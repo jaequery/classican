@@ -1,4 +1,4 @@
-:root { --ink: #c9d3e6; --dim: #6f7d9c; --warm: #f2c57c; --bg: #0a1026; }
+:root { --ink: #c9d3e6; --soft: #8593b3; --focus: #f2c57c; --bg: #0a1026; }
 * { box-sizing: border-box; margin: 0; }
 html, body { height: 100%; background: var(--bg); overflow: hidden; }
 
@@ -8,40 +8,53 @@ canvas {
 }
 
 .ui {
-  position: fixed; left: max(20px, 4vw); bottom: max(20px, 4vh);
-  display: flex; align-items: center; gap: 16px;
+  position: fixed; left: max(28px, 5vw); bottom: max(28px, 5vh);
+  display: flex; align-items: center; gap: 12px;
   font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; color: var(--ink);
 }
 
+/* A bare pixel glyph: the scene is the picture, the control stays out of its way. */
 button {
-  width: 40px; height: 40px; flex: none; padding: 0; border-radius: 0;
+  width: 44px; height: 44px; flex: none; padding: 0; margin-left: -15px;
   display: grid; place-items: center; cursor: pointer;
-  background: rgba(10, 16, 38, .55); border: 2px solid var(--ink); color: var(--ink);
-  box-shadow: 3px 3px 0 rgba(0, 0, 0, .45);
-  transition: border-color .4s, color .4s, transform .1s, box-shadow .1s;
+  background: none; border: 0; border-radius: 0; color: var(--ink);
+  opacity: .55; transition: opacity .6s;
 }
-button:hover { border-color: var(--warm); color: var(--warm); }
-button:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 rgba(0, 0, 0, .45); }
-button:focus-visible { outline: 2px solid var(--warm); outline-offset: 4px; }
-button svg { width: 16px; height: 16px; fill: currentColor; shape-rendering: crispEdges; }
+button:hover, button:focus-visible { opacity: 1; }
+button:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+button svg { width: 14px; height: 14px; fill: currentColor; shape-rendering: crispEdges; }
+
+/* Before the first press, the glyph breathes slowly to invite a click. */
+.ui:not(.started) button { animation: breathe 4s ease-in-out infinite; }
+.ui:not(.started) button:hover, .ui:not(.started) button:focus-visible { animation: none; opacity: 1; }
+@keyframes breathe { 50% { opacity: .9; } }
+
+/* Buffering: the glyph dims and breathes until sound arrives. */
+.loading button { animation: breathe 2s ease-in-out infinite; opacity: .35; }
 
 .icon-pause { display: none; }
 .playing .icon-pause { display: block; }
 .playing .icon-play { display: none; }
 
 .track {
-  font-size: 12px; letter-spacing: .04em; line-height: 1.5; min-height: 18px;
-  max-width: calc(100vw - 100px); text-shadow: 0 1px 6px rgba(0, 0, 0, .7);
-  opacity: 0; transition: opacity 2.2s ease;
+  font-size: 11px; letter-spacing: .08em; line-height: 1.6; min-height: 18px;
+  max-width: calc(100vw - 100px); text-shadow: 0 0 12px rgba(10, 16, 38, .9);
+  opacity: .45; transition: opacity 2.2s ease;
 }
-.started .track { opacity: .8; }
+.started .track { opacity: .7; }
 .track.fade { opacity: 0 !important; }
-.composer { color: var(--dim); }
+.composer { color: var(--soft); }
+.composer:not(:empty)::before { content: "— "; }
+
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;
+}
 
 @media (max-width: 480px) {
-  .track { font-size: 11px; }
   .composer { display: block; }
 }
 @media (prefers-reduced-motion: reduce) {
   .track, button { transition: none; }
+  .ui button { animation: none !important; }
 }

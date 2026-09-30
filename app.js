@@ -10,8 +10,14 @@
   // ---------------------------------------------------------------------------
   var canvas = document.getElementById("scene");
   var g = canvas.getContext("2d");
-  var FPS = 14;
-  var W, H, horizon, stars, buildings, skyRows, lastFrame = 0;
+  var backdrop = document.createElement("canvas"); // static layers, drawn once per resize
+  var bg = backdrop.getContext("2d");
+  var FPS = 10;
+  var FADE = 4; // seconds a window takes to switch on or off
+  var W, H, horizon, waterH, moonX, moonY, stars, buildings, lastFrame = 0;
+
+  // Scene time runs slower while paused, so pausing feels like the scene settling.
+  var sim = 0, energy = 0.35, energyTarget = 0.35;
 
   // Seeded PRNG (mulberry32) so the skyline is the same on every visit.
   function seeded(seed) {
@@ -28,16 +34,19 @@
     var px = Math.max(3, Math.round(Math.min(vw, vh * 1.6) / 200));
     W = Math.ceil(vw / px);
     H = Math.ceil(vh / px);
-    canvas.width = W;
-    canvas.height = H;
+    canvas.width = backdrop.width = W;
+    canvas.height = backdrop.height = H;
 
     var r = seeded(7);
     horizon = Math.floor(H * 0.68);
+    waterH = H - horizon - 1;
+    moonX = (W * 0.78) | 0;
+    moonY = (horizon * 0.22) | 0;
 
     stars = [];
     var starCount = Math.floor((W * horizon) / 420);
     for (var i = 0; i < starCount; i++) {
-      stars.push({ x: (r() * W) | 0, y: (r() * horizon * 0.85) | 0, phase: r() * 6.28, speed: 0.3 + r() * 0.8, warm: r() < 0.15 });
+      stars.push({ x: (r() * W) | 0, y: (r() * horizon * 0.85) | 0, phase: r() * 6.28, speed: 0.08 + r() * 0.25, warm: r() < 0.15 });
     }
 
     buildings = [];
@@ -48,131 +57,162 @@
       var b = { x: x, w: w, h: h, windows: [] };
       for (var wx = x + 1; wx < x + w - 1; wx += 2) {
         for (var wy = horizon - h + 2; wy < horizon - 1; wy += 3) {
-          if (r() < 0.55) b.windows.push({ x: wx, y: wy, offset: r() * 1000, period: 40 + r() * 90, on: r() < 0.35, tone: r() });
+          if (r() < 0.4) {
+            b.windows.push({ x: wx, y: wy, offset: r() * 1000, period: 90 + r() * 240, on: r() < 0.35, color: r() > 0.7 ? "#ffdf9e" : "#f2b765" });
+          }
         }
       }
       buildings.push(b);
       x += w + (r() < 0.3 ? 1 + ((r() * 2) | 0) : 0);
     }
 
-    skyRows = [];
-    for (var y = 0; y < horizon; y++) {
-      var t = y / horizon;
-      skyRows.push("rgb(" + ((8 + t * 26) | 0) + "," + ((13 + t * 28) | 0) + "," + ((36 + t * 44) | 0) + ")");
-    }
+    paintBackdrop();
   }
 
-  // Each window flips on/off once per its own slow period.
-  function windowLit(win, s) {
-    if (reducedMotion) return win.on;
-    return (Math.floor((s + win.offset) / win.period) % 2 === 0) === win.on;
-  }
-
-  function draw(ms) {
-    var s = ms / 1000;
-    var y, i, k, m;
-
+  function paintBackdrop() {
+    var y, d;
     for (y = 0; y < horizon; y++) {
-      g.fillStyle = skyRows[y];
-      g.fillRect(0, y, W, 1);
-    }
-
-    for (i = 0; i < stars.length; i++) {
-      var st = stars[i];
-      var a = reducedMotion ? 0.6 : 0.35 + 0.65 * (0.5 + 0.5 * Math.sin(s * st.speed + st.phase));
-      g.fillStyle = "rgba(" + (st.warm ? "255,240,210" : "200,215,255") + "," + a.toFixed(2) + ")";
-      g.fillRect(st.x, st.y, 1, 1);
+      d = y / horizon;
+      bg.fillStyle = "rgb(" + ((8 + d * 26) | 0) + "," + ((13 + d * 28) | 0) + "," + ((36 + d * 44) | 0) + ")";
+      bg.fillRect(0, y, W, 1);
     }
 
     // Moon with a faint stepped halo.
-    var mx = (W * 0.78) | 0, my = (horizon * 0.22) | 0;
-    g.fillStyle = "#e8e3cf";
-    g.fillRect(mx, my, 3, 3);
-    g.fillRect(mx - 1, my + 1, 5, 1);
-    g.fillRect(mx + 1, my - 1, 1, 5);
-    g.fillStyle = "rgba(232,227,207,.05)";
-    g.fillRect(mx - 3, my - 2, 9, 7);
-    g.fillRect(mx - 2, my - 3, 7, 9);
+    bg.fillStyle = "#e8e3cf";
+    bg.fillRect(moonX, moonY, 3, 3);
+    bg.fillRect(moonX - 1, moonY + 1, 5, 1);
+    bg.fillRect(moonX + 1, moonY - 1, 1, 5);
+    bg.fillStyle = "rgba(232,227,207,.05)";
+    bg.fillRect(moonX - 3, moonY - 2, 9, 7);
+    bg.fillRect(moonX - 2, moonY - 3, 7, 9);
+
+    for (var k = 0; k < buildings.length; k++) {
+      var b = buildings[k];
+      bg.fillStyle = "#070b1c";
+      bg.fillRect(b.x, horizon - b.h, b.w, b.h);
+      bg.fillStyle = "#0d1530";
+      bg.fillRect(b.x, horizon - b.h, b.w, 1);
+    }
+
+    bg.fillStyle = "#060918";
+    bg.fillRect(0, horizon, W, 1);
+
+    for (y = 0; y < waterH; y++) {
+      d = y / waterH;
+      bg.fillStyle = "rgb(" + ((6 + d * 4) | 0) + "," + ((10 + d * 6) | 0) + "," + ((26 + d * 10) | 0) + ")";
+      bg.fillRect(0, horizon + 1 + y, W, 1);
+    }
+  }
+
+  // Each window flips on/off once per its own slow period, fading over FADE seconds.
+  function windowLight(win, t) {
+    if (reducedMotion) return win.on ? 1 : 0;
+    var u = t + win.offset;
+    var lit = (Math.floor(u / win.period) % 2 === 0) === win.on;
+    var sinceFlip = u % win.period;
+    if (sinceFlip >= FADE) return lit ? 1 : 0;
+    var p = sinceFlip / FADE;
+    return lit ? p : 1 - p;
+  }
+
+  function draw() {
+    var t = sim;
+    var y, i, k, m;
+
+    g.globalAlpha = 1;
+    g.drawImage(backdrop, 0, 0);
+
+    for (i = 0; i < stars.length; i++) {
+      var st = stars[i];
+      var a = reducedMotion ? 0.7 : 0.55 + 0.35 * (0.5 + 0.5 * Math.sin(t * st.speed + st.phase));
+      g.globalAlpha = Math.round(a * 20) / 20;
+      g.fillStyle = st.warm ? "#fff0d2" : "#c8d7ff";
+      g.fillRect(st.x, st.y, 1, 1);
+    }
 
     for (k = 0; k < buildings.length; k++) {
       var b = buildings[k];
-      g.fillStyle = "#070b1c";
-      g.fillRect(b.x, horizon - b.h, b.w, b.h);
-      g.fillStyle = "#0d1530";
-      g.fillRect(b.x, horizon - b.h, b.w, 1);
       for (m = 0; m < b.windows.length; m++) {
         var win = b.windows[m];
-        if (!windowLit(win, s)) continue;
-        g.fillStyle = win.tone > 0.7 ? "#ffdf9e" : "#f2b765";
+        var light = windowLight(win, t);
+        if (light <= 0) continue;
+        g.fillStyle = win.color;
+
+        g.globalAlpha = light;
         g.fillRect(win.x, win.y, 1, 1);
-      }
-    }
 
-    g.fillStyle = "#060918";
-    g.fillRect(0, horizon, W, 1);
-
-    // Water.
-    var waterH = H - horizon - 1;
-    for (y = 0; y < waterH; y++) {
-      var d = y / waterH;
-      g.fillStyle = "rgb(" + ((6 + d * 4) | 0) + "," + ((10 + d * 6) | 0) + "," + ((26 + d * 10) | 0) + ")";
-      g.fillRect(0, horizon + 1 + y, W, 1);
-    }
-
-    // Lit windows reflected in the water, wobbling gently.
-    for (k = 0; k < buildings.length; k++) {
-      var bb = buildings[k];
-      for (m = 0; m < bb.windows.length; m++) {
-        var ww = bb.windows[m];
-        if (!windowLit(ww, s)) continue;
-        var dy = horizon - ww.y;
+        // Reflection in the water, wobbling gently.
+        var dy = horizon - win.y;
         if (dy > waterH - 1) continue;
+        g.fillStyle = "#f2b765";
         for (var q = 0; q < 3; q++) {
           var ry = horizon + dy + q * 2;
           if (ry >= H) break;
-          var shift = reducedMotion ? 0 : Math.round(Math.sin(s * 0.9 + ry * 0.7 + ww.x * 0.3) * 1.2);
-          var alpha = (0.42 - (dy / waterH) * 0.3) * (q ? 0.6 : 1);
-          g.fillStyle = "rgba(242,183,101," + Math.max(alpha, 0.04).toFixed(2) + ")";
-          g.fillRect(ww.x + shift, ry, 1, 1);
+          var shift = reducedMotion ? 0 : Math.round(Math.sin(t * 0.25 + ry * 0.35 + win.x * 0.3) * 0.8);
+          g.globalAlpha = light * Math.max((0.42 - (dy / waterH) * 0.3) * (q ? 0.6 : 1), 0.04);
+          g.fillRect(win.x + shift, ry, 1, 1);
         }
       }
     }
 
     // Drifting ripple lines.
+    g.globalAlpha = 0.07;
+    g.fillStyle = "#7896d2";
     for (y = 2; y < waterH; y += 3) {
-      var xo = reducedMotion ? 0 : Math.floor(s * 2 + y * 5) % W;
-      g.fillStyle = "rgba(120,150,210,.07)";
+      var xo = reducedMotion ? 0 : Math.floor(t * 0.6 + y * 5) % W;
       g.fillRect((xo * 3 + y * 11) % W, horizon + 1 + y, 5 + (y % 4), 1);
       g.fillRect((xo * 2 + y * 29) % W, horizon + 1 + y, 4, 1);
     }
 
     // Moon reflection.
+    g.fillStyle = "#e8e3cf";
     for (y = 0; y < waterH; y += 2) {
-      var sway = reducedMotion ? 0 : Math.round(Math.sin(s * 0.7 + y) * 1.5);
-      g.fillStyle = "rgba(232,227,207," + (0.2 - (y / waterH) * 0.15).toFixed(2) + ")";
-      g.fillRect(mx + sway, horizon + 2 + y, 2, 1);
+      var sway = reducedMotion ? 0 : Math.round(Math.sin(t * 0.2 + y * 0.5));
+      g.globalAlpha = 0.2 - (y / waterH) * 0.15;
+      g.fillRect(moonX + sway, horizon + 2 + y, 2, 1);
     }
+    g.globalAlpha = 1;
   }
 
+  var rafId = 0;
   function frame(ms) {
-    requestAnimationFrame(frame);
+    rafId = requestAnimationFrame(frame);
     if (ms - lastFrame < 1000 / FPS) return;
+    var dt = lastFrame ? Math.min((ms - lastFrame) / 1000, 0.25) : 0;
     lastFrame = ms;
-    draw(ms);
+    energy += (energyTarget - energy) * 0.02;
+    sim += dt * energy;
+    draw();
   }
+
+  function startLoop() {
+    if (reducedMotion || rafId) return;
+    lastFrame = 0;
+    rafId = requestAnimationFrame(frame);
+  }
+  function stopLoop() {
+    cancelAnimationFrame(rafId);
+    rafId = 0;
+  }
+
+  document.addEventListener("visibilitychange", function () {
+    if (document.hidden) stopLoop();
+    else startLoop();
+  });
 
   var resizeTimer;
   addEventListener("resize", function () {
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(function () {
       buildScene();
-      draw(performance.now());
+      draw();
     }, 120);
   });
 
+  sim = 30; // start mid-cycle so some windows are already lit
   buildScene();
-  draw(0);
-  if (!reducedMotion) requestAnimationFrame(frame);
+  draw();
+  startLoop();
 
   // ---------------------------------------------------------------------------
   // Player: one button, a continuous looping playlist, no track choice.
@@ -183,10 +223,12 @@
   var trackEl = document.getElementById("track");
   var titleEl = document.getElementById("title");
   var composerEl = document.getElementById("composer");
+  var statusEl = document.getElementById("status");
 
   var audio = new Audio();
   audio.preload = "none";
   var useMp3 = audio.canPlayType("audio/mpeg") !== "";
+  var media = "mediaSession" in navigator ? navigator.mediaSession : null;
 
   var index = 0;
   var wantPlay = false;   // the visitor's intent
@@ -196,21 +238,24 @@
 
   function setPlayingUI(playing) {
     ui.classList.toggle("playing", playing);
-    button.setAttribute("aria-label", playing ? "Pause" : "Play");
+    button.setAttribute("aria-pressed", playing ? "true" : "false");
+    energyTarget = playing ? 1 : 0.35;
+    if (!playing) ui.classList.remove("loading");
+    if (media) media.playbackState = playing ? "playing" : "paused";
   }
 
   function showText(title, composer, animate) {
     clearTimeout(fadeTimer);
     if (!animate || reducedMotion) {
       titleEl.textContent = title;
-      composerEl.textContent = composer ? "— " + composer : "";
+      composerEl.textContent = composer;
       trackEl.classList.remove("fade");
       return;
     }
     trackEl.classList.add("fade");
     fadeTimer = setTimeout(function () {
       showText(title, composer, false);
-    }, 1200);
+    }, 2200); // matches the CSS opacity transition
   }
 
   function load(i, animate) {
@@ -218,6 +263,10 @@
     var t = tracks[i];
     audio.src = useMp3 ? t.mp3 : t.ogg;
     showText(t.title, t.composer, animate);
+    statusEl.textContent = "";
+    if (media && window.MediaMetadata) {
+      media.metadata = new MediaMetadata({ title: t.title, artist: t.composer });
+    }
   }
 
   function startPlayback() {
@@ -240,25 +289,49 @@
     }
   }
 
-  button.addEventListener("click", function () {
-    if (!tracks.length) return;
-    if (wantPlay) {
-      wantPlay = false;
-      audio.pause();
-      setPlayingUI(false);
-      return;
-    }
+  function play() {
+    if (!tracks.length || wantPlay) return;
     wantPlay = true;
     ui.classList.add("started");
     setPlayingUI(true);
-    if (!audio.src) load(index, false);
-    else if (audio.error) load(index, false); // retry after "unavailable"
+    if (!audio.src || audio.error) load(index, false); // first play, or retry after "unavailable"
     startPlayback();
+  }
+
+  function pause() {
+    if (!wantPlay) return;
+    wantPlay = false;
+    audio.pause();
+    setPlayingUI(false);
+  }
+
+  function toggle() {
+    if (wantPlay) pause();
+    else play();
+  }
+
+  button.addEventListener("click", toggle);
+
+  // Space toggles from anywhere; a focused button already handles it natively.
+  document.addEventListener("keydown", function (e) {
+    if (e.key !== " " || e.repeat || e.target.closest("button")) return;
+    e.preventDefault();
+    toggle();
+  });
+
+  if (media) {
+    media.setActionHandler("play", play);
+    media.setActionHandler("pause", pause);
+  }
+
+  audio.addEventListener("waiting", function () {
+    if (wantPlay) ui.classList.add("loading");
   });
 
   audio.addEventListener("playing", function () {
     failures = 0;
     switching = false;
+    ui.classList.remove("loading");
   });
 
   audio.addEventListener("ended", next);
@@ -272,6 +345,7 @@
       audio.pause();
       setPlayingUI(false);
       showText("Music is unavailable right now.", "", true);
+      statusEl.textContent = "Music is unavailable right now.";
       return;
     }
     next();
@@ -290,6 +364,9 @@
     ui.classList.add("started");
     setPlayingUI(true);
   });
+
+  // The first piece doubles as a quiet invitation before anything plays.
+  if (tracks.length) showText(tracks[0].title, tracks[0].composer, false);
 
   // Exposed only so automated checks can inspect player state.
   window.__player = { audio: audio, tracks: tracks, get index() { return index; } };
