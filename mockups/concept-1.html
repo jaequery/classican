@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dusk Motes</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#f3e3c8;--gold:236,190,120}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%;background:#0d0b22;overflow:hidden}
+canvas{position:fixed;inset:0;width:100%;height:100%;display:block}
+main{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 16px}
+#btn{width:76px;height:76px;border-radius:50%;background:rgba(255,235,200,.03);border:1px solid rgba(243,227,200,.45);color:var(--ink);cursor:pointer;display:grid;place-items:center;transition:background .8s,border-color .8s,box-shadow .8s,transform .8s;-webkit-tap-highlight-color:transparent}
+#btn:hover{background:rgba(255,235,200,.08);border-color:rgba(243,227,200,.75);box-shadow:0 0 40px rgba(var(--gold),.18)}
+#btn:focus-visible{outline:2px solid var(--ink);outline-offset:6px}
+#btn svg{width:22px;height:22px;fill:currentColor;grid-area:1/1;transition:opacity .6s}
+#btn .pa{opacity:0}
+#btn[data-playing=true] .pl{opacity:0}
+#btn[data-playing=true] .pa{opacity:1}
+#btn[data-playing=true]{box-shadow:0 0 60px rgba(var(--gold),.14)}
+#meta{margin-top:44px;height:64px;text-align:center;font-family:"Cormorant Garamond",Georgia,serif;color:var(--ink);opacity:0;transition:opacity 2.4s ease;letter-spacing:.22em}
+#meta.on{opacity:.6}
+#meta .in{transition:opacity 2s ease}
+#meta .in.out{opacity:0}
+#t{font-size:15px;text-transform:uppercase;line-height:1.6}
+#c{font-size:13px;font-style:italic;opacity:.7;margin-top:6px;letter-spacing:.18em}
+#tag{position:fixed;left:14px;bottom:12px;font:11px/1 system-ui,sans-serif;letter-spacing:.06em;color:rgba(243,227,200,.35)}
+@media(max-width:400px){#t{font-size:13px;letter-spacing:.16em}#meta{letter-spacing:.16em}}
+@media(prefers-reduced-motion:reduce){*{transition-duration:.01s!important}}
+</style>
+</head>
+<body>
+<canvas id="cv" aria-hidden="true"></canvas>
+<main>
+  <button id="btn" type="button" aria-label="Play" data-playing="false">
+    <svg class="pl" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6.5v11l9-5.5z"/></svg>
+    <svg class="pa" viewBox="0 0 24 24" aria-hidden="true"><rect x="7.5" y="6.5" width="3" height="11" rx=".5"/><rect x="13.5" y="6.5" width="3" height="11" rx=".5"/></svg>
+  </button>
+  <div id="meta" aria-live="polite"><div class="in" id="in"><div id="t"></div><div id="c"></div></div></div>
+</main>
+<div id="tag">Concept 1 — Dusk Motes</div>
+<script>
+(function(){
+var cv=document.getElementById('cv'),ctx=cv.getContext('2d');
+var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+var W,H,dpr,motes=[],bg;
+function rnd(a,b){return a+Math.random()*(b-a)}
+function resize(){
+  dpr=Math.min(window.devicePixelRatio||1,2);
+  W=innerWidth;H=innerHeight;
+  cv.width=W*dpr;cv.height=H*dpr;
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  bg=ctx.createLinearGradient(0,0,0,H);
+  bg.addColorStop(0,'#0d0b22');bg.addColorStop(.45,'#221a48');
+  bg.addColorStop(.78,'#5a3a58');bg.addColorStop(1,'#a2644f');
+  var n=Math.round(Math.min(46,Math.max(18,W*H/30000)));
+  motes=[];for(var i=0;i<n;i++)motes.push(mk(true));
+  draw(0);
+}
+function mk(init){
+  return{x:rnd(0,W),y:init?rnd(0,H):H+60,r:rnd(5,30),a:rnd(.05,.2),
+    vy:rnd(3,9),ph:rnd(0,6.28),sw:rnd(.05,.15),amp:rnd(6,22)};
+}
+function draw(t){
+  ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
+  var g=ctx.createRadialGradient(W*.5,H*1.05,0,W*.5,H*1.05,H*.8);
+  g.addColorStop(0,'rgba(255,170,100,.16)');g.addColorStop(1,'rgba(255,170,100,0)');
+  ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+  ctx.globalCompositeOperation='lighter';
+  for(var i=0;i<motes.length;i++){
+    var m=motes[i],x=m.x+Math.sin(t*m.sw+m.ph)*m.amp;
+    var f=Math.min(1,Math.min(m.y+60,H+60-m.y+60)/(H*.25));
+    var al=m.a*Math.max(0,Math.min(1,f))*(.75+.25*Math.sin(t*.4+m.ph));
+    var rg=ctx.createRadialGradient(x,m.y,0,x,m.y,m.r);
+    rg.addColorStop(0,'rgba(236,190,120,'+al+')');
+    rg.addColorStop(.6,'rgba(236,190,120,'+al*.5+')');
+    rg.addColorStop(1,'rgba(236,190,120,0)');
+    ctx.fillStyle=rg;ctx.beginPath();ctx.arc(x,m.y,m.r,0,6.283);ctx.fill();
+  }
+  ctx.globalCompositeOperation='source-over';
+}
+var last=0,t=0,raf;
+function loop(ts){
+  var dt=Math.min(.05,(ts-last)/1000||0);last=ts;
+  t+=dt;
+  for(var i=0;i<motes.length;i++){var m=motes[i];m.y-=m.vy*dt;if(m.y<-60)motes[i]=mk(false)}
+  draw(t);raf=requestAnimationFrame(loop);
+}
+addEventListener('resize',resize);
+resize();
+if(!reduce)raf=requestAnimationFrame(loop);
+
+var pieces=[["Clair de lune","Claude Debussy"],["Gymnopédie No. 1","Erik Satie"],["Prelude in E minor, Op. 28 No. 4","Frédéric Chopin"]];
+var btn=document.getElementById('btn'),meta=document.getElementById('meta'),inn=document.getElementById('in'),
+    T=document.getElementById('t'),C=document.getElementById('c');
+var idx=0,playing=false,timer=null,sw=null;
+function show(){T.textContent=pieces[idx][0];C.textContent=pieces[idx][1]}
+function cycle(){
+  inn.classList.add('out');
+  sw=setTimeout(function(){idx=(idx+1)%pieces.length;show();inn.classList.remove('out')},2000);
+}
+btn.addEventListener('click',function(){
+  playing=!playing;
+  btn.dataset.playing=playing;
+  btn.setAttribute('aria-label',playing?'Pause':'Play');
+  if(playing){
+    show();meta.classList.add('on');
+    timer=setInterval(cycle,20000);
+  }else{
+    meta.classList.remove('on');clearInterval(timer);clearTimeout(sw);inn.classList.remove('out');
+  }
+});
+})();
+</script>
+</body>
+</html>

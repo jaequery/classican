@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aurora Field</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#05070d; --ink:#d9e4e8; --ink-dim:rgba(217,228,232,.5);
+    --glow:120,220,190;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;background:var(--bg);color:var(--ink);overflow:hidden;
+    font-family:"Inter",system-ui,-apple-system,"Helvetica Neue",sans-serif;font-weight:300}
+  canvas{position:fixed;inset:0;width:100%;height:100%;display:block}
+  main{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 16px}
+  .orb{
+    position:relative;width:104px;height:104px;border-radius:50%;border:0;cursor:pointer;
+    background:radial-gradient(circle at 50% 42%,rgba(235,255,248,.95) 0%,rgba(150,235,205,.55) 38%,rgba(90,170,190,.18) 68%,rgba(90,140,200,.05) 100%);
+    box-shadow:0 0 40px 6px rgba(var(--glow),.28),0 0 120px 30px rgba(120,150,230,.14);
+    color:#0b1a1c;display:grid;place-items:center;
+    transition:box-shadow 1.2s ease,transform 1.2s ease,opacity 1.2s ease;
+    opacity:.82;-webkit-tap-highlight-color:transparent;
+  }
+  .orb:hover{opacity:1}
+  .orb:focus-visible{outline:1px solid rgba(255,255,255,.85);outline-offset:10px}
+  .orb.playing{animation:breathe 6s ease-in-out infinite;opacity:1}
+  @keyframes breathe{
+    0%,100%{transform:scale(1);box-shadow:0 0 40px 6px rgba(var(--glow),.25),0 0 110px 24px rgba(120,150,230,.12)}
+    50%{transform:scale(1.09);box-shadow:0 0 64px 14px rgba(var(--glow),.42),0 0 170px 50px rgba(150,120,230,.2)}
+  }
+  .orb svg{width:26px;height:26px;fill:currentColor;grid-area:1/1;transition:opacity .6s ease}
+  .orb .i-pause{opacity:0}
+  .orb.playing .i-play{opacity:0}
+  .orb.playing .i-pause{opacity:.85}
+  .orb .i-play{transform:translateX(2px);opacity:.8}
+  .meta{margin-top:56px;height:56px;text-align:center;position:relative;width:min(420px,100%)}
+  .track{position:absolute;inset:0;opacity:0;transition:opacity 2.4s ease}
+  .track.on{opacity:1}
+  .title{font-size:14px;letter-spacing:.06em;color:var(--ink)}
+  .composer{margin-top:8px;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-dim);font-weight:200}
+  .marker{position:fixed;left:16px;bottom:14px;font-size:10px;letter-spacing:.14em;color:rgba(217,228,232,.28);font-weight:300;pointer-events:none}
+  @media (max-width:420px){.orb{width:88px;height:88px}.meta{margin-top:44px}.title{font-size:13px}}
+  @media (prefers-reduced-motion:reduce){
+    .orb.playing{animation:none}.orb,.track,.orb svg{transition-duration:.01s}
+  }
+</style>
+</head>
+<body>
+<canvas id="sky" aria-hidden="true"></canvas>
+<main>
+  <button class="orb" id="orb" type="button" aria-label="Play">
+    <svg class="i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg>
+    <svg class="i-pause" viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="4.5" width="4" height="15" rx="1"/><rect x="14" y="4.5" width="4" height="15" rx="1"/></svg>
+  </button>
+  <div class="meta" id="meta" aria-live="polite"></div>
+</main>
+<div class="marker">Concept 5 — Aurora Field</div>
+
+<script>
+(function(){
+  var tracks=[
+    {t:"Gymnopédie No. 1",c:"Erik Satie"},
+    {t:"Clair de lune",c:"Claude Debussy"},
+    {t:"Prelude in E minor, Op. 28 No. 4",c:"Frédéric Chopin"}
+  ];
+  var orb=document.getElementById('orb'),meta=document.getElementById('meta');
+  var playing=false,idx=0,timer=null,els=[];
+  tracks.forEach(function(k){
+    var d=document.createElement('div');d.className='track';
+    var a=document.createElement('div');a.className='title';a.textContent=k.t;
+    var b=document.createElement('div');b.className='composer';b.textContent=k.c;
+    d.appendChild(a);d.appendChild(b);meta.appendChild(d);els.push(d);
+  });
+  function show(i){els.forEach(function(e,j){e.classList.toggle('on',playing&&j===i)})}
+  function toggle(){
+    playing=!playing;
+    orb.classList.toggle('playing',playing);
+    orb.setAttribute('aria-label',playing?'Pause':'Play');
+    clearInterval(timer);
+    if(playing){show(idx);timer=setInterval(function(){idx=(idx+1)%tracks.length;show(idx)},20000)}
+    else show(idx);
+  }
+  orb.addEventListener('click',toggle); // native button handles Space/Enter
+
+  /* Aurora + stars */
+  var cv=document.getElementById('sky'),ctx=cv.getContext('2d');
+  var reduce=window.matchMedia('(prefers-reduced-motion: reduce)');
+  var off=null,octx=null,W=0,H=0,scale=0.5,stars=[],lastT=0,tt=0,energy=0.55;
+  var layers=[
+    {c:[90,230,170],y:.30,a:.20,f:1.3,s:.030,ph:0,amp:.07,h:.32},
+    {c:[60,200,200],y:.36,a:.16,f:1.9,s:-.022,ph:2,amp:.06,h:.28},
+    {c:[150,110,230],y:.26,a:.15,f:1.1,s:.018,ph:4,amp:.08,h:.36},
+    {c:[110,190,160],y:.42,a:.09,f:2.6,s:-.015,ph:1,amp:.05,h:.22}
+  ];
+  function resize(){
+    var dpr=Math.min(window.devicePixelRatio||1,2);
+    scale=Math.min(dpr,1)*0.6; // reduced-res render, upscaled by CSS (soft by nature)
+    W=Math.max(1,Math.round(innerWidth*scale));H=Math.max(1,Math.round(innerHeight*scale));
+    cv.width=W;cv.height=H;
+    var n=Math.round(innerWidth*innerHeight/9000);stars=[];
+    for(var i=0;i<n;i++)stars.push({x:Math.random(),y:Math.random()*.85,r:Math.random()*.9+.3,a:Math.random()*.35+.08,p:Math.random()*6.28,s:Math.random()*.4+.15});
+    draw();
+  }
+  function draw(){
+    var g=ctx.createLinearGradient(0,0,0,H);
+    g.addColorStop(0,'#04060c');g.addColorStop(.6,'#070b14');g.addColorStop(1,'#0a0f1a');
+    ctx.globalCompositeOperation='source-over';ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+    for(var i=0;i<stars.length;i++){
+      var s=stars[i],tw=.6+.4*Math.sin(tt*s.s+s.p);
+      ctx.fillStyle='rgba(225,235,245,'+(s.a*tw).toFixed(3)+')';
+      ctx.fillRect(s.x*W,s.y*H,s.r*scale*1.4,s.r*scale*1.4);
+    }
+    ctx.globalCompositeOperation='lighter';
+    var step=Math.max(4,Math.round(W/90));
+    if(!off){off=document.createElement('canvas');octx=off.getContext('2d');}
+    if(off.width!==W||off.height!==H){off.width=W;off.height=H;}
+    layers.forEach(function(L,li){
+      var a=L.a*energy, top=[], base=[];
+      octx.clearRect(0,0,W,H);
+      for(var x=0;x<=W+step;x+=step){
+        var u=x/W;
+        var y=H*L.y+H*L.amp*(Math.sin(u*L.f*6.283+tt*L.s*6.283+L.ph)*.6+Math.sin(u*L.f*2.3*6.283-tt*L.s*4+L.ph*1.7)*.4);
+        top.push([x,y]);
+      }
+      // vertical curtain: draw as gradient-filled strips
+      var hgt=H*L.h;
+      for(var k=0;k<top.length-1;k++){
+        var p=top[k],q=top[k+1],u2=p[0]/W;
+        var shimmer=.55+.45*Math.sin(u2*7+tt*.15*(li+1)+L.ph);
+        var gr=ctx.createLinearGradient(0,p[1]-hgt*.15,0,p[1]+hgt);
+        var col=L.c.join(',');
+        gr.addColorStop(0,'rgba('+col+',0)');
+        gr.addColorStop(.18,'rgba('+col+','+(a*shimmer).toFixed(3)+')');
+        gr.addColorStop(1,'rgba('+col+',0)');
+        octx.fillStyle=gr;
+        // integer-aligned rects: adjacent strips share exact edges, so no anti-aliased seams
+        octx.fillRect(p[0],p[1]-hgt*.15,step,hgt*1.15);
+      }
+      ctx.drawImage(off,0,0); // composite whole layer at once so strip seams never double-add
+    });
+    ctx.globalCompositeOperation='source-over';
+  }
+  var raf=0,frameGap=1000/30;
+  function loop(now){
+    raf=requestAnimationFrame(loop);
+    if(now-lastT<frameGap)return; // ~30fps cap
+    var dt=Math.min((now-lastT)/1000,.1);lastT=now;
+    tt+=dt;
+    energy+=((playing?1:.6)-energy)*Math.min(1,dt*.6); // aurora gently brightens while playing
+    draw();
+  }
+  function start(){cancelAnimationFrame(raf);
+    if(reduce.matches){tt=12;energy=.8;draw();return}
+    lastT=performance.now();raf=requestAnimationFrame(loop)}
+  addEventListener('resize',resize);
+  (reduce.addEventListener?reduce.addEventListener('change',start):reduce.addListener(start));
+  document.addEventListener('visibilitychange',function(){
+    if(document.hidden)cancelAnimationFrame(raf);else start()});
+  resize();start();
+})();
+</script>
+</body>
+</html>
