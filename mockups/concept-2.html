@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Paper Light</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap">
+<style>
+:root{
+  --paper:#f4efe6;
+  --ink:#3b3a35;
+  --ink-soft:#8a857a;
+  --serif:"Cormorant Garamond","Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  background:var(--paper);color:var(--ink);font-family:var(--serif);
+  overflow:hidden;-webkit-font-smoothing:antialiased;
+}
+#scene{
+  position:fixed;inset:-6%;width:112%;height:112%;
+  filter:blur(40px) saturate(1.05);
+  image-rendering:auto;
+}
+.grain{
+  position:fixed;inset:0;pointer-events:none;opacity:.35;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .45  0 0 0 0 .4  0 0 0 0 .3  0 0 0 .09 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+main{position:relative;height:100%;display:grid;place-items:center}
+#ctl{
+  appearance:none;background:none;border:0;cursor:pointer;color:var(--ink);
+  font-family:var(--serif);font-weight:300;font-size:clamp(3rem,9vw,5.5rem);
+  letter-spacing:.02em;line-height:1;padding:.4em .7em;border-radius:4px;
+  position:relative;transition:opacity .6s ease, letter-spacing .9s ease;
+  opacity:.85;
+}
+#ctl:hover{opacity:1;letter-spacing:.06em}
+#ctl:focus-visible{outline:1px solid var(--ink);outline-offset:6px}
+#ctl span{display:block;transition:opacity .7s ease, transform .7s ease}
+#ctl .b{position:absolute;inset:.4em .7em;opacity:0;transform:translateY(.15em)}
+#ctl[data-on="true"] .a{opacity:0;transform:translateY(-.15em)}
+#ctl[data-on="true"] .b{opacity:1;transform:none}
+#ctl[data-on="true"]{opacity:.5}
+#ctl[data-on="true"]:hover,#ctl[data-on="true"]:focus-visible{opacity:.9}
+.program{
+  position:fixed;left:clamp(20px,4vw,56px);bottom:clamp(24px,5vh,56px);
+  font-variant:small-caps;letter-spacing:.14em;
+  opacity:0;transition:opacity 2.4s ease;max-width:calc(100% - 40px);
+}
+.program.show{opacity:1}
+.program .t{font-size:clamp(.95rem,2.4vw,1.15rem);font-weight:400;color:var(--ink);transition:opacity 1.6s ease}
+.program .c{font-size:clamp(.8rem,2vw,.95rem);font-weight:300;color:var(--ink-soft);margin-top:.35em;transition:opacity 1.6s ease}
+.program.fade .t,.program.fade .c{opacity:0}
+.mark{
+  position:fixed;top:14px;right:16px;font:11px/1 system-ui,sans-serif;
+  letter-spacing:.04em;color:rgba(59,58,53,.4);pointer-events:none;
+}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+@media (prefers-reduced-motion:reduce){
+  #ctl,#ctl span,.program,.program .t,.program .c{transition-duration:.01s}
+}
+</style>
+</head>
+<body>
+<canvas id="scene" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+<main>
+  <button id="ctl" type="button" aria-label="Play" data-on="false">
+    <span class="a" aria-hidden="true">play</span>
+    <span class="b" aria-hidden="true">pause</span>
+  </button>
+</main>
+<div class="program" id="prog" aria-live="polite">
+  <div class="t" id="title"></div>
+  <div class="c" id="composer"></div>
+</div>
+<div class="mark">Concept 2 — Paper Light</div>
+
+<script>
+(function(){
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var cv = document.getElementById('scene'), cx = cv.getContext('2d');
+  var W = 0, H = 0;
+  // low-res canvas; blur + upscale via CSS
+  function resize(){
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var scale = 0.18 * Math.min(dpr, 1.5);
+    W = cv.width = Math.max(120, Math.round(innerWidth * scale));
+    H = cv.height = Math.max(120, Math.round(innerHeight * scale));
+    draw(last);
+  }
+  var blobs = [
+    {c:[163,184,156], x:.25,y:.30,r:.42, sx:.055,sy:.045,px:0.0,py:1.2, a:.75},  // sage
+    {c:[226,205,170], x:.75,y:.25,r:.40, sx:.045,sy:.06, px:2.1,py:0.4, a:.80},  // sand
+    {c:[234,190,182], x:.65,y:.75,r:.44, sx:.05, sy:.04, px:4.0,py:2.5, a:.70},  // blush
+    {c:[190,205,185], x:.20,y:.80,r:.38, sx:.04, sy:.055,px:1.0,py:3.3, a:.60},  // pale sage
+    {c:[240,222,198], x:.50,y:.50,r:.36, sx:.035,sy:.035,px:3.0,py:5.0, a:.65}   // linen
+  ];
+  var last = 0;
+  function draw(t){
+    cx.globalCompositeOperation = 'source-over';
+    cx.fillStyle = '#f4efe6';
+    cx.fillRect(0,0,W,H);
+    var m = Math.max(W,H);
+    for (var i=0;i<blobs.length;i++){
+      var b = blobs[i];
+      var x = (b.x + Math.sin(t*b.sx + b.px)*.16) * W;
+      var y = (b.y + Math.cos(t*b.sy + b.py)*.14) * H;
+      var r = m * b.r * (1 + Math.sin(t*.05 + i*1.7)*.12);
+      var g = cx.createRadialGradient(x,y,0,x,y,r);
+      var col = b.c.join(',');
+      g.addColorStop(0,'rgba('+col+','+b.a+')');
+      g.addColorStop(.55,'rgba('+col+','+(b.a*.4)+')');
+      g.addColorStop(1,'rgba('+col+',0)');
+      cx.fillStyle = g;
+      cx.fillRect(0,0,W,H);
+    }
+  }
+  var raf = 0, t0 = performance.now(), lastFrame = 0;
+  function loop(now){
+    raf = requestAnimationFrame(loop);
+    if (now - lastFrame < 33) return; // ~30fps cap
+    lastFrame = now;
+    last = (now - t0) / 1000;
+    draw(last);
+  }
+  addEventListener('resize', resize);
+  resize();
+  if (reduce){ last = 3; draw(last); }
+  else {
+    raf = requestAnimationFrame(loop);
+    document.addEventListener('visibilitychange', function(){
+      if (document.hidden) cancelAnimationFrame(raf);
+      else { cancelAnimationFrame(raf); raf = requestAnimationFrame(loop); }
+    });
+  }
+
+  // Playing state + program
+  var pieces = [
+    ['Gymnopédie No. 1','Erik Satie'],
+    ['Clair de lune','Claude Debussy'],
+    ['Prelude in E minor, Op. 28 No. 4','Frédéric Chopin']
+  ];
+  var idx = 0, timer = null, playing = false;
+  var btn = document.getElementById('ctl'),
+      prog = document.getElementById('prog'),
+      ti = document.getElementById('title'),
+      co = document.getElementById('composer');
+  function setPiece(){ ti.textContent = pieces[idx][0]; co.textContent = pieces[idx][1]; }
+  function next(){
+    prog.classList.add('fade');
+    setTimeout(function(){
+      idx = (idx + 1) % pieces.length; setPiece();
+      prog.classList.remove('fade');
+    }, 1700);
+  }
+  function toggle(){
+    playing = !playing;
+    btn.dataset.on = playing;
+    btn.setAttribute('aria-label', playing ? 'Pause' : 'Play');
+    if (playing){
+      setPiece(); prog.classList.add('show');
+      timer = setInterval(next, 20000);
+    } else {
+      prog.classList.remove('show');
+      clearInterval(timer);
+    }
+  }
+  btn.addEventListener('click', toggle);
+})();
+</script>
+</body>
+</html>

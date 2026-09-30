@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Still Water</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;1,300&display=swap">
+<style>
+:root{--bg:#02090b;--ink:#9fc4c2;--dim:rgba(159,196,194,.55)}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--bg);overflow:hidden}
+body{font-family:"Cormorant Garamond",Georgia,serif;font-weight:300;color:var(--ink)}
+canvas{position:fixed;inset:0;width:100%;height:100%;display:block}
+.tag{position:fixed;top:14px;left:16px;font:11px/1 system-ui,sans-serif;letter-spacing:.08em;color:rgba(159,196,194,.3);z-index:3;pointer-events:none}
+#ctl{position:fixed;inset:0;width:100%;height:100%;background:transparent;border:0;cursor:pointer;z-index:2;color:inherit;font:inherit;-webkit-tap-highlight-color:transparent}
+#ctl:focus{outline:none}
+#ctl:focus-visible{outline:1px solid rgba(159,196,194,.6);outline-offset:-12px;border-radius:2px}
+.hint{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);font-style:italic;font-size:1.2rem;letter-spacing:.14em;color:var(--dim);transition:opacity 2.4s ease;pointer-events:none;z-index:1;text-align:center;width:90%;animation:br 6s ease-in-out infinite}
+@keyframes br{50%{opacity:.45}}
+.hint{opacity:1}
+.playing .hint{opacity:0;animation:none}
+.info{position:fixed;left:0;right:0;bottom:calc(28px + env(safe-area-inset-bottom));display:flex;justify-content:center;align-items:center;gap:14px;padding:0 20px;opacity:0;transition:opacity 2.4s ease;pointer-events:none;z-index:1;font-size:1rem;letter-spacing:.06em;color:var(--dim)}
+.playing .info{opacity:1}
+.txt{transition:opacity 1.8s ease;text-align:center}
+.txt.out{opacity:0}
+.txt b{font-weight:300;color:var(--ink)}
+.glyph{width:9px;height:11px;display:inline-flex;justify-content:space-between;flex:none;opacity:.7}
+.glyph i{width:2px;height:100%;background:currentColor}
+@media(max-width:400px){.hint{font-size:1.05rem}.info{font-size:.92rem;gap:10px}}
+@media(prefers-reduced-motion:reduce){.hint{animation:none}*{transition-duration:.01s!important}}
+</style>
+</head>
+<body>
+<div class="tag">Concept 4 — Still Water</div>
+<canvas id="c" aria-hidden="true"></canvas>
+<div class="hint" aria-hidden="true">tap anywhere to begin</div>
+<div class="info" aria-live="off">
+  <span class="txt" id="txt"><b id="t">Gymnopédie No. 1</b> · <span id="c2">Erik Satie</span></span>
+  <span class="glyph" aria-hidden="true"><i></i><i></i></span>
+</div>
+<button id="ctl" type="button" aria-label="Play"></button>
+<script>
+(function(){
+  var cv=document.getElementById('c'),ctx=cv.getContext('2d'),btn=document.getElementById('ctl');
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var W=0,H=0,dpr=1,playing=false,ripples=[],shim=[],last=0,nextDrop=0,moonX=0;
+  var pieces=[["Gymnopédie No. 1","Erik Satie"],["Clair de lune","Claude Debussy"],["Prelude in E minor, Op. 28 No. 4","Frédéric Chopin"]],pi=0;
+  function resize(){
+    dpr=Math.min(window.devicePixelRatio||1,2);W=innerWidth;H=innerHeight;
+    cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);
+    moonX=W*.62;shim=[];
+    for(var i=0;i<26;i++)shim.push({y:H*(.38+.6*Math.pow(i/26,1.5)),ph:Math.random()*6.28,sp:.03+Math.random()*.05,w:40+Math.random()*120,a:.03+Math.random()*.05});
+    if(reduce)draw(0);
+  }
+  function drop(t){
+    ripples.push({x:W*(.1+.8*Math.random()),y:H*(.15+.75*Math.random()),t:t,life:8500+Math.random()*1500,max:Math.min(W,H)*(.22+.2*Math.random())});
+    if(ripples.length>14)ripples.shift();
+  }
+  function draw(t){
+    var g=ctx.createLinearGradient(0,0,0,H);
+    g.addColorStop(0,'#03110f');g.addColorStop(1,'#010506');
+    ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+    // moon glow
+    var r=Math.max(W,H)*.5,rg=ctx.createRadialGradient(moonX,H*.05,0,moonX,H*.05,r);
+    rg.addColorStop(0,'rgba(120,180,175,.10)');rg.addColorStop(1,'rgba(120,180,175,0)');
+    ctx.fillStyle=rg;ctx.fillRect(0,0,W,H);
+    // shimmer lines
+    ctx.lineWidth=1;
+    for(var i=0;i<shim.length;i++){
+      var s=shim[i],d=Math.abs((s.y<H*.4?0:1));
+      var cx=moonX+Math.sin(t*.001*s.sp*2+s.ph)*W*.12+(Math.sin(i*7.3)*W*.08);
+      var a=s.a*(.6+.4*Math.sin(t*.0004*s.sp*10+s.ph));
+      var grad=ctx.createLinearGradient(cx-s.w,0,cx+s.w,0);
+      grad.addColorStop(0,'rgba(170,215,210,0)');grad.addColorStop(.5,'rgba(170,215,210,'+a+')');grad.addColorStop(1,'rgba(170,215,210,0)');
+      ctx.strokeStyle=grad;ctx.beginPath();ctx.moveTo(cx-s.w,s.y);ctx.lineTo(cx+s.w,s.y);ctx.stroke();
+    }
+    // ripples
+    for(var k=0;k<ripples.length;k++){
+      var p=ripples[k],u=(t-p.t)/p.life;
+      if(u<0||u>1)continue;
+      var e=1-Math.pow(1-u,2),fade=Math.pow(1-u,1.6);
+      for(var j=0;j<3;j++){
+        var rr=p.max*e-j*p.max*.07;if(rr<=0)continue;
+        ctx.strokeStyle='rgba(165,215,210,'+(fade*.32*(1-j*.3))+')';
+        ctx.beginPath();ctx.ellipse(p.x,p.y,rr,rr*.38,0,0,6.2832);ctx.stroke();
+      }
+    }
+  }
+  function frame(t){
+    requestAnimationFrame(frame);
+    if(reduce||document.hidden)return;
+    if(t-last<33)return; // ~30fps cap
+    last=t;
+    if(t>nextDrop){drop(t);var base=playing?3200:6500;nextDrop=t+base*(.7+.6*Math.random());}
+    ripples=ripples.filter(function(p){return t-p.t<p.life});
+    draw(t);
+  }
+  // text cycling
+  var tx=document.getElementById('txt'),tt=document.getElementById('t'),cc=document.getElementById('c2'),timer=null;
+  function cycle(){
+    tx.classList.add('out');
+    setTimeout(function(){pi=(pi+1)%pieces.length;tt.textContent=pieces[pi][0];cc.textContent=pieces[pi][1];tx.classList.remove('out')},1900);
+  }
+  function toggle(){
+    playing=!playing;
+    document.body.classList.toggle('playing',playing);
+    btn.setAttribute('aria-label',playing?'Pause':'Play');
+    clearInterval(timer);
+    if(playing){timer=setInterval(cycle,20000);if(reduce){drop(performance.now());draw(performance.now())}}
+    // glyph: pause bars while playing (shown only when playing)
+  }
+  btn.addEventListener('click',toggle);
+  addEventListener('resize',resize);
+  resize();
+  if(reduce){drop(0);ripples[0].t=-3000;draw(0)}
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
