@@ -1,7 +1,7 @@
 # classican
 
 One screen of public-domain classical music for studying and deep work. The only interface is a
-small player at bottom centre: previous, play/pause, fast-forward, next and volume. Behind it,
+small player at bottom centre: play/pause, next and volume. Behind it,
 five original pixelated paintings in the manner of Cubist Picasso slowly shift and dissolve into
 one another every 45 seconds. No accounts, no search, no other pages.
 
@@ -35,7 +35,7 @@ play tries again. Space plays and pauses from anywhere on the page; media keys a
 | --- | --- |
 | Name, tagline, description | `lib/site.ts` (`name`, `tagline`, `description`) |
 | Playlist | `lib/site.ts` (`tracks`) |
-| How long each painting stays; fast-forward length | `lib/site.ts` (`paintingSeconds`, `skipSeconds`) |
+| How long each painting stays | `lib/site.ts` (`paintingSeconds`) |
 | Paintings | `lib/paintings.ts` |
 | Palette of the frame | `app/globals.css` (`:root`) |
 

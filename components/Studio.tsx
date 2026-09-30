@@ -11,7 +11,7 @@ export function Studio({ site }: { site: Site }) {
   return (
     <>
       <Scene playing={playing} paintingSeconds={site.paintingSeconds} />
-      <Player tracks={site.tracks} skipSeconds={site.skipSeconds} onPlayingChange={setPlaying} />
+      <Player tracks={site.tracks} onPlayingChange={setPlaying} />
     </>
   );
 }

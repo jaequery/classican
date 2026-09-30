@@ -17,8 +17,6 @@ export type Site = {
   description: string;
   /** Seconds each background painting stays before the next one arrives. */
   paintingSeconds: number;
-  /** Seconds the fast-forward control skips. */
-  skipSeconds: number;
   tracks: Track[];
 };
 
@@ -28,7 +26,6 @@ export const site: Site = {
   description:
     "A continuous playlist of public-domain classical recordings over slowly shifting pixel paintings. Press play and get to work.",
   paintingSeconds: 45,
-  skipSeconds: 15,
   tracks: [
     {
       title: "Gymnopédie No. 1",
