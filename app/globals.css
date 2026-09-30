@@ -1,0 +1,162 @@
+/* The frame stays quiet and dark; the paintings carry all the colour. */
+:root {
+  --canvas: #181818; /* Obsidian */
+  --surface: #262626; /* Graphite */
+  --ink: #fafafa; /* Bone: text, focus and the primary action */
+  --muted: #a3a3a3; /* Ash: secondary text and control borders */
+  --accent: var(--ink);
+  --accent-ink: var(--canvas);
+  --font: var(--font-inter), Inter, Arial, Helvetica, sans-serif;
+  color-scheme: dark;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+html,
+body {
+  min-height: 100%;
+  background: var(--canvas);
+}
+
+body {
+  color: var(--ink);
+  font: 400 16px/1.5 var(--font);
+  letter-spacing: -0.009em;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* Full-screen pixel painting behind everything. */
+.scene {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  background: var(--canvas);
+}
+
+/* The only interface: a Graphite pill at bottom centre. */
+.player {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  width: min(448px, calc(100% - 48px));
+  max-height: calc(100% - 48px);
+  overflow-y: auto;
+  padding: 12px 12px 8px 20px;
+  background: var(--surface);
+  border-radius: 16px;
+}
+
+.now {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 8px;
+  padding-right: 8px;
+  line-height: 1.18;
+}
+.title {
+  color: var(--ink);
+}
+.composer {
+  color: var(--muted);
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  margin: 6px 0 0 -12px;
+}
+
+.control {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  flex: none;
+  padding: 0;
+  border: 0;
+  border-radius: 12px;
+  background: none;
+  color: var(--ink);
+  cursor: pointer;
+  transition: opacity 120ms;
+}
+.control svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+.control:hover {
+  opacity: 0.72;
+}
+
+/* Play is the one action with weight: a Bone disc with an Obsidian glyph. */
+.control.play {
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+.volume {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: 1 1 140px;
+  min-width: 0;
+  margin-left: auto;
+}
+.volume input {
+  flex: 1;
+  min-width: 64px;
+  height: 44px;
+  margin: 0 8px 0 0;
+  accent-color: var(--accent);
+  background: transparent;
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.noscript {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  width: min(448px, calc(100% - 48px));
+  padding: 16px 20px;
+  background: var(--surface);
+  border-radius: 16px;
+  color: var(--muted);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .control {
+    transition: none;
+  }
+}
