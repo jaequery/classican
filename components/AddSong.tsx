@@ -56,7 +56,7 @@ export function AddSong({ songs, onAdd, onRemove }: Props) {
     const name = title.trim() || titleFromFile(file.name);
     const note = await onAdd(file, name, artist.trim());
     setBusy(false);
-    setMessage(note || `Added ${name}. It plays after the other pieces.`);
+    setMessage(note || `Added ${name}. It joins the shuffle.`);
     reset();
   };
 

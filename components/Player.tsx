@@ -6,6 +6,12 @@ import type { Playable } from "@/lib/library";
 const VOLUME_KEY = "classican:volume";
 const VOLUME_STEP = 5;
 
+/** A random piece other than `current` (the only piece when there is just one). */
+function shuffle(current: number, n: number) {
+  if (n < 2) return 0;
+  return (current + 1 + Math.floor(Math.random() * (n - 1))) % n;
+}
+
 type Props = {
   /** Can grow or shrink while the page is open, as the visitor adds or removes songs. */
   tracks: Playable[];
@@ -17,7 +23,8 @@ type Props = {
 };
 
 /**
- * One continuous playlist. Pieces play in order and loop; a piece that fails
+ * One continuous playlist, shuffled: it opens on a random piece, tries to play
+ * straight away, and each next piece is another random one. A piece that fails
  * to load is skipped, and if every piece fails the player says so quietly.
  */
 export function Player({ tracks, onPlayingChange, onTrackChange, children }: Props) {
@@ -35,6 +42,8 @@ export function Player({ tracks, onPlayingChange, onTrackChange, children }: Pro
   const failures = useRef(0);
   const indexRef = useRef(0);
   const tracksRef = useRef(tracks);
+  const history = useRef<number[]>([]); // pieces played before this one, for "previous"
+  const blocked = useRef(false); // the browser refused to autoplay; the first gesture starts the music
 
   const track = tracks[index] ?? tracks[0];
 
@@ -72,6 +81,7 @@ export function Player({ tracks, onPlayingChange, onTrackChange, children }: Pro
     audio.play().catch((err: unknown) => {
       // Load failures arrive through the "error" event; only a refused play needs handling here.
       if (err instanceof DOMException && err.name === "NotAllowedError") {
+        blocked.current = true;
         switching.current = false;
         setWant(false);
       }
@@ -105,8 +115,14 @@ export function Player({ tracks, onPlayingChange, onTrackChange, children }: Pro
   }, [setWant]);
 
   const toggle = useCallback(() => (want.current ? pause() : play()), [pause, play]);
-  const next = useCallback(() => go(indexRef.current + 1), [go]);
-  const prev = useCallback(() => go(indexRef.current - 1), [go]);
+  const next = useCallback(() => {
+    history.current.push(indexRef.current);
+    go(shuffle(indexRef.current, tracksRef.current.length));
+  }, [go]);
+  const prev = useCallback(() => {
+    const before = history.current.pop();
+    go(before ?? shuffle(indexRef.current, tracksRef.current.length));
+  }, [go]);
 
   // Restore the visitor's volume from last time.
   useEffect(() => {
@@ -125,16 +141,32 @@ export function Player({ tracks, onPlayingChange, onTrackChange, children }: Pro
     audio.muted = muted;
   }, [volume, muted]);
 
+  // Open on a random piece and try to play it at once. Browsers often refuse
+  // until the visitor has interacted with the page; then the first click or
+  // key anywhere starts it. Listening on window runs after the play button and
+  // the Space hotkey, so a gesture that already started the music is left alone.
   useEffect(() => {
-    load(0);
-  }, [load]);
+    load(Math.floor(Math.random() * tracks.length));
+    play();
+    const onGesture = () => {
+      if (blocked.current && !want.current) play();
+    };
+    window.addEventListener("click", onGesture);
+    window.addEventListener("keydown", onGesture);
+    return () => {
+      window.removeEventListener("click", onGesture);
+      window.removeEventListener("keydown", onGesture);
+    };
+    // Once, on mount.
+  }, []);
 
-  // The list changed: keep the piece that is loaded, wherever it now sits. If it
-  // was removed, move on to whatever took its place.
+  // The list changed: keep the piece that is loaded, wherever it now sits, and
+  // the pieces played before it. If it was removed, move on to whatever took its place.
   useEffect(() => {
     const before = tracksRef.current;
     if (before === tracks) return;
     tracksRef.current = tracks;
+    history.current = history.current.map((h) => tracks.indexOf(before[h])).filter((h) => h >= 0);
     const i = tracks.indexOf(before[indexRef.current]);
     if (i < 0) go(indexRef.current);
     else if (i !== indexRef.current) {
@@ -150,6 +182,7 @@ export function Player({ tracks, onPlayingChange, onTrackChange, children }: Pro
     if (!audio) return;
     const onWaiting = () => want.current && setLoading(true);
     const onPlaying = () => {
+      blocked.current = false;
       failures.current = 0;
       switching.current = false;
       setLoading(false);
