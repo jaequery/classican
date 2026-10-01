@@ -7,7 +7,6 @@ const VOLUME_KEY = "classican:volume";
 
 type Props = {
   tracks: Track[];
-  skipSeconds: number;
   onPlayingChange: (playing: boolean) => void;
 };
 
@@ -15,7 +14,7 @@ type Props = {
  * One continuous playlist. Pieces play in order and loop; a piece that fails
  * to load is skipped, and if every piece fails the player says so quietly.
  */
-export function Player({ tracks, skipSeconds, onPlayingChange }: Props) {
+export function Player({ tracks, onPlayingChange }: Props) {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [index, setIndex] = useState(0);
   const [playing, setPlaying] = useState(false);
@@ -100,20 +99,6 @@ export function Player({ tracks, skipSeconds, onPlayingChange }: Props) {
   const toggle = useCallback(() => (want.current ? pause() : play()), [pause, play]);
   const next = useCallback(() => go(indexRef.current + 1), [go]);
 
-  const previous = useCallback(() => {
-    const audio = audioRef.current;
-    // Like a CD player: a few seconds in, "previous" returns to the start of the piece.
-    if (audio && audio.currentTime > 3) audio.currentTime = 0;
-    else go(indexRef.current - 1);
-  }, [go]);
-
-  const skipAhead = useCallback(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
-    if (Number.isFinite(audio.duration) && audio.currentTime + skipSeconds >= audio.duration - 1) next();
-    else audio.currentTime += skipSeconds;
-  }, [next, skipSeconds]);
-
   // Restore the visitor's volume from last time.
   useEffect(() => {
     try {
@@ -191,9 +176,7 @@ export function Player({ tracks, skipSeconds, onPlayingChange }: Props) {
     const handlers: [MediaSessionAction, MediaSessionActionHandler][] = [
       ["play", play],
       ["pause", pause],
-      ["previoustrack", previous],
       ["nexttrack", next],
-      ["seekforward", skipAhead],
     ];
     for (const [action, handler] of handlers) {
       try {
@@ -202,7 +185,7 @@ export function Player({ tracks, skipSeconds, onPlayingChange }: Props) {
         // Unsupported action in this browser.
       }
     }
-  }, [next, pause, play, previous, skipAhead]);
+  }, [next, pause, play]);
 
   // Space plays and pauses from anywhere that isn't already a control.
   useEffect(() => {
@@ -245,11 +228,6 @@ export function Player({ tracks, skipSeconds, onPlayingChange }: Props) {
       </p>
 
       <div className="controls">
-        <button type="button" className="control" onClick={previous} aria-label="Previous piece">
-          <svg viewBox="0 0 20 20" aria-hidden="true">
-            <path d="M4 4h2v12H4zM16 4v12L7.5 10z" />
-          </svg>
-        </button>
         <button type="button" className="control play" onClick={toggle} aria-label={playing ? "Pause" : "Play"}>
           {playing ? (
             <svg viewBox="0 0 20 20" aria-hidden="true">
@@ -260,11 +238,6 @@ export function Player({ tracks, skipSeconds, onPlayingChange }: Props) {
               <path d="M6 3.5v13L16.5 10z" />
             </svg>
           )}
-        </button>
-        <button type="button" className="control" onClick={skipAhead} aria-label={`Fast-forward ${skipSeconds} seconds`}>
-          <svg viewBox="0 0 20 20" aria-hidden="true">
-            <path d="M2 4.5v11L9.5 10zM10 4.5v11l7.5-5.5z" />
-          </svg>
         </button>
         <button type="button" className="control" onClick={next} aria-label="Next piece">
           <svg viewBox="0 0 20 20" aria-hidden="true">
