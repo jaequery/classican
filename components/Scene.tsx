@@ -134,7 +134,7 @@ export function Scene({ playing, painting, facts, factSeconds }: Props) {
       factEl.setAttribute("aria-hidden", String(!on));
     };
 
-    /** Beside the pool: right of it, else left, else above or below; always inside the gutters and above the player. */
+    /** Beside the pool: right of it, else left, else above or below; always inside the gutters, above the player and clear of the wall label. */
     const placeFact = () => {
       const gutter = innerWidth < 600 ? 16 : 24;
       const w = factEl.offsetWidth;
@@ -156,6 +156,12 @@ export function Scene({ playing, painting, facts, factSeconds }: Props) {
       }
       x = Math.max(gutter, Math.min(innerWidth - gutter - w, x));
       y = Math.max(gutter, Math.min(playerTop() - 12 - h, y));
+      // Keep clear of the wall label: step below it, or beside it if there is no room below.
+      const label = document.querySelector(".wall")?.getBoundingClientRect();
+      if (label && x < label.right + 12 && x + w > label.left - 12 && y < label.bottom + 12 && y + h > label.top - 12) {
+        if (label.bottom + 12 + h <= playerTop() - 12) y = label.bottom + 12;
+        else x = Math.max(gutter, label.left - 12 - w);
+      }
       factEl.style.transform = `translate(${Math.round(x)}px, ${Math.round(y)}px)`;
     };
 
