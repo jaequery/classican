@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type { Track } from "@/lib/site";
 
 const VOLUME_KEY = "classican:volume";
+const VOLUME_STEP = 5;
 
 type Props = {
   tracks: Track[];
@@ -101,6 +102,7 @@ export function Player({ tracks, onPlayingChange, onTrackChange }: Props) {
 
   const toggle = useCallback(() => (want.current ? pause() : play()), [pause, play]);
   const next = useCallback(() => go(indexRef.current + 1), [go]);
+  const prev = useCallback(() => go(indexRef.current - 1), [go]);
 
   // Restore the visitor's volume from last time.
   useEffect(() => {
@@ -190,27 +192,54 @@ export function Player({ tracks, onPlayingChange, onTrackChange }: Props) {
     }
   }, [next, pause, play]);
 
-  // Space plays and pauses from anywhere that isn't already a control.
+  const changeVolume = useCallback(
+    (v: number) => {
+      setVolume(v);
+      if (v > 0 && muted) setMuted(false);
+      try {
+        localStorage.setItem(VOLUME_KEY, String(v));
+      } catch {
+        // Not saved; it still applies for this visit.
+      }
+    },
+    [muted],
+  );
+
+  // Hotkeys from anywhere on the page: Space plays and pauses, Left/Right change
+  // the piece, Up/Down change the volume. Form fields keep their own keys, and a
+  // focused button or link keeps Space for its own click.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key !== " " || e.repeat || e.defaultPrevented) return;
-      if ((e.target as Element | null)?.closest?.("button, input, a, select, textarea")) return;
+      if (e.defaultPrevented || e.ctrlKey || e.metaKey || e.altKey) return;
+      const target = e.target as HTMLElement | null;
+      if (target?.closest?.("input, select, textarea, [contenteditable]:not([contenteditable='false'])")) return;
+      switch (e.key) {
+        case " ":
+          if (e.repeat || target?.closest?.("button, a")) return;
+          toggle();
+          break;
+        case "ArrowRight":
+          if (e.repeat) return;
+          next();
+          break;
+        case "ArrowLeft":
+          if (e.repeat) return;
+          prev();
+          break;
+        case "ArrowUp":
+          changeVolume(Math.min(100, volume + VOLUME_STEP));
+          break;
+        case "ArrowDown":
+          changeVolume(Math.max(0, volume - VOLUME_STEP));
+          break;
+        default:
+          return;
+      }
       e.preventDefault();
-      toggle();
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
-  }, [toggle]);
-
-  const changeVolume = (v: number) => {
-    setVolume(v);
-    if (v > 0 && muted) setMuted(false);
-    try {
-      localStorage.setItem(VOLUME_KEY, String(v));
-    } catch {
-      // Not saved; it still applies for this visit.
-    }
-  };
+  }, [changeVolume, next, prev, toggle, volume]);
 
   const silent = muted || volume === 0;
 
