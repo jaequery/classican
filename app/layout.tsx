@@ -3,14 +3,26 @@ import localFont from "next/font/local";
 import { site } from "@/lib/site";
 import "./globals.css";
 
-// Inter Regular, self-hosted (SIL Open Font License; see app/fonts/Inter-OFL.txt).
-const inter = localFont({
-  src: "./fonts/Inter-Regular-latin.woff2",
-  weight: "400",
+// Self-hosted serifs (SIL Open Font License; see app/fonts/*-OFL.txt).
+// Playfair Display sets the piece's title like an engraved concert programme;
+// Source Serif 4 carries everything else, sturdy enough to read across a room.
+const display = localFont({
+  src: "./fonts/PlayfairDisplay-SemiBold-latin.woff2",
+  weight: "600",
   style: "normal",
   display: "swap",
-  variable: "--font-inter",
-  fallback: ["Arial", "Helvetica", "sans-serif"],
+  variable: "--font-display",
+  fallback: ["Georgia", "Times New Roman", "serif"],
+});
+
+const text = localFont({
+  src: [
+    { path: "./fonts/SourceSerif4-Medium-latin.woff2", weight: "500", style: "normal" },
+    { path: "./fonts/SourceSerif4-SemiBold-latin.woff2", weight: "600", style: "normal" },
+  ],
+  display: "swap",
+  variable: "--font-text",
+  fallback: ["Georgia", "Times New Roman", "serif"],
 });
 
 export const metadata: Metadata = {
@@ -26,7 +38,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={inter.variable}>
+    <html lang="en" className={`${display.variable} ${text.variable}`}>
       <body>{children}</body>
     </html>
   );
