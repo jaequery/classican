@@ -8,13 +8,15 @@ const VOLUME_KEY = "classican:volume";
 type Props = {
   tracks: Track[];
   onPlayingChange: (playing: boolean) => void;
+  /** The piece now loaded, so the painting and facts can follow it. */
+  onTrackChange: (index: number) => void;
 };
 
 /**
  * One continuous playlist. Pieces play in order and loop; a piece that fails
  * to load is skipped, and if every piece fails the player says so quietly.
  */
-export function Player({ tracks, onPlayingChange }: Props) {
+export function Player({ tracks, onPlayingChange, onTrackChange }: Props) {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [index, setIndex] = useState(0);
   const [playing, setPlaying] = useState(false);
@@ -49,13 +51,14 @@ export function Player({ tracks, onPlayingChange }: Props) {
       const t = tracks[i];
       indexRef.current = i;
       setIndex(i);
+      onTrackChange(i);
       setUnavailable(false);
       audio.src = audio.canPlayType("audio/mpeg") ? t.mp3 : t.ogg;
       if ("mediaSession" in navigator && "MediaMetadata" in window) {
         navigator.mediaSession.metadata = new MediaMetadata({ title: t.title, artist: t.composer, album: "classican" });
       }
     },
-    [tracks],
+    [onTrackChange, tracks],
   );
 
   const start = useCallback(() => {

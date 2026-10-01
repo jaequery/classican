@@ -1,8 +1,10 @@
-// Five original pixel paintings in the manner of early-twentieth-century
-// Cubism: split faces, profile noses, tilted tables and fractured planes.
-// Each one is composed from code, drawn at 160×100 and scaled up by the page.
+// One original pixel painting per piece, each showing what the piece is about:
+// the Greek dancers behind Satie's title, the moonlit park of Verlaine's poem,
+// Bach's two-keyboard harpsichord, the columns of Knossos, Chopin's piano at night.
+// Each one is composed from code in a loose Cubist manner, drawn at 160×100
+// and scaled up by the page.
 
-import { clipConvex, ellipse, place, rect, Raster, seeded, type Pt } from "./raster";
+import { clipHalf, ellipse, rect, Raster, seeded, type Pt } from "./raster";
 
 export const ART_W = 160;
 export const ART_H = 100;
@@ -14,12 +16,18 @@ export type Frame = {
   still: boolean;
 };
 
+/** A circle in art pixels, [x, y, radius]: where a fact's light falls. */
+export type Spot = [number, number, number];
+
+export type PaintingId = "gymnopedie" | "clair-de-lune" | "goldberg" | "gnossienne" | "nocturne";
+
 export type Painting = {
-  id: string;
-  title: string;
+  id: PaintingId;
   /** Read out as the background's accessible name. */
   alt: string;
   colors: string[];
+  /** Things in the picture a fact can point at, by name. */
+  motifs: Record<string, Spot>;
   render: (r: Raster, f: Frame) => void;
 };
 
@@ -55,8 +63,8 @@ function wave(f: Frame, speed: number, phase = 0) {
 
 type Plane = { pts: Pt[]; a: number; b: number; level: number; phase: number };
 
-/** Split the canvas into angular planes by repeated straight cuts. */
-function fracture(seed: number, pairs: [number, number][], depth: number): Plane[] {
+/** Split a box (the whole canvas by default) into angular planes by repeated straight cuts. */
+function fracture(seed: number, pairs: [number, number][], depth: number, box = [-8, -8, ART_W + 8, ART_H + 8]): Plane[] {
   const rnd = seeded(seed);
   const planes: Plane[] = [];
   const split = (poly: Pt[], d: number) => {
@@ -75,33 +83,11 @@ function fracture(seed: number, pairs: [number, number][], depth: number): Plane
     // Favour steep diagonals: Cubist planes rarely lie flat.
     const ang = (rnd() < 0.5 ? 0.35 : 1.2) + rnd() * 1.1 + (rnd() < 0.5 ? Math.PI / 2 : 0);
     const n: Pt = [Math.cos(ang), Math.sin(ang)];
-    const a = clipConvex(poly, halfPlane(o, n));
-    const b = clipConvex(poly, halfPlane(o, [-n[0], -n[1]]));
-    split(a, d - 1);
-    split(b, d - 1);
+    split(clipHalf(poly, o, n), d - 1);
+    split(clipHalf(poly, o, [-n[0], -n[1]]), d - 1);
   };
-  split(
-    [
-      [-8, -8],
-      [ART_W + 8, -8],
-      [ART_W + 8, ART_H + 8],
-      [-8, ART_H + 8],
-    ],
-    depth,
-  );
+  split(rect(box[0], box[1], box[2] - box[0], box[3] - box[1]), depth);
   return planes;
-}
-
-/** A huge convex square covering the side of the line through `o` that `n` points to. */
-function halfPlane(o: Pt, n: Pt): Pt[] {
-  const t: Pt = [-n[1], n[0]];
-  const far = 1000;
-  return [
-    [o[0] + t[0] * far, o[1] + t[1] * far],
-    [o[0] + t[0] * far + n[0] * far, o[1] + t[1] * far + n[1] * far],
-    [o[0] - t[0] * far + n[0] * far, o[1] - t[1] * far + n[1] * far],
-    [o[0] - t[0] * far, o[1] - t[1] * far],
-  ];
 }
 
 function paintPlanes(r: Raster, planes: Plane[], f: Frame, line?: number) {
@@ -114,763 +100,386 @@ function paintPlanes(r: Raster, planes: Plane[], f: Frame, line?: number) {
   }
 }
 
-type FaceStyle = {
-  skin: number;
-  shade: number;
-  ink: number;
-  white: number;
-  lips: number;
-  lipsDark: number;
+/** Clip a convex polygon to an axis-aligned box. */
+function clipBox(poly: Pt[], x0: number, y0: number, x1: number, y1: number) {
+  poly = clipHalf(poly, [x0, 0], [1, 0]);
+  poly = clipHalf(poly, [x1, 0], [-1, 0]);
+  poly = clipHalf(poly, [0, y0], [0, 1]);
+  return clipHalf(poly, [0, y1], [0, -1]);
+}
+
+/** A two-pixel-wide line. */
+function thick(r: Raster, x0: number, y0: number, x1: number, y1: number, c: number) {
+  r.line(x0, y0, x1, y1, c);
+  r.line(x0 + 1, y0, x1 + 1, y1, c);
+}
+
+// ---------------------------------------------------------------------------
+// 1. Gymnopédie No. 1: black-figure dancers round a vase frieze, Satie beside it
+// ---------------------------------------------------------------------------
+
+const gym = palette({
+  d0: "#1a120e",
+  d1: "#33211a",
+  terra: "#c66a3b",
+  terraL: "#dc8a56",
+  ochre: "#a4532c",
+  blk: "#17110e",
+  cream: "#e8d4ad",
+  skin: "#d6ae88",
+  shade: "#97684a",
+});
+const gymBack = fracture(11, [[gym.c.d0, gym.c.d1], [gym.c.d1, gym.c.d0], [gym.c.d1, gym.c.ochre]], 4);
+const gymBand = fracture(7, [[gym.c.terra, gym.c.terraL], [gym.c.terraL, gym.c.terra], [gym.c.terra, gym.c.ochre]], 4, [0, 30, 117, 72]);
+const gymSide = fracture(23, [[gym.c.d0, gym.c.d1], [gym.c.d1, gym.c.d0]], 3, [118, -8, 168, 108]);
+
+function dancer(r: Raster, f: Frame, x: number, y: number, phase: number) {
+  const { c } = gym;
+  const sw = wave(f, 0.5, phase) * 1.5;
+  r.fill(ellipse(x, y + 4, 3, 3.3, 0, Math.PI * 2, 14), c.blk);
+  r.fill([[x + 2, y + 3], [x + 5, y + 5], [x + 2, y + 6]], c.blk);
+  r.dot(x + 1, y + 3, c.cream);
+  r.fill([[x - 3, y + 8], [x + 3, y + 8], [x + 2, y + 17], [x - 2, y + 17]], c.blk);
+  r.fill([[x - 2, y + 15], [x + 3, y + 15], [x + 7, y + 23], [x - 5, y + 23]], c.blk);
+  thick(r, x + 1, y + 9, x + 8, y + 3 + sw, c.blk);
+  thick(r, x - 2, y + 9, x - 8, y + 13 - sw, c.blk);
+  thick(r, x - 2, y + 22, x - 6 - sw, y + 32, c.blk);
+  thick(r, x + 1, y + 22, x + 6 + sw, y + 32, c.blk);
+}
+
+function renderGymnopedie(r: Raster, f: Frame) {
+  const { c } = gym;
+  paintPlanes(r, gymBack, f);
+  paintPlanes(r, gymBand, f);
+
+  // Greek-key border above, a dotted rule below.
+  r.fill(rect(0, 17, 118, 11), c.cream);
+  for (let x = 1; x < 116; x += 10) {
+    r.stroke([[x, 26], [x, 19], [x + 7, 19], [x + 7, 24], [x + 3, 24], [x + 3, 22]], c.blk, false);
+  }
+  r.fill(rect(0, 28, 118, 2), c.blk);
+  r.fill(rect(0, 72, 118, 3), c.blk);
+  for (let x = 2; x < 116; x += 5) r.dot(x, 76, c.cream);
+
+  // The dancers process slowly round the vase.
+  const shift = f.still ? 0 : (f.t * 0.6) % 36;
+  for (let i = -1; i < 4; i++) {
+    const x = 8 + i * 36 + shift;
+    if (x > -8 && x < 112) dancer(r, f, x, 36, i * 1.7);
+  }
+
+  // Side panel: Satie in his bowler hat and pince-nez.
+  paintPlanes(r, gymSide, f);
+  r.fill(rect(117, 0, 1, ART_H), c.blk);
+  r.fill([[124, 82], [128, 64], [152, 64], [158, 82]], c.blk);
+  r.fill([[136, 64], [144, 64], [140, 72]], c.cream);
+  r.fill(ellipse(140, 53, 9, 11, 0, Math.PI * 2, 22), c.skin);
+  r.fill(ellipse(140, 53, 9, 11, -Math.PI / 2, Math.PI / 2, 11), c.shade, c.skin, 4);
+  r.fill([[133, 59], [147, 59], [143, 67], [137, 67]], c.blk);
+  r.fill(ellipse(140, 43, 8, 7, Math.PI, Math.PI * 2, 12), c.blk);
+  r.fill(rect(129, 42, 22, 2), c.blk);
+  r.stroke(ellipse(136, 51, 2, 2, 0, Math.PI * 2, 8), c.blk);
+  r.stroke(ellipse(144, 51, 2, 2, 0, Math.PI * 2, 8), c.blk);
+  r.dot(140, 51, c.blk);
+}
+
+// ---------------------------------------------------------------------------
+// 2. Clair de lune: a moonlit park, a fountain and masked figures (Verlaine's poem)
+// ---------------------------------------------------------------------------
+
+const lune = palette({
+  n0: "#0c1430",
+  n1: "#19244f",
+  n2: "#2b3c72",
+  moon: "#efe6b8",
+  moonShade: "#c4bb8a",
+  tree: "#10221b",
+  tree2: "#1d3829",
+  stone: "#8f95aa",
+  stoneDark: "#545b78",
+  water: "#a3c6e2",
+  mask: "#f4f1ea",
+  robe: "#7a3352",
+  robe2: "#3d6283",
+  skin: "#d6c4ae",
+  ink: "#0a0d18",
+});
+const luneSky = fracture(31, [[lune.c.n0, lune.c.n1], [lune.c.n1, lune.c.n2], [lune.c.n1, lune.c.n0]], 4);
+const moonbeam = {
+  [lune.c.n0]: lune.c.n1,
+  [lune.c.n1]: lune.c.n2,
+  [lune.c.tree]: lune.c.tree2,
+  [lune.c.tree2]: lune.c.stoneDark,
 };
 
-/**
- * A Cubist face: one half lit, one half in another colour, a frontal eye and a
- * profile eye at different heights, and the nose seen side-on.
- * `side` is the direction the profile faces.
- */
-function face(r: Raster, f: Frame, x: number, y: number, w: number, h: number, tilt: number, side: 1 | -1, s: FaceStyle) {
-  const at = (pts: Pt[]) => place(pts, x, y, tilt);
-  const head = ellipse(0, 0, w / 2, h / 2, 0, Math.PI * 2, 26);
-  r.fill(at(head), s.skin);
-  const half = side === 1 ? ellipse(0, 0, w / 2, h / 2, -Math.PI / 2, Math.PI / 2, 13) : ellipse(0, 0, w / 2, h / 2, Math.PI / 2, Math.PI * 1.5, 13);
-  r.fill(at(half), s.shade, s.skin, 4);
-
-  // Nose in profile, jutting past the outline.
-  const nose: Pt[] = [
-    [side * w * 0.06, -h * 0.12],
-    [side * (w * 0.5 + w * 0.14), h * 0.1],
-    [side * w * 0.1, h * 0.14],
-  ];
-  r.fill(at(nose), s.skin);
-  r.stroke(at(nose), s.ink);
-
-  const blink = !f.still && f.t % 7.3 < 0.2;
-  // Frontal eye: a full almond.
-  const ex = -side * w * 0.2;
-  const ey = -h * 0.06;
-  if (blink) {
-    const l = at([
-      [ex - w * 0.13, ey],
-      [ex + w * 0.13, ey],
-    ]);
-    r.line(l[0][0], l[0][1], l[1][0], l[1][1], s.ink);
-  } else {
-    const eye = ellipse(ex, ey, w * 0.14, h * 0.065, 0, Math.PI * 2, 12);
-    r.fill(at(eye), s.white);
-    r.stroke(at(eye), s.ink);
-    const [pupil] = at([[ex + side * w * 0.02, ey]]);
-    r.dot(pupil[0], pupil[1], s.ink);
-    r.dot(pupil[0] + 1, pupil[1], s.ink);
-  }
-  // Profile eye: higher, narrower, turned.
-  const px = side * w * 0.2;
-  const py = -h * 0.16;
-  if (blink) {
-    const l = at([
-      [px - w * 0.08, py],
-      [px + w * 0.08, py],
-    ]);
-    r.line(l[0][0], l[0][1], l[1][0], l[1][1], s.ink);
-  } else {
-    const eye2 = place(ellipse(0, 0, w * 0.1, h * 0.05, 0, Math.PI * 2, 10), px, py, side * 0.35);
-    r.fill(at(eye2), s.white);
-    r.stroke(at(eye2), s.ink);
-    const [pupil] = at([[px + side * w * 0.03, py]]);
-    r.dot(pupil[0], pupil[1], s.ink);
-  }
-  // Brows.
-  const brows = at([
-    [ex - w * 0.16, ey - h * 0.12],
-    [ex + w * 0.12, ey - h * 0.14],
-    [px - w * 0.1, py - h * 0.1],
-    [px + w * 0.12, py - h * 0.06],
-  ]);
-  r.line(brows[0][0], brows[0][1], brows[1][0], brows[1][1], s.ink);
-  r.line(brows[2][0], brows[2][1], brows[3][0], brows[3][1], s.ink);
-
-  // Lips as two small wedges.
-  const mx = side * w * 0.06;
-  const my = h * 0.3;
-  r.fill(at([[mx - w * 0.14, my], [mx, my - h * 0.05], [mx + w * 0.14, my]]), s.lips);
-  r.fill(at([[mx - w * 0.14, my], [mx + w * 0.14, my], [mx, my + h * 0.05]]), s.lipsDark);
-
-  r.stroke(at(head), s.ink);
+function masker(r: Raster, x: number, robe: number, alt: number, dir: 1 | -1) {
+  const { c } = lune;
+  r.fill([[x - 2, 51], [x + 2, 51], [x + 7, 78], [x - 7, 78]], robe, alt, 8);
+  r.fill(ellipse(x, 47, 3, 3.5, 0, Math.PI * 2, 12), c.skin);
+  r.fill([[x - 3, 43], [x + 3, 43], [x + dir, 35]], c.mask);
+  r.fill(rect(x - 3, 46, 7, 2), c.mask);
+  r.dot(x - 1, 46, c.ink);
+  r.dot(x + 2, 46, c.ink);
+  r.line(x + dir * 2, 54, x + dir * 8, 60, robe);
 }
 
-/** Two bouts, a sound hole, a neck and strings. Neck points along local −y. */
-function guitar(r: Raster, x: number, y: number, angle: number, scale: number, c: { body: number; shade: number; ink: number; neck: number; string: number }) {
-  const at = (pts: Pt[]) => place(pts, x, y, angle, scale);
-  const lower = ellipse(0, 7, 10, 10, 0, Math.PI * 2, 22);
-  const upper = ellipse(0, -8, 7.5, 7.5, 0, Math.PI * 2, 18);
-  r.fill(at([[-1.8, -12], [1.8, -12], [2.2, -38], [-2.2, -38]]), c.neck);
-  r.fill(at([[-3, -38], [3, -38], [2.4, -44], [-2.4, -44]]), c.ink);
-  r.fill(at(lower), c.body);
-  r.fill(at(upper), c.body);
-  r.fill(at(ellipse(0, 7, 10, 10, -Math.PI / 2, Math.PI / 2, 11)), c.shade, c.body, 6);
-  r.stroke(at(lower), c.ink);
-  r.stroke(at(upper), c.ink);
-  r.fill(at(ellipse(0, 0, 3.4, 3.4, 0, Math.PI * 2, 12)), c.ink);
-  for (const sx of [-1, 0, 1]) {
-    const s = at([
-      [sx, 13],
-      [sx * 0.8, -38],
-    ]);
-    r.line(s[0][0], s[0][1], s[1][0], s[1][1], c.string);
-  }
-  const bridge = at(rect(-3.5, 12, 7, 1.6));
-  r.fill(bridge, c.ink);
-}
+function renderClairDeLune(r: Raster, f: Frame) {
+  const { c } = lune;
+  paintPlanes(r, luneSky, f);
+  r.tint([[116, 30], [132, 30], [112, 100], [30, 100]], moonbeam, 4);
 
-// ---------------------------------------------------------------------------
-// 1. The Blue Guitarist
-// ---------------------------------------------------------------------------
-
-const blue = palette({
-  ink: "#0b1026",
-  navy: "#16244d",
-  blue: "#23407a",
-  cerulean: "#3a6aa8",
-  pale: "#8fb3d9",
-  mist: "#c9dbea",
-  skin: "#a9bfd6",
-  shade: "#5f7fa8",
-  ochre: "#c79a4a",
-  ochreDark: "#8a6428",
-});
-
-const bluePlanes = fracture(
-  11,
-  [
-    [blue.c.navy, blue.c.blue],
-    [blue.c.blue, blue.c.cerulean],
-    [blue.c.navy, blue.c.ink],
-    [blue.c.cerulean, blue.c.pale],
-    [blue.c.blue, blue.c.navy],
-  ],
-  5,
-);
-
-function renderBlue(r: Raster, f: Frame) {
-  const { c } = blue;
-  r.clear(c.navy);
-  paintPlanes(r, bluePlanes, f);
-
-  const sway = wave(f, 0.18) * 0.8;
-  const X = 80 + sway;
-  // Cloak and shoulders.
-  const cloak: Pt[] = [
-    [X - 18, 40],
-    [X + 16, 38],
-    [X + 34, 104],
-    [X - 36, 104],
-  ];
-  r.fill(cloak, c.blue, c.navy, 6);
+  // Lawn and trees.
   r.fill(
-    [
-      [X, 39],
-      [X + 16, 38],
-      [X + 34, 104],
-      [X + 4, 104],
-    ],
-    c.navy,
-    c.ink,
-    3,
+    ([[0, 68], [60, 64], [160, 70], [160, 100], [0, 100]] as Pt[]).map((p) => drift(p, f, 0.5)),
+    c.tree2,
+    c.tree,
+    6,
   );
-  r.stroke(cloak, c.ink);
-  // Neck.
-  r.fill(
-    [
-      [X - 4, 31],
-      [X + 4, 31],
-      [X + 5, 40],
-      [X - 5, 40],
-    ],
-    c.shade,
-  );
-  // Bowed head with a dark cap of hair.
-  face(r, f, X, 22 + wave(f, 0.15, 1) * 0.5, 20, 26, -0.28, 1, {
-    skin: c.skin,
-    shade: c.shade,
-    ink: c.ink,
-    white: c.mist,
-    lips: c.shade,
-    lipsDark: c.navy,
-  });
-  const hair = place(ellipse(0, -4, 11, 10, Math.PI, Math.PI * 2, 12), X, 22, -0.28);
-  r.fill(hair, c.ink, c.navy, 4);
+  r.fill([[0, 8], [22, 30], [15, 40], [28, 64], [0, 70]], c.tree, c.tree2, 3);
+  r.fill([[6, 30], [32, 68], [0, 68]], c.tree2, c.tree, 6);
+  r.fill([[160, 28], [141, 44], [150, 52], [136, 70], [160, 72]], c.tree, c.tree2, 3);
 
-  // Guitar across the body, held low.
-  guitar(r, X + 8, 70, 0.95, 1.15, { body: c.ochre, shade: c.ochreDark, ink: c.ink, neck: c.ochreDark, string: c.mist });
+  r.fill(ellipse(124, 21, 10, 10, 0, Math.PI * 2, 26), c.moon);
+  r.fill(ellipse(124, 21, 10, 10, -Math.PI / 2, Math.PI / 2, 13), c.moonShade, c.moon, 5);
 
-  // Arms: one strumming, one reaching up the neck.
-  const strum: Pt[] = [
-    [X - 16, 44],
-    [X - 8, 42],
-    [X + 6, 74],
-    [X - 1, 78],
-  ];
-  r.fill(strum, c.cerulean, c.blue, 5);
-  r.stroke(strum, c.ink);
-  r.fill(place(ellipse(0, 0, 4, 3, 0, Math.PI * 2, 10), X + 3, 76, 0.4), c.skin);
-  const reach: Pt[] = [
-    [X + 12, 42],
-    [X + 18, 44],
-    [X + 36, 50],
-    [X + 34, 55],
-  ];
-  r.fill(reach, c.cerulean, c.blue, 5);
-  r.stroke(reach, c.ink);
-  r.fill(place(ellipse(0, 0, 3.5, 3, 0, Math.PI * 2, 10), X + 37, 51, 0.9), c.skin);
+  // The fountain, its jets arcing over and falling.
+  r.fill([[54, 71], [80, 71], [76, 77], [58, 77]], c.stone, c.stoneDark, 6);
+  r.fill(rect(55, 70, 24, 1), c.water);
+  r.fill([[64, 54], [68, 54], [69, 71], [63, 71]], c.stone);
+  r.fill([[56, 50], [76, 50], [72, 54], [60, 54]], c.stone, c.stoneDark, 3);
+  r.line(66, 40, 66, 50, c.water);
+  for (let k = 0; k < 6; k++) {
+    const p = f.still ? k / 6 : (f.t * 0.45 + k / 6) % 1;
+    const y = 41 - 4 * p + 13 * p * p;
+    r.dot(66 - p * 10, y, c.water);
+    r.dot(66 + p * 10, y, c.water);
+  }
+
+  masker(r, 43, c.robe, c.robe2, 1);
+  masker(r, 90, c.robe2, c.robe, -1);
 }
 
 // ---------------------------------------------------------------------------
-// 2. Harlequin in Rose
+// 3. Goldberg Variations: a two-keyboard harpsichord by candlelight
 // ---------------------------------------------------------------------------
 
-const rose = palette({
-  ink: "#2a1a1f",
-  rose: "#d98b8b",
-  blush: "#eab8a8",
-  terracotta: "#b5563f",
-  ochre: "#d9a45b",
-  cream: "#f2e2c9",
-  grey: "#8c7f86",
-  red: "#c24d4d",
-  teal: "#3f6d6a",
-  skin: "#efc9ae",
-  shade: "#c98f77",
+const gold = palette({
+  k0: "#0d0907",
+  k1: "#1e150f",
+  k2: "#33241a",
+  glow: "#5a3a22",
+  wood: "#7a4a24",
+  woodLight: "#a8703a",
+  lid: "#55311a",
+  ivory: "#ece2c6",
+  ebony: "#140f0d",
+  flame: "#ffd56a",
+  flameOuter: "#ef8a2c",
+  wax: "#e6d9bb",
+  brass: "#c49a45",
 });
+const goldBack = fracture(41, [[gold.c.k0, gold.c.k1], [gold.c.k1, gold.c.k2], [gold.c.k1, gold.c.k0]], 4);
+const candlelight = {
+  [gold.c.k0]: gold.c.k1,
+  [gold.c.k1]: gold.c.k2,
+  [gold.c.k2]: gold.c.glow,
+  [gold.c.lid]: gold.c.wood,
+  [gold.c.wood]: gold.c.woodLight,
+};
 
-const rosePlanes = fracture(
-  23,
-  [
-    [rose.c.rose, rose.c.blush],
-    [rose.c.blush, rose.c.cream],
-    [rose.c.terracotta, rose.c.rose],
-    [rose.c.ochre, rose.c.blush],
-    [rose.c.grey, rose.c.rose],
-  ],
-  5,
-);
+/** One keyboard: ivory naturals with the black keys grouped in twos and threes. */
+function manual(r: Raster, x: number, y: number, w: number) {
+  const { c } = gold;
+  r.fill(rect(x, y, w, 3), c.ivory);
+  for (let i = 0; i < w; i += 2) if ([1, 1, 0, 1, 1, 1, 0][(i >> 1) % 7]) r.dot(x + i + 1, y, c.ebony);
+  r.fill(rect(x, y + 3, w, 1), c.ebony);
+}
 
-function renderRose(r: Raster, f: Frame) {
-  const { c } = rose;
-  r.clear(c.rose);
-  paintPlanes(r, rosePlanes, f);
+function renderGoldberg(r: Raster, f: Frame) {
+  const { c } = gold;
+  paintPlanes(r, goldBack, f);
+  const flicker = wave(f, 2.3) * 0.6 + wave(f, 3.7, 1) * 0.4;
 
-  const X = 80 + wave(f, 0.16) * 0.8;
-  const torso: Pt[] = [
-    [X - 20, 44],
-    [X + 20, 44],
-    [X + 28, 104],
-    [X - 28, 104],
-  ];
-  r.fill(torso, c.red);
-  // The harlequin's diamonds, clipped to the costume.
-  for (let gy = 0; gy < 6; gy++) {
-    for (let gx = -4; gx <= 4; gx++) {
-      const cx = X + gx * 10 + (gy % 2) * 5;
-      const cy = 46 + gy * 11;
-      const d = clipConvex(
-        [
-          [cx, cy - 6],
-          [cx + 5, cy],
-          [cx, cy + 6],
-          [cx - 5, cy],
-        ],
-        torso,
-      );
-      if (d.length > 2) r.fill(d, (gx + gy) % 2 ? c.teal : c.cream, c.ochre, (gx + gy) % 3 === 0 ? 3 : 0);
-    }
-  }
-  r.stroke(torso, c.ink);
-
+  // Case and raised lid.
   r.fill(
-    [
-      [X - 3, 36],
-      [X + 4, 36],
-      [X + 4, 45],
-      [X - 3, 45],
-    ],
-    c.shade,
+    ([[18, 44], [96, 40], [130, 30], [134, 34], [104, 50], [18, 50]] as Pt[]).map((p) => drift(p, f, 0.4)),
+    c.lid,
+    c.wood,
+    4,
   );
-  // Ruff collar: a zigzag of points.
-  const ruff: Pt[] = [];
-  for (let i = 0; i <= 12; i++) {
-    const a = Math.PI * (i / 12);
-    const rr = i % 2 ? 15 : 20;
-    ruff.push([X - Math.cos(a) * rr, 43 + Math.sin(a) * rr * 0.4]);
-  }
-  r.fill(ruff, c.cream);
-  r.stroke(ruff, c.ink);
+  r.fill([[22, 44], [96, 40], [124, 8]], c.woodLight, c.wood, 6);
+  r.stroke([[22, 44], [96, 40], [124, 8]], c.lid);
+  r.fill(rect(18, 50, 86, 13), c.wood, c.lid, 3);
+  manual(r, 26, 52, 70);
+  manual(r, 24, 57, 74);
+  r.fill(rect(18, 63, 86, 2), c.lid);
+  for (const x of [24, 60, 98]) r.line(x, 65, x - 2, 84, c.lid);
+  r.line(126, 34, 128, 70, c.lid);
 
-  face(r, f, X, 27, 18, 24, 0.12, -1, {
-    skin: c.skin,
-    shade: c.shade,
-    ink: c.ink,
-    white: c.cream,
-    lips: c.terracotta,
-    lipsDark: c.red,
-  });
-
-  // Bicorne hat with a pompom.
-  const hat: Pt[] = place(
-    [
-      [-19, 0],
-      [0, -11],
-      [19, 0],
-      [0, -3],
-    ],
-    X,
-    17,
-    0.12,
-  );
-  r.fill(hat, c.ink, c.grey, 2);
-  r.stroke(hat, c.ink);
-  r.fill(ellipse(X + 1, 5, 2.5, 2.5, 0, Math.PI * 2, 10), c.cream);
-
-  // A small drum held at the hip.
-  const drum = ellipse(X + 30, 76, 9, 9, 0, Math.PI * 2, 20);
-  r.fill(drum, c.ochre, c.cream, 4);
-  r.stroke(drum, c.ink);
-  r.stroke(ellipse(X + 30, 76, 6, 6, 0, Math.PI * 2, 16), c.terracotta);
+  // The candle on its stand, and its light.
+  r.fill(rect(134, 60, 14, 2), c.brass);
+  r.line(141, 62, 141, 84, c.brass);
+  r.fill(rect(139, 46, 5, 14), c.wax);
+  r.tint(ellipse(141, 42, 34 + flicker, 30 + flicker, 0, Math.PI * 2, 10), candlelight, 3);
+  r.tint(ellipse(141, 42, 18, 16, 0, Math.PI * 2, 9), candlelight, 6);
+  r.fill([[141 + flicker * 0.6, 35], [143, 42], [141, 45], [139, 42]], c.flameOuter);
+  r.fill([[141 + flicker * 0.4, 38], [142, 42], [141, 44], [140, 42]], c.flame);
 }
 
 // ---------------------------------------------------------------------------
-// 3. Still Life with Mandolin
+// 4. Gnossienne No. 1: the red columns of Knossos and a stave with no bar lines
 // ---------------------------------------------------------------------------
 
-const still = palette({
-  ink: "#231c14",
-  umber: "#4a3a28",
-  brown: "#6e5438",
-  ochre: "#a8834f",
-  sand: "#cdb58a",
-  grey: "#7d7a70",
-  greyLight: "#aaa596",
-  paper: "#e6dcc2",
-  green: "#5b6b4a",
-  fruit: "#b0643a",
+const gno = palette({
+  wall: "#c79a54",
+  wallDark: "#a5793b",
+  stone: "#7d6a50",
+  cream: "#efe2c4",
+  red: "#b9322a",
+  redDark: "#84211b",
+  ink: "#161110",
+  sky: "#3c5b75",
+  skyLight: "#5f8098",
 });
-
-const stillPlanes = fracture(
-  37,
+const gnoBack = fracture(
+  53,
   [
-    [still.c.umber, still.c.brown],
-    [still.c.brown, still.c.ochre],
-    [still.c.grey, still.c.greyLight],
-    [still.c.ochre, still.c.sand],
-    [still.c.umber, still.c.grey],
-  ],
-  6,
-);
-
-function renderStill(r: Raster, f: Frame) {
-  const { c } = still;
-  r.clear(c.brown);
-  paintPlanes(r, stillPlanes, f, c.umber);
-
-  // A table seen from above and from the side at once.
-  const table: Pt[] = [
-    [14, 60],
-    [146, 54],
-    [156, 104],
-    [4, 104],
-  ];
-  r.fill(table, c.brown, c.ochre, 4);
-  r.stroke(table, c.ink);
-  r.fill(
-    [
-      [14, 60],
-      [146, 54],
-      [147, 58],
-      [15, 64],
-    ],
-    c.sand,
-  );
-
-  // Sheet music: one stave and a short phrase.
-  const lift = wave(f, 0.4) * 0.6;
-  const sheet = place(rect(-18, -12, 36, 24), 50, 60 + lift, -0.14);
-  r.fill(sheet, c.paper);
-  r.stroke(sheet, c.ink);
-  for (let i = 0; i < 5; i++) {
-    const l = place(
-      [
-        [-15, -6 + i * 2.6],
-        [15, -6 + i * 2.6],
-      ],
-      50,
-      60 + lift,
-      -0.14,
-    );
-    r.line(l[0][0], l[0][1], l[1][0], l[1][1], c.grey);
-  }
-  const notes = [-10, -4, 2, 8, 13];
-  const pitch = [2, 0, 3, 1, 4];
-  notes.forEach((nx, i) => {
-    const [head, stem] = place(
-      [
-        [nx, -6 + pitch[i] * 2.6],
-        [nx + 1, -6 + pitch[i] * 2.6 - 6],
-      ],
-      50,
-      60 + lift,
-      -0.14,
-    );
-    r.fill(ellipse(head[0], head[1], 1.4, 1, 0, Math.PI * 2, 8), c.ink);
-    r.line(head[0] + 1, head[1], stem[0], stem[1], c.ink);
-  });
-
-  // Mandolin: a teardrop body split into lit and shadowed halves.
-  const M: Pt = [96, 64];
-  const ang = -0.55;
-  const at = (pts: Pt[]) => place(pts, M[0], M[1], ang);
-  r.fill(at([[-1.6, -8], [1.6, -8], [1.8, -34], [-1.8, -34]]), c.umber);
-  r.fill(at([[-2.8, -34], [2.8, -34], [2, -40], [-2, -40]]), c.ink);
-  const body = ellipse(0, 2, 11, 14, 0, Math.PI * 2, 24);
-  r.fill(at(body), c.ochre, c.sand, 5);
-  r.fill(at(ellipse(0, 2, 11, 14, Math.PI / 2, Math.PI * 1.5, 12)), c.umber, c.brown, 6);
-  r.stroke(at(body), c.ink);
-  r.fill(at(ellipse(0, -2, 3.2, 3.2, 0, Math.PI * 2, 12)), c.ink);
-  for (const sx of [-0.8, 0.8]) {
-    const s = at([
-      [sx, 12],
-      [sx, -38],
-    ]);
-    r.line(s[0][0], s[0][1], s[1][0], s[1][1], c.paper);
-  }
-
-  // Bottle, seen as two overlapping flat shapes.
-  const bottle: Pt[] = [
-    [120, 26],
-    [132, 26],
-    [132, 56],
-    [120, 56],
-  ];
-  r.fill(bottle, c.green, c.umber, 4);
-  r.fill(rect(124, 14, 4, 12), c.green);
-  r.fill(rect(126, 26, 6, 30), c.umber, c.green, 8);
-  r.stroke(bottle, c.ink);
-  r.line(122, 30, 122, 50, c.greyLight);
-
-  // Fruit bowl.
-  for (const [fx, fy, rr] of [
-    [132, 66, 4.5],
-    [140, 67, 4],
-    [136, 62, 3.5],
-  ] as const) {
-    r.fill(ellipse(fx, fy, rr, rr, 0, Math.PI * 2, 12), c.fruit, c.ochre, 3);
-    r.stroke(ellipse(fx, fy, rr, rr, 0, Math.PI * 2, 12), c.ink);
-  }
-  const bowl = ellipse(136, 68, 12, 7, 0, Math.PI, 14);
-  r.fill(bowl, c.greyLight, c.grey, 6);
-  r.stroke(bowl, c.ink);
-}
-
-// ---------------------------------------------------------------------------
-// 4. Woman in a Red Hat
-// ---------------------------------------------------------------------------
-
-const hat = palette({
-  ink: "#141414",
-  yellow: "#f2c53d",
-  violet: "#6b4ba1",
-  green: "#3f9a5a",
-  red: "#d8453b",
-  blue: "#3a6fc4",
-  pink: "#f0a6b4",
-  skin: "#f3d7b6",
-  mint: "#9fc7a8",
-  white: "#f5f1e6",
-  orange: "#e98a3a",
-});
-
-const hatPlanes = fracture(
-  51,
-  [
-    [hat.c.violet, hat.c.blue],
-    [hat.c.green, hat.c.yellow],
-    [hat.c.yellow, hat.c.orange],
-    [hat.c.blue, hat.c.violet],
-    [hat.c.pink, hat.c.white],
+    [gno.c.wall, gno.c.wallDark],
+    [gno.c.wallDark, gno.c.stone],
+    [gno.c.wall, gno.c.cream],
+    [gno.c.sky, gno.c.skyLight],
   ],
   4,
 );
+const NOTE_PITCH = [3, 1, 2, 4, 2, 0, 3, 5, 1, 2, 4, 3];
 
-function renderHat(r: Raster, f: Frame) {
-  const { c } = hat;
-  r.clear(c.violet);
-  paintPlanes(r, hatPlanes, f);
+/** A Minoan column: wider at the top than the bottom, under a black cushion capital. */
+function column(r: Raster, x: number) {
+  const { c } = gno;
+  r.fill([[x - 6, 26], [x + 6, 26], [x + 3, 80], [x - 3, 80]], c.red);
+  r.fill([[x, 26], [x + 6, 26], [x + 3, 80], [x, 80]], c.redDark, c.red, 6);
+  r.fill(ellipse(x, 23, 8, 4, 0, Math.PI * 2, 16), c.ink);
+  r.fill(rect(x - 8, 16, 17, 4), c.ink);
+  r.fill(rect(x - 5, 80, 11, 3), c.stone);
+}
 
-  const X = 80 + wave(f, 0.14) * 0.7;
-  // Armchair back: bold stripes behind the sitter.
-  const chair: Pt[] = [
-    [X - 34, 30],
-    [X + 34, 30],
-    [X + 40, 104],
-    [X - 40, 104],
-  ];
-  r.fill(chair, c.green);
-  for (let i = -3; i <= 3; i++) {
-    const s = clipConvex(
-      [
-        [X + i * 10 - 2, 20],
-        [X + i * 10 + 2, 20],
-        [X + i * 12 + 3, 110],
-        [X + i * 12 - 3, 110],
-      ],
-      chair,
-    );
-    if (s.length > 2) r.fill(s, c.yellow);
+function renderGnossienne(r: Raster, f: Frame) {
+  const { c } = gno;
+  paintPlanes(r, gnoBack, f, c.wallDark);
+  r.fill(rect(0, 8, 98, 8), c.red);
+  r.fill(rect(0, 10, 98, 3), c.ink, c.cream, 4);
+  for (const x of [20, 48, 76]) column(r, x);
+  r.fill(rect(0, 83, 98, 3), c.stone);
+
+  // A scrap of score: five lines, a clef, notes drifting by with no bar lines.
+  const sheet = ([[102, 40], [156, 37], [156, 63], [102, 66]] as Pt[]).map((p) => drift(p, f, 0.5));
+  r.fill(sheet, c.cream);
+  r.stroke(sheet, c.stone);
+  for (let i = 0; i < 5; i++) r.line(105, 44 + i * 3, 153, 44 + i * 3, c.ink);
+  r.line(107, 41, 107, 58, c.ink);
+  r.line(108, 40, 109, 57, c.ink);
+  const offset = f.still ? 0 : (f.t * 0.5) % 42;
+  for (let n = 0; n < NOTE_PITCH.length; n++) {
+    const x = Math.round(112 + ((n * 7 + 42 - offset) % 42));
+    const y = 55 - NOTE_PITCH[n] * 1.5;
+    r.fill(rect(x, Math.round(y), 2, 2), c.ink);
+    r.line(x + 2, y, x + 2, y - 5, c.ink);
   }
-  r.stroke(chair, c.ink);
-
-  // Dress in stripes.
-  const dress: Pt[] = [
-    [X - 18, 58],
-    [X + 18, 58],
-    [X + 28, 104],
-    [X - 28, 104],
-  ];
-  r.fill(dress, c.blue);
-  for (let i = 0; i < 6; i++) {
-    const s = clipConvex(rect(X - 40, 60 + i * 8, 80, 3), dress);
-    if (s.length > 2) r.fill(s, c.white);
-  }
-  r.stroke(dress, c.ink);
-  r.fill(
-    [
-      [X - 5, 52],
-      [X + 5, 52],
-      [X + 6, 60],
-      [X - 6, 60],
-    ],
-    c.mint,
-  );
-  // Necklace.
-  for (let i = -4; i <= 4; i++) r.dot(X + i * 2, 60 + Math.abs(i) * 0.4, i % 2 ? c.red : c.white);
-
-  face(r, f, X, 36, 28, 34, 0.08, 1, {
-    skin: c.skin,
-    shade: c.mint,
-    ink: c.ink,
-    white: c.white,
-    lips: c.red,
-    lipsDark: c.ink,
-  });
-  // Hair falling to one side.
-  const hair: Pt[] = place(
-    [
-      [-15, -10],
-      [-8, -16],
-      [-16, 12],
-      [-20, 16],
-    ],
-    X,
-    36,
-    0.08,
-  );
-  r.fill(hair, c.orange, c.yellow, 4);
-  r.stroke(hair, c.ink);
-
-  // Red hat with a green feather that nods gently.
-  const brim = place(ellipse(0, 0, 21, 5, 0, Math.PI * 2, 20), X - 2, 20, 0.12);
-  const crown = place(
-    [
-      [-12, 0],
-      [-9, -12],
-      [9, -12],
-      [12, 0],
-    ],
-    X - 2,
-    19,
-    0.12,
-  );
-  r.fill(crown, c.red, c.orange, 2);
-  r.stroke(crown, c.ink);
-  r.fill(brim, c.red);
-  r.stroke(brim, c.ink);
-  const nod = wave(f, 0.5) * 0.08;
-  const feather = place(
-    [
-      [0, 0],
-      [8, -10],
-      [20, -14],
-      [12, -6],
-    ],
-    X + 6,
-    10,
-    nod,
-  );
-  r.fill(feather, c.green, c.mint, 4);
-  r.stroke(feather, c.ink);
 }
 
 // ---------------------------------------------------------------------------
-// 5. Nocturne with Violin
+// 5. Nocturne Op. 9 No. 2: a piano by a tall window, the moon over Paris rooftops
 // ---------------------------------------------------------------------------
 
 const noct = palette({
-  ink: "#0f1418",
-  teal: "#1f4a4f",
-  pine: "#2d6a5e",
-  indigo: "#27305c",
-  night: "#171d3a",
-  moon: "#efe6c4",
-  amber: "#d9953b",
-  wood: "#a2562b",
-  woodLight: "#c87b3f",
-  paper: "#ddd6bd",
-  grey: "#5a6470",
+  d0: "#0b0a12",
+  d1: "#17142a",
+  d2: "#251f40",
+  pane: "#24396b",
+  paneLight: "#3a5590",
+  moon: "#f2e9c4",
+  roof: "#3c4660",
+  roofDark: "#1e2338",
+  piano: "#07060b",
+  pianoLight: "#3a3556",
+  ivory: "#e8e0cc",
+  frame: "#3a3350",
+  lamp: "#e9b25a",
 });
-
-const noctPlanes = fracture(
-  67,
-  [
-    [noct.c.night, noct.c.indigo],
-    [noct.c.indigo, noct.c.teal],
-    [noct.c.teal, noct.c.pine],
-    [noct.c.night, noct.c.ink],
-    [noct.c.pine, noct.c.grey],
-  ],
-  5,
-);
-
-const stars = (() => {
-  const rnd = seeded(5);
-  return Array.from({ length: 14 }, () => ({ x: 22 + rnd() * 36, y: 14 + rnd() * 30, p: rnd() * 6.283 }));
-})();
+const noctBack = fracture(61, [[noct.c.d0, noct.c.d1], [noct.c.d1, noct.c.d2], [noct.c.d1, noct.c.d0]], 4);
+const noctSky = fracture(67, [[noct.c.pane, noct.c.paneLight], [noct.c.paneLight, noct.c.pane]], 3, [98, 6, 138, 78]);
+const moonlit = { [noct.c.d0]: noct.c.d1, [noct.c.d1]: noct.c.d2, [noct.c.d2]: noct.c.frame };
+const roofs: Pt[][] = [
+  [[98, 60], [104, 52], [116, 52], [120, 58], [120, 80], [98, 80]],
+  [[118, 64], [124, 57], [134, 57], [139, 64], [139, 80], [118, 80]],
+];
+const lamps: Pt[] = [[104, 64], [112, 70], [126, 68], [132, 72]];
 
 function renderNocturne(r: Raster, f: Frame) {
   const { c } = noct;
-  r.clear(c.night);
-  paintPlanes(r, noctPlanes, f);
+  paintPlanes(r, noctBack, f);
+  r.tint([[98, 78], [138, 78], [120, 100], [50, 100]], moonlit, 5);
 
-  // Window onto the night, with the moon and a few stars.
-  const win = rect(18, 10, 44, 38);
-  r.fill(win, c.night, c.indigo, 3);
-  for (const s of stars) {
-    if (f.still || Math.sin(f.t * 0.6 + s.p) > -0.3) r.dot(s.x, s.y, c.paper);
-  }
-  r.fill(ellipse(48, 22, 6, 6, 0, Math.PI * 2, 18), c.moon);
-  r.fill(ellipse(51, 20, 5, 5, 0, Math.PI * 2, 16), c.night, c.indigo, 3);
-  r.stroke(win, c.ink);
-  r.line(40, 10, 40, 48, c.ink);
-  r.line(18, 29, 62, 29, c.ink);
-  r.fill(rect(14, 48, 52, 3), c.grey);
+  // The window: night sky, moon, rooftops with lit windows coming and going.
+  r.fill(rect(95, 3, 46, 78), c.frame);
+  paintPlanes(r, noctSky, f);
+  r.fill(ellipse(127, 17, 5, 5, 0, Math.PI * 2, 14), c.moon);
+  for (const p of roofs) r.fill(clipBox(p, 98, 6, 138, 78), c.roof, c.roofDark, 6);
+  r.fill(rect(108, 47, 3, 6), c.roofDark);
+  r.fill(rect(128, 52, 3, 6), c.roofDark);
+  lamps.forEach(([x, y], i) => {
+    if (f.still || wave(f, 0.07, i * 2) > -0.6) r.fill(rect(x, y, 2, 2), c.lamp);
+  });
+  r.fill(rect(117, 6, 2, 72), c.frame);
+  r.fill(rect(98, 40, 40, 2), c.frame);
 
-  // Music stand with an open score.
-  const stand = place(rect(-15, -10, 30, 20), 128, 44, 0.1);
-  r.fill(stand, c.paper, c.moon, 4);
-  r.stroke(stand, c.ink);
-  for (let i = 0; i < 3; i++) {
-    const l = place(
-      [
-        [-12, -6 + i * 6],
-        [12, -6 + i * 6],
-      ],
-      128,
-      44,
-      0.1,
-    );
-    r.line(l[0][0], l[0][1], l[1][0], l[1][1], c.grey);
-  }
-  r.line(129, 54, 131, 100, c.ink);
-  r.line(131, 100, 122, 104, c.ink);
-  r.line(131, 100, 140, 104, c.ink);
-
-  // Violin standing on end, turned slightly.
-  const V: Pt = [90, 64];
-  const ang = 0.2 + wave(f, 0.2) * 0.02;
-  const at = (pts: Pt[]) => place(pts, V[0], V[1], ang);
-  const lower = ellipse(0, 10, 10, 11, 0, Math.PI * 2, 22);
-  const upper = ellipse(0, -10, 8, 8.5, 0, Math.PI * 2, 20);
-  const waist = rect(-6, -6, 12, 12);
-  r.fill(at(lower), c.wood);
-  r.fill(at(upper), c.wood);
-  r.fill(at(waist), c.wood);
-  r.fill(at(ellipse(0, 10, 10, 11, -Math.PI / 2, Math.PI / 2, 11)), c.woodLight, c.amber, 4);
-  r.stroke(at(lower), c.ink);
-  r.stroke(at(upper), c.ink);
-  r.fill(at(rect(-1.6, -38, 3.2, 38)), c.ink);
-  r.fill(at(ellipse(0, -40, 2.6, 2.6, 0, Math.PI * 2, 10)), c.wood);
-  r.stroke(at(ellipse(0, -40, 2.6, 2.6, 0, Math.PI * 2, 10)), c.ink);
-  for (const sx of [-4, 4]) {
-    const fh = at([
-      [sx, -2],
-      [sx - 1, 2],
-      [sx + 1, 6],
-      [sx, 10],
-    ]);
-    r.stroke(fh, c.ink, false);
-  }
-  for (const sx of [-0.9, 0.9]) {
-    const s = at([
-      [sx, 18],
-      [sx * 0.7, -38],
-    ]);
-    r.line(s[0][0], s[0][1], s[1][0], s[1][1], c.paper);
-  }
-  r.fill(at(rect(-4, 6, 8, 1.4)), c.amber);
-
-  // The bow resting across it.
-  const bow = place(
-    [
-      [-36, 0],
-      [36, 0],
-    ],
-    96,
-    74,
-    -0.5,
-  );
-  r.line(bow[0][0], bow[0][1], bow[1][0], bow[1][1], c.wood);
-  const hair = place(
-    [
-      [-34, 2],
-      [34, 2],
-    ],
-    96,
-    74,
-    -0.5,
-  );
-  r.line(hair[0][0], hair[0][1], hair[1][0], hair[1][1], c.paper);
+  // The grand piano, lid raised.
+  r.fill(([[16, 50], [78, 50], [30, 26]] as Pt[]).map((p) => drift(p, f, 0.4)), c.pianoLight, c.piano, 8);
+  r.line(30, 26, 78, 50, c.frame);
+  r.fill([[10, 50], [72, 50], [86, 56], [86, 66], [10, 66]], c.piano, c.pianoLight, 2);
+  r.line(10, 50, 72, 50, c.frame);
+  r.fill(rect(6, 53, 10, 2), c.ivory);
+  for (const x of [14, 50, 80]) r.fill(rect(x, 66, 2, 18), c.piano);
+  r.line(44, 66, 44, 78, c.piano);
+  r.fill(rect(40, 78, 9, 1), c.pianoLight);
 }
+
+// ---------------------------------------------------------------------------
 
 export const paintings: Painting[] = [
   {
-    id: "blue-guitarist",
-    title: "The Blue Guitarist",
-    alt: "A pixelated Cubist painting in blues: a bowed musician in a cloak plays an ochre guitar.",
-    colors: blue.colors,
-    render: renderBlue,
+    id: "gymnopedie",
+    alt: "Black-figure dancers in profile moving round a terracotta vase frieze, with a portrait of Satie in a bowler hat beside it.",
+    colors: gym.colors,
+    motifs: { dancers: [60, 54, 20], frieze: [30, 24, 13], composer: [140, 52, 17] },
+    render: renderGymnopedie,
   },
   {
-    id: "harlequin",
-    title: "Harlequin in Rose",
-    alt: "A pixelated Cubist painting in pinks and terracotta: a harlequin in a diamond costume and bicorne hat holds a small drum.",
-    colors: rose.colors,
-    render: renderRose,
+    id: "clair-de-lune",
+    alt: "Moonlight over a park at night: a full moon, a fountain and two masked figures beside it.",
+    colors: lune.colors,
+    motifs: { moon: [124, 21, 13], fountain: [66, 58, 27] },
+    render: renderClairDeLune,
   },
   {
-    id: "still-life",
-    title: "Still Life with Mandolin",
-    alt: "A pixelated Cubist still life in browns and ochres: a mandolin, sheet music, a green bottle and a bowl of fruit on a tilted table.",
-    colors: still.colors,
-    render: renderStill,
+    id: "goldberg",
+    alt: "A two-keyboard harpsichord with its lid raised, lit by a single candle at night.",
+    colors: gold.colors,
+    motifs: { harpsichord: [72, 38, 27], keyboards: [60, 56, 13], candle: [141, 44, 13] },
+    render: renderGoldberg,
   },
   {
-    id: "red-hat",
-    title: "Woman in a Red Hat",
-    alt: "A pixelated Cubist portrait in vivid colours: a woman shown in front view and profile at once, wearing a red hat with a green feather.",
-    colors: hat.colors,
-    render: renderHat,
+    id: "gnossienne",
+    alt: "Red, top-heavy columns with black capitals from the palace of Knossos, beside a stave of music with no bar lines.",
+    colors: gno.colors,
+    motifs: { columns: [48, 46, 27], stave: [128, 51, 17] },
+    render: renderGnossienne,
   },
   {
     id: "nocturne",
-    title: "Nocturne with Violin",
-    alt: "A pixelated Cubist night scene in deep greens and blues: a violin and bow before a moonlit window and a music stand.",
+    alt: "A grand piano in a dark room by a tall window, with the moon and Paris rooftops outside.",
     colors: noct.colors,
+    motifs: { piano: [44, 54, 22], window: [118, 26, 17], rooftops: [118, 64, 14] },
     render: renderNocturne,
   },
 ];
