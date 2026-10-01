@@ -192,6 +192,7 @@ export const site: Site = {
         { text: "Listen for the opening tune passing back and forth between flute and oboe, a little brighter each time.", motif: "flute" },
         { text: "Listen for the moment the whole orchestra swells, as if the sun has cleared the horizon, before it all settles again.", motif: "sun" },
         { text: "Grieg later gathered the music into two concert suites. Morning Mood opens the first." },
+        { text: "Grieg’s first piano teacher was his mother, in Bergen. Later he composed in a small hut by the water at his home, Troldhaugen." },
       ],
     },
     {
