@@ -19,8 +19,10 @@ npm run dev        # http://localhost:3000
 npm run build && npm start
 ```
 
-Browsers block autoplay, so music starts when the visitor presses play. Pieces play in order and
-loop. A piece that fails to load is skipped; if every piece fails, the player says so and pressing
+Pieces play in shuffle: the page opens on a random piece and tries to play it straight away, and
+next (or the end of a piece) picks another at random; Left goes back to the piece before. Most
+browsers block autoplay on a first visit, so then the visitor's first click or key starts the music.
+A piece that fails to load is skipped; if every piece fails, the player says so and pressing
 play tries again. Space plays and pauses from anywhere on the page; media keys and the OS
 "now playing" panel work too.
 
