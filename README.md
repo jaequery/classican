@@ -28,8 +28,8 @@ play tries again. Space plays and pauses from anywhere on the page; media keys a
 
 - Next.js (App Router), React Server Components, TypeScript, plain CSS custom properties
 - `app/page.tsx` is a server component; the player and the painting canvas are the only client code
-- Inter Regular is self-hosted from `app/fonts/` (SIL Open Font License, `app/fonts/Inter-OFL.txt`),
-  falling back to Arial, Helvetica, sans-serif
+- Playfair Display SemiBold (titles) and Source Serif 4 Medium/SemiBold (everything else) are self-hosted
+  from `app/fonts/` (SIL Open Font License, `app/fonts/*-OFL.txt`), falling back to Georgia and serif
 - No remote images, fonts or icons. The paintings are drawn in code and the icons are inline SVG
 
 ## Changing things

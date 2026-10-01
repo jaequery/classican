@@ -3,10 +3,11 @@
   --canvas: #181818; /* Obsidian */
   --surface: #262626; /* Graphite */
   --ink: #fafafa; /* Bone: text, focus and the primary action */
-  --muted: #a3a3a3; /* Ash: secondary text and control borders */
+  --muted: #e0d6c2; /* Parchment: secondary text, warm and bright enough to read across a room */
   --accent: var(--ink);
   --accent-ink: var(--canvas);
-  --font: var(--font-inter), Inter, Arial, Helvetica, sans-serif;
+  --font: var(--font-text), Georgia, "Times New Roman", serif;
+  --font-title: var(--font-display), Georgia, "Times New Roman", serif;
   color-scheme: dark;
 }
 
@@ -25,8 +26,7 @@ body {
 
 body {
   color: var(--ink);
-  font: 400 16px/1.5 var(--font);
-  letter-spacing: -0.009em;
+  font: 500 18px/1.5 var(--font);
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
@@ -46,19 +46,24 @@ body {
   background: var(--canvas);
 }
 
-/* A fact: small type beside the pool of light on the thing it is about. */
+/* A fact: large, solid type beside the pool of light on the thing it is about,
+   on an opaque card so the painting never shows through the letters. */
 .fact {
   position: fixed;
   left: 0;
   top: 0;
   width: max-content;
-  max-width: min(260px, calc(100vw - 32px));
-  padding: 9px 13px 10px;
-  background: color-mix(in srgb, var(--surface) 90%, transparent);
-  border-radius: 12px;
+  max-width: min(420px, calc(100vw - 32px));
+  padding: 16px 20px 18px;
+  background: var(--surface);
+  border-left: 3px solid var(--muted);
+  border-radius: 4px 14px 14px 4px;
+  box-shadow: 0 10px 32px rgb(0 0 0 / 0.45);
   color: var(--ink);
-  font-size: 13px;
-  line-height: 1.45;
+  font-size: clamp(19px, 1.2vw + 12px, 24px);
+  font-weight: 500;
+  line-height: 1.42;
+  text-wrap: pretty;
   opacity: 0;
   transition: opacity 900ms ease;
   pointer-events: none;
@@ -73,10 +78,10 @@ body {
   left: 50%;
   bottom: 24px;
   transform: translateX(-50%);
-  width: min(448px, calc(100% - 48px));
+  width: min(560px, calc(100% - 32px));
   max-height: calc(100% - 48px);
   overflow-y: auto;
-  padding: 12px 12px 8px 20px;
+  padding: 18px 16px 10px 24px;
   background: var(--surface);
   border-radius: 16px;
 }
@@ -84,15 +89,25 @@ body {
 .now {
   display: flex;
   flex-wrap: wrap;
-  column-gap: 8px;
+  flex-direction: column;
+  row-gap: 4px;
   padding-right: 8px;
-  line-height: 1.18;
+  line-height: 1.15;
 }
+/* The piece in display serif, like a concert programme; its composer beneath. */
 .title {
   color: var(--ink);
+  font-family: var(--font-title);
+  font-size: clamp(24px, 1.6vw + 16px, 32px);
+  font-weight: 600;
+  letter-spacing: 0.005em;
+  text-wrap: balance;
 }
 .composer {
   color: var(--muted);
+  font-size: clamp(18px, 0.6vw + 15px, 21px);
+  font-weight: 600;
+  letter-spacing: 0.02em;
 }
 
 .controls {
@@ -100,7 +115,7 @@ body {
   flex-wrap: wrap;
   align-items: center;
   gap: 4px;
-  margin: 6px 0 0 -12px;
+  margin: 10px 0 0 -12px;
 }
 
 .control {
@@ -161,7 +176,7 @@ body {
   left: 50%;
   bottom: 24px;
   transform: translateX(-50%);
-  width: min(448px, calc(100% - 48px));
+  width: min(560px, calc(100% - 32px));
   padding: 16px 20px;
   background: var(--surface);
   border-radius: 16px;
