@@ -1,23 +1,26 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
-import type { Track } from "@/lib/site";
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
+import type { Playable } from "@/lib/library";
 
 const VOLUME_KEY = "classican:volume";
 const VOLUME_STEP = 5;
 
 type Props = {
-  tracks: Track[];
+  /** Can grow or shrink while the page is open, as the visitor adds or removes songs. */
+  tracks: Playable[];
   onPlayingChange: (playing: boolean) => void;
   /** The piece now loaded, so the painting and facts can follow it. */
   onTrackChange: (index: number) => void;
+  /** Extra controls after Next. */
+  children?: ReactNode;
 };
 
 /**
  * One continuous playlist. Pieces play in order and loop; a piece that fails
  * to load is skipped, and if every piece fails the player says so quietly.
  */
-export function Player({ tracks, onPlayingChange, onTrackChange }: Props) {
+export function Player({ tracks, onPlayingChange, onTrackChange, children }: Props) {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [index, setIndex] = useState(0);
   const [playing, setPlaying] = useState(false);
@@ -31,8 +34,9 @@ export function Player({ tracks, onPlayingChange, onTrackChange }: Props) {
   const switching = useRef(false); // a track change is under way; ignore the pause it causes
   const failures = useRef(0);
   const indexRef = useRef(0);
+  const tracksRef = useRef(tracks);
 
-  const track = tracks[index];
+  const track = tracks[index] ?? tracks[0];
 
   const setWant = useCallback(
     (on: boolean) => {
@@ -49,7 +53,7 @@ export function Player({ tracks, onPlayingChange, onTrackChange }: Props) {
     (i: number) => {
       const audio = audioRef.current;
       if (!audio) return;
-      const t = tracks[i];
+      const t = tracksRef.current[i];
       indexRef.current = i;
       setIndex(i);
       onTrackChange(i);
@@ -59,7 +63,7 @@ export function Player({ tracks, onPlayingChange, onTrackChange }: Props) {
         navigator.mediaSession.metadata = new MediaMetadata({ title: t.title, artist: t.composer, album: "classican" });
       }
     },
-    [onTrackChange, tracks],
+    [onTrackChange],
   );
 
   const start = useCallback(() => {
@@ -76,14 +80,14 @@ export function Player({ tracks, onPlayingChange, onTrackChange }: Props) {
 
   const go = useCallback(
     (i: number) => {
-      const n = tracks.length;
+      const n = tracksRef.current.length;
       load(((i % n) + n) % n);
       if (want.current) {
         switching.current = true;
         start();
       }
     },
-    [load, start, tracks.length],
+    [load, start],
   );
 
   const play = useCallback(() => {
@@ -125,6 +129,21 @@ export function Player({ tracks, onPlayingChange, onTrackChange }: Props) {
     load(0);
   }, [load]);
 
+  // The list changed: keep the piece that is loaded, wherever it now sits. If it
+  // was removed, move on to whatever took its place.
+  useEffect(() => {
+    const before = tracksRef.current;
+    if (before === tracks) return;
+    tracksRef.current = tracks;
+    const i = tracks.indexOf(before[indexRef.current]);
+    if (i < 0) go(indexRef.current);
+    else if (i !== indexRef.current) {
+      indexRef.current = i;
+      setIndex(i);
+      onTrackChange(i);
+    }
+  }, [go, onTrackChange, tracks]);
+
   // Audio events.
   useEffect(() => {
     const audio = audioRef.current;
@@ -134,12 +153,12 @@ export function Player({ tracks, onPlayingChange, onTrackChange }: Props) {
       failures.current = 0;
       switching.current = false;
       setLoading(false);
-      const t = tracks[indexRef.current];
+      const t = tracksRef.current[indexRef.current];
       setStatus(`Now playing ${t.title} by ${t.composer}.`);
     };
     const onError = () => {
       failures.current++;
-      if (failures.current >= tracks.length) {
+      if (failures.current >= tracksRef.current.length) {
         failures.current = 0;
         switching.current = false;
         audio.pause();
@@ -172,7 +191,7 @@ export function Player({ tracks, onPlayingChange, onTrackChange }: Props) {
       audio.removeEventListener("pause", onPause);
       audio.removeEventListener("play", onPlay);
     };
-  }, [go, next, setWant, tracks]);
+  }, [go, next, setWant]);
 
   // Hardware media keys and the OS "now playing" panel.
   useEffect(() => {
@@ -206,13 +225,13 @@ export function Player({ tracks, onPlayingChange, onTrackChange }: Props) {
   );
 
   // Hotkeys from anywhere on the page: Space plays and pauses, Left/Right change
-  // the piece, Up/Down change the volume. Form fields keep their own keys, and a
-  // focused button or link keeps Space for its own click.
+  // the piece, Up/Down change the volume. Form fields and dialogs keep their own
+  // keys, and a focused button or link keeps Space for its own click.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.defaultPrevented || e.ctrlKey || e.metaKey || e.altKey) return;
       const target = e.target as HTMLElement | null;
-      if (target?.closest?.("input, select, textarea, [contenteditable]:not([contenteditable='false'])")) return;
+      if (target?.closest?.("dialog, input, select, textarea, [contenteditable]:not([contenteditable='false'])")) return;
       switch (e.key) {
         case " ":
           if (e.repeat || target?.closest?.("button, a")) return;
@@ -276,6 +295,7 @@ export function Player({ tracks, onPlayingChange, onTrackChange }: Props) {
             <path d="M14 4h2v12h-2zM4 4v12l8.5-6z" />
           </svg>
         </button>
+        {children}
 
         <div className="volume">
           <button

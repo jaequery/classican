@@ -299,9 +299,123 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .control,
+  .add-primary,
+  .add-secondary,
   .fact,
   .wall-more,
   .wall-toggle {
     transition: none;
   }
+}
+
+/* The "Your songs" dialog: a Graphite card over the painting. */
+.add-song {
+  width: min(440px, calc(100% - 32px));
+  max-height: calc(100% - 48px);
+  margin: auto;
+  padding: 22px 24px 18px;
+  border: 0;
+  border-radius: 16px;
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: 0 10px 32px rgb(0 0 0 / 0.45);
+}
+.add-song::backdrop {
+  background: rgb(0 0 0 / 0.55);
+}
+.add-song h2 {
+  font-family: var(--font-title);
+  font-size: 26px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+.add-note {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 17px;
+}
+.add-song form {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+}
+.add-song label {
+  display: grid;
+  gap: 4px;
+  color: var(--muted);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.add-song input {
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid var(--muted);
+  border-radius: 8px;
+  background: var(--canvas);
+  color: var(--ink);
+  font: 500 18px var(--font);
+  letter-spacing: normal;
+  text-transform: none;
+}
+.add-song input::placeholder {
+  color: var(--muted);
+  opacity: 0.7;
+}
+.add-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+}
+.add-primary,
+.add-secondary {
+  min-height: 44px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 12px;
+  font: 600 17px var(--font);
+  cursor: pointer;
+  transition: opacity 120ms;
+}
+.add-primary {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+.add-primary:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+.add-secondary {
+  background: none;
+  color: var(--muted);
+}
+.add-primary:not(:disabled):hover,
+.add-secondary:hover {
+  opacity: 0.72;
+}
+.add-message:not(:empty) {
+  margin-top: 12px;
+  font-size: 17px;
+}
+.add-list {
+  margin-top: 14px;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid rgb(250 250 250 / 0.12);
+}
+.add-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 0;
+  border-bottom: 1px solid rgb(250 250 250 / 0.12);
+  overflow-wrap: anywhere;
+}
+.add-artist {
+  color: var(--muted);
+}
+.wall-last {
+  padding-bottom: 12px;
 }
