@@ -5,7 +5,7 @@
 export type Pt = [number, number];
 
 // 4×4 ordered dither: a plane with `level` n shows its second colour on n of 16 pixels.
-const BAYER = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5];
+export const BAYER = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5];
 
 export class Raster {
   readonly w: number;
@@ -30,6 +30,16 @@ export class Raster {
 
   /** Even-odd scanline fill, sampling pixel centres. */
   fill(pts: Pt[], a: number, b = a, level = 0) {
+    this.scan(pts, (x, y) => (level > 0 && BAYER[(y & 3) * 4 + (x & 3)] < level ? b : a));
+  }
+
+  /** Light what is already inside `pts`: swap colours through `map` on `level` of 16 pixels. */
+  tint(pts: Pt[], map: Partial<Record<number, number>>, level: number) {
+    this.scan(pts, (x, y, c) => (BAYER[(y & 3) * 4 + (x & 3)] < level ? (map[c] ?? c) : c));
+  }
+
+  /** Visit every pixel centre inside `pts` and replace it with `paint(x, y, current)`. */
+  private scan(pts: Pt[], paint: (x: number, y: number, c: number) => number) {
     let minY = Infinity;
     let maxY = -Infinity;
     for (const p of pts) {
@@ -52,9 +62,7 @@ export class Raster {
       for (let k = 0; k + 1 < xs.length; k += 2) {
         const xa = Math.max(0, Math.ceil(xs[k] - 0.5));
         const xb = Math.min(this.w - 1, Math.ceil(xs[k + 1] - 0.5) - 1);
-        for (let x = xa; x <= xb; x++) {
-          this.buf[row + x] = level > 0 && BAYER[(y & 3) * 4 + (x & 3)] < level ? b : a;
-        }
+        for (let x = xa; x <= xb; x++) this.buf[row + x] = paint(x, y, this.buf[row + x]);
       }
     }
   }

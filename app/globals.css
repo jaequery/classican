@@ -31,17 +31,40 @@ body {
   overflow-x: hidden;
 }
 
-/* Full-screen pixel painting behind everything. */
+/* Full-screen pixel painting behind everything. Scene sizes it to cover the
+   screen and pans it, so a lit motif stays in view on narrow screens. */
 .scene {
   position: fixed;
-  inset: 0;
+  left: 0;
+  top: 0;
   width: 100%;
   height: 100%;
   display: block;
-  object-fit: cover;
+  transform-origin: 0 0;
   image-rendering: pixelated;
   image-rendering: crisp-edges;
   background: var(--canvas);
+}
+
+/* A fact: small type beside the pool of light on the thing it is about. */
+.fact {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: max-content;
+  max-width: min(260px, calc(100vw - 32px));
+  padding: 9px 13px 10px;
+  background: color-mix(in srgb, var(--surface) 90%, transparent);
+  border-radius: 12px;
+  color: var(--ink);
+  font-size: 13px;
+  line-height: 1.45;
+  opacity: 0;
+  transition: opacity 900ms ease;
+  pointer-events: none;
+}
+.fact.on {
+  opacity: 1;
 }
 
 /* The only interface: a Graphite pill at bottom centre. */
@@ -156,7 +179,8 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .control {
+  .control,
+  .fact {
     transition: none;
   }
 }

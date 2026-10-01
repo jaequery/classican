@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>classican — Whisper</title>
+<style>
+:root{--canvas:#181818;--surface:#262626;--ink:#fafafa;--muted:#a3a3a3;--font:Inter,Arial,Helvetica,sans-serif;color-scheme:dark}
+*,*::before,*::after{box-sizing:border-box;margin:0}
+html,body{min-height:100%;background:var(--canvas)}
+body{color:var(--ink);font:400 16px/1.5 var(--font);letter-spacing:-.009em;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+.scene{position:fixed;inset:0;width:100%;height:100%;display:block;object-fit:cover;image-rendering:pixelated;image-rendering:crisp-edges;background:var(--canvas)}
+/* Fact line + pill share one bottom-centred column, so the fact always sits just above the pill. */
+.dock{position:fixed;left:16px;right:16px;bottom:24px;display:flex;flex-direction:column;align-items:center;gap:14px;pointer-events:none}
+.fact{max-width:min(560px,100%);min-height:1.45em;text-align:center;color:var(--muted);font-size:13px;line-height:1.45;text-shadow:0 0 2px rgba(24,24,24,.9),0 0 12px rgba(24,24,24,.9);opacity:0;transition:opacity 1.2s ease}
+.fact.on{opacity:1}
+.player{pointer-events:auto;width:min(448px,calc(100vw - 48px));padding:12px 12px 8px 20px;background:var(--surface);border-radius:16px}
+.now{display:flex;flex-wrap:wrap;column-gap:8px;padding-right:8px;line-height:1.18}
+.title{color:var(--ink)}.composer{color:var(--muted)}
+.controls{display:flex;flex-wrap:wrap;align-items:center;gap:4px;margin:6px 0 0 -12px}
+.control{display:grid;place-items:center;width:44px;height:44px;flex:none;padding:0;border:0;border-radius:12px;background:none;color:var(--ink);cursor:pointer;transition:opacity 120ms}
+.control svg{width:20px;height:20px;fill:currentColor}
+.control:hover{opacity:.72}
+.control.play{border-radius:50%;background:var(--ink);color:var(--canvas)}
+.volume{display:flex;align-items:center;gap:4px;flex:1 1 140px;min-width:0;margin-left:auto}
+.volume input{flex:1;min-width:64px;height:44px;margin:0 8px 0 0;accent-color:var(--ink);background:transparent;cursor:pointer}
+:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.label{position:fixed;left:16px;bottom:16px;max-width:200px;font-size:11px;line-height:1.35;color:var(--muted);text-shadow:0 0 8px rgba(24,24,24,.9)}
+.label b{display:block;color:var(--ink);font-weight:500}
+@media (max-width:959px){
+  .label{right:16px;bottom:8px;max-width:none}
+  .label b{display:inline}
+  .dock{bottom:60px}
+}
+@media (prefers-reduced-motion:reduce){.fact,.control{transition:none}}
+</style>
+</head>
+<body>
+<canvas id="art" class="scene" role="img" aria-label=""></canvas>
+
+<div class="dock">
+  <p id="fact" class="fact" aria-live="polite"></p>
+  <section class="player" aria-label="Music player">
+    <p class="now"><span class="title" id="title"></span><span class="composer" id="composer"></span></p>
+    <div class="controls">
+      <button type="button" class="control play" id="play" aria-label="Play">
+        <svg viewBox="0 0 20 20" aria-hidden="true"><path id="playGlyph" d="M6 3.5v13L16.5 10z"/></svg>
+      </button>
+      <button type="button" class="control" id="next" aria-label="Next piece">
+        <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M14 4h2v12h-2zM4 4v12l8.5-6z"/></svg>
+      </button>
+      <div class="volume">
+        <button type="button" class="control" id="mute" aria-label="Mute">
+          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 7.5h3.5L11 4v12l-4.5-3.5H3z"/><path id="volGlyph" d="M13.2 6.6a4.8 4.8 0 0 1 0 6.8l-1.1-1.1a3.2 3.2 0 0 0 0-4.6zM15.3 4.5a7.8 7.8 0 0 1 0 11l-1.1-1.1a6.2 6.2 0 0 0 0-8.8z"/></svg>
+        </button>
+        <input type="range" id="vol" min="0" max="100" step="1" value="80" aria-label="Volume">
+      </div>
+    </div>
+  </section>
+</div>
+
+<p class="label"><b>Concept 1 — Whisper</b> One quiet line above the player; a tiny blinking pixel marks what it’s about in the painting. Mock: a fact every ~7s (real: one every ~40s).</p>
+
+<script>
+"use strict";
+const W=160,H=100,FPS=10,FADE=2.5,SHOW=4.8,GAP=2.4;
+const BAY=[0,8,2,10,12,4,14,6,3,11,1,9,15,7,13,5];
+let B=new Uint8Array(W*H);
+
+// ---- tiny indexed rasterizer (same approach as lib/raster.ts) ----
+function fill(pts,a,b=a,lv=0){
+  let y0=1e9,y1=-1e9;for(const p of pts){if(p[1]<y0)y0=p[1];if(p[1]>y1)y1=p[1]}
+  y0=Math.max(0,Math.floor(y0));y1=Math.min(H-1,Math.ceil(y1));const xs=[];
+  for(let y=y0;y<=y1;y++){const sy=y+.5;xs.length=0;
+    for(let i=0,j=pts.length-1;i<pts.length;j=i++){const[xi,yi]=pts[i],[xj,yj]=pts[j];if(yi>sy!==yj>sy)xs.push(xi+(sy-yi)/(yj-yi)*(xj-xi))}
+    xs.sort((m,n)=>m-n);
+    for(let k=0;k+1<xs.length;k+=2){const xa=Math.max(0,Math.ceil(xs[k]-.5)),xb=Math.min(W-1,Math.ceil(xs[k+1]-.5)-1);
+      for(let x=xa;x<=xb;x++)B[y*W+x]=lv>0&&BAY[(y&3)*4+(x&3)]<lv?b:a}}
+}
+function dot(x,y,c){x=Math.round(x);y=Math.round(y);if(x>=0&&y>=0&&x<W&&y<H)B[y*W+x]=c}
+function line(x0,y0,x1,y1,c){x0=Math.round(x0);y0=Math.round(y0);x1=Math.round(x1);y1=Math.round(y1);
+  const dx=Math.abs(x1-x0),dy=-Math.abs(y1-y0),sx=x0<x1?1:-1,sy=y0<y1?1:-1;let e=dx+dy;
+  for(;;){dot(x0,y0,c);if(x0===x1&&y0===y1)return;const e2=2*e;if(e2>=dy){e+=dy;x0+=sx}if(e2<=dx){e+=dx;y0+=sy}}}
+function thick(x0,y0,x1,y1,c){line(x0,y0,x1,y1,c);line(x0+1,y0,x1+1,y1,c)}
+function stroke(pts,c){for(let i=0;i<pts.length;i++){const p=pts[i],q=pts[(i+1)%pts.length];line(p[0],p[1],q[0],q[1],c)}}
+function ell(cx,cy,rx,ry,from=0,to=Math.PI*2,n=24){const pts=[],full=Math.abs(to-from-Math.PI*2)<1e-6;
+  for(let i=0;i<(full?n:n+1);i++){const a=from+(to-from)*i/n;pts.push([cx+Math.cos(a)*rx,cy+Math.sin(a)*ry])}return pts}
+function rect(x,y,w,h){return[[x,y],[x+w,y],[x+w,y+h],[x,y+h]]}
+function seeded(s){return()=>{s=(s+0x6d2b79f5)|0;let t=Math.imul(s^(s>>>15),1|s);t=(t+Math.imul(t^(t>>>7),61|t))^t;return((t^(t>>>14))>>>0)/4294967296}}
+function clipHalf(poly,o,n){const side=p=>(p[0]-o[0])*n[0]+(p[1]-o[1])*n[1],out=[];
+  for(let i=0;i<poly.length;i++){const p=poly[i],q=poly[(i+1)%poly.length],sp=side(p),sq=side(q);
+    if(sp>=0)out.push(p);if(sp>=0!==sq>=0){const t=sp/(sp-sq);out.push([p[0]+(q[0]-p[0])*t,p[1]+(q[1]-p[1])*t])}}return out}
+function half(o,n){const t=[-n[1],n[0]],F=1000;return[[o[0]+t[0]*F,o[1]+t[1]*F],[o[0]+t[0]*F+n[0]*F,o[1]+t[1]*F+n[1]*F],[o[0]-t[0]*F+n[0]*F,o[1]-t[1]*F+n[1]*F],[o[0]-t[0]*F,o[1]-t[1]*F]]}
+function clipConvex(poly,cl){let area=0;for(let i=0,j=cl.length-1;i<cl.length;j=i++)area+=(cl[j][0]-cl[i][0])*(cl[j][1]+cl[i][1]);
+  const s=area>0?1:-1;let out=poly;for(let i=0;i<cl.length&&out.length;i++){const a=cl[i],b=cl[(i+1)%cl.length];out=clipHalf(out,a,[-(b[1]-a[1])*s,(b[0]-a[0])*s])}return out}
+function hash(x,y){const s=Math.sin(x*12.9898+y*78.233)*43758.5453;return s-Math.floor(s)}
+function drift(p,f,amp=.9){if(f.still)return p;const kx=Math.round(p[0]*4),ky=Math.round(p[1]*4);
+  return[p[0]+Math.sin(f.t*.31+hash(kx,ky)*6.283)*amp,p[1]+Math.cos(f.t*.23+hash(ky,kx)*6.283)*amp]}
+const D=(pts,f,amp)=>pts.map(p=>drift(p,f,amp));
+function fracture(seed,pairs,depth){const rnd=seeded(seed),out=[];
+  const split=(poly,d)=>{if(!d||poly.length<3){const pr=pairs[Math.floor(rnd()*pairs.length)];out.push({pts:poly,a:pr[0],b:pr[1],lv:[0,3,6,8][Math.floor(rnd()*4)],ph:rnd()*6.283});return}
+    let cx=0,cy=0;for(const p of poly){cx+=p[0];cy+=p[1]}
+    const o=[cx/poly.length+(rnd()-.5)*16,cy/poly.length+(rnd()-.5)*12];
+    const ang=(rnd()<.5?.35:1.2)+rnd()*1.1+(rnd()<.5?Math.PI/2:0),n=[Math.cos(ang),Math.sin(ang)];
+    split(clipConvex(poly,half(o,n)),d-1);split(clipConvex(poly,half(o,[-n[0],-n[1]])),d-1)};
+  split([[-8,-8],[W+8,-8],[W+8,H+8],[-8,H+8]],depth);return out}
+function planes(ps,f){for(const p of ps){const lv=Math.max(0,Math.min(10,p.lv+Math.round((f.still?0:Math.sin(f.t*.09+p.ph))*2)));fill(D(p.pts,f),p.a,p.b,lv)}}
+
+// ---- paintings: one per piece, each depicting the "Painting:" subject in facts.md ----
+const DANCE=[0,45,90,135];
+const dancerX=(i,f)=>((DANCE[i]+f.t*1.2)%180)-10;
+function dancer(x,f,ph,c){const s=f.still?0:Math.sin(f.t*.8+ph)*1.6;
+  fill(ell(x+1,31,2.6,2.6,0,Math.PI*2,12),c);dot(x+4,32,c);
+  fill([[x-1,34],[x+3,34],[x+2,42],[x-2,42]],c);fill([[x-2,41],[x+2,41],[x+5,47],[x-5,47]],c);
+  thick(x-1,47,x-4+s,53,c);thick(x+1,47,x+3-s,53,c);line(x+2,36,x+7,30+s,c);line(x,36,x-6,40-s,c)}
+
+const P=[
+{ // Gymnopédie: dancers in profile round a Greek-vase frieze; the composer at the piano in the register below
+  title:"Gymnopédie No. 1",composer:"Erik Satie",
+  alt:"Black-figure dancers in profile circle a terracotta frieze; below, a small figure plays the piano.",
+  colors:["#141210","#c8643a","#9a4428","#d99a5a","#3a2418","#e8c89a","#1c1410"],
+  bg:fracture(11,[[4,0],[0,4],[2,4]],5),
+  draw(f){const c=6;planes(this.bg,f);
+    fill(rect(-1,26,162,28),1,3,2);
+    fill(D([[28,26],[72,26],[52,54],[8,54]],f),1,2,4);fill(D([[104,26],[152,26],[134,54],[112,54]],f),2,1,3);
+    fill(rect(-1,20,162,6),3);line(-1,20,161,20,c);line(-1,26,161,26,c);
+    for(let x=-4;x<164;x+=8){line(x,25,x,22,c);line(x,22,x+5,22,c);line(x+5,22,x+5,24,c);line(x+5,24,x+2,24,c)}
+    fill(rect(-1,54,162,5),3);line(-1,54,161,54,c);line(-1,58,161,58,c);
+    for(let x=0;x<160;x+=8)fill(rect(x,55,3,3),c);
+    for(let i=0;i<4;i++)dancer(dancerX(i,f),f,i*1.7,c);
+    fill(rect(-1,62,162,20),2,4,3);line(-1,61,161,61,3);line(-1,82,161,82,3);
+    fill(rect(92,65,13,16),c);fill(rect(89,72,4,2),5);line(93,66,104,66,3);
+    fill(ell(84,68,2.2,2.5,0,Math.PI*2,12),c);fill(ell(84,66.4,2.4,1.8,Math.PI,Math.PI*2,8),c);line(81,66,87,66,c);
+    fill([[81,70],[86,70],[87,77],[80,77]],c);line(86,72,90,73,c);thick(81,77,88,77,c);thick(87,77,87,81,c);fill(rect(79,78,4,3),4);
+  },
+  m:{dancers:(f,k)=>{if(k.i==null){let best=1e9;for(let i=0;i<4;i++){const d=Math.abs(dancerX(i,f)-74);if(d<best){best=d;k.i=i}}}return[dancerX(k.i,f)+1,26]},
+     frieze:()=>[80,23],composer:()=>[83,62]},
+  facts:[["Satie wrote his three Gymnopédies in 1888, in his early twenties.","dancers"],
+    ["The title comes from the gymnopaedia, a festival in ancient Sparta where young men danced.","frieze"],
+    ["Around then, Satie was playing piano in Montmartre’s cabarets, such as Le Chat Noir.","composer"],
+    ["The score asks for it to be played “Lent et douloureux”: slow and sorrowful."],
+    ["Claude Debussy, Satie’s friend, later arranged two of the Gymnopédies for orchestra."]]
+},
+{ // Clair de lune: moonlight over a night park, a fountain and masked figures
+  title:"Clair de lune",composer:"Claude Debussy",
+  alt:"Moonlight over a park at night: a fountain between two masked figures, dark trees on either side.",
+  colors:["#0b1024","#16224a","#24386e","#3d5a94","#e9e4c8","#a9b8d6","#0a1a16"],
+  bg:fracture(23,[[0,1],[1,2],[0,2],[1,0]],5),
+  draw(f){planes(this.bg,f);
+    fill(D([[84,30],[96,30],[110,72],[54,72]],f),2,3,3);
+    fill(ell(90,20,17,17,0,Math.PI*2,20),2,3,4);fill(ell(90,20,10,10),4);fill(ell(90,20,10,10,-Math.PI/2,Math.PI/2,12),5,4,6);
+    fill(D([[-2,68],[60,64],[162,69],[162,102],[-2,102]],f,.5),1,0,6);
+    for(const[a,b,c]of[[18,30,6],[34,44,20],[116,128,12],[132,144,24]]){fill(D([[a-2,70],[b,c],[2*b-a+2,70]],f,.6),6);fill([[b,c],[2*b-a+2,70],[b,70]],6,1,4)}
+    fill([[64,66],[96,66],[92,72],[68,72]],5);line(64,66,96,66,4);fill(rect(77,53,6,13),3);
+    fill([[70,50],[90,50],[86,54],[74,54]],5);line(70,50,90,50,4);line(80,50,80,37,4);
+    for(let k=0;k<8;k++){const u=f.still?k/8:(f.t*.6+k/8)%1;dot(80+u*9,38+u*u*12,u<.5?4:5);dot(80-u*9,38+u*u*12,u<.5?4:5)}
+    for(const[x,ph]of[[60,0],[100,2]]){const s=f.still?0:Math.sin(f.t*.5+ph)*.8;
+      fill([[x-6,73],[x+s,47],[x+6,73]],0,2,3);fill(ell(x+s,44,3,3.4,0,Math.PI*2,12),4);
+      line(x-3+s,43,x+3+s,43,0);dot(x-1+s,43,5);dot(x+2+s,43,5);fill([[x-5+s,41],[x+s,36],[x+5+s,41]],0)}
+  },
+  m:{moon:()=>[86,17],fountain:()=>[79,35]},
+  facts:[["“Clair de lune” means “moonlight”. It is the third of four movements in Debussy’s Suite bergamasque.","moon"],
+    ["The title comes from a poem by Paul Verlaine, which pictures masked dancers and fountains under the moon.","fountain"],
+    ["Debussy began the suite around 1890 but did not publish it until 1905, revising it first."],
+    ["It is in D-flat major, and its opening is marked pp: very softly."]]
+},
+{ // Goldberg: a two-keyboard harpsichord by candlelight
+  title:"Goldberg Variations: Aria",composer:"Johann Sebastian Bach",
+  alt:"A harpsichord with two keyboards by candlelight at night, its lid raised.",
+  colors:["#0e0a08","#24170f","#3e2617","#7a3a1e","#b0632a","#efe2c4","#f6c25a","#ffeaa0","#5c3a1c"],
+  bg:fracture(37,[[0,1],[1,2],[0,2]],5),
+  draw(f){planes(this.bg,f);
+    fill(ell(66,32,34,28,0,Math.PI*2,24),1,8,4);fill(ell(66,32,17,15,0,Math.PI*2,20),8,2,6);
+    fill(D([[94,48],[150,43],[112,12]],f,.6),4,3,8);stroke([[94,48],[150,43],[112,12]],0);line(122,45,114,22,5);
+    fill(D([[94,48],[150,43],[150,57],[94,70]],f,.6),3,2,6);line(94,48,150,43,4);
+    fill(rect(58,48,36,22),3,4,3);stroke(rect(58,48,36,22),0);
+    for(const y of[52,59]){fill(rect(61,y,30,4),5);for(let x=61;x<91;x++){const k=(x-61)%21;if([1,4,8,11,14].includes(k))line(x,y,x,y+1,0)}line(61,y+4,90,y+4,2)}
+    for(const x of[60,92,147])thick(x,70,x,88,2);line(60,84,147,84,2);
+    fill(rect(62,47,8,2),4);fill(rect(64,36,4,11),5);line(67,36,67,46,4);
+    const w=f.still?0:Math.sin(f.t*3.1)*.7+Math.sin(f.t*5.3)*.4,h=f.still?0:Math.sin(f.t*2.3)*.8;
+    fill([[66+w,27-h],[68.6,35],[63.4,35]],6);dot(66,33,7);dot(66,32,7);line(66,35,66,36,0);
+  },
+  m:{harpsichord:()=>[106,36],keyboards:()=>[75,56],candle:()=>[65,23]},
+  facts:[["Bach published the Goldberg Variations in 1741: this Aria, thirty variations, then the Aria again.","harpsichord"],
+    ["It was written for a harpsichord with two keyboards, so the hands can cross without colliding.","keyboards"],
+    ["Every variation is built on the bass line of this Aria, not on its tune."],
+    ["Bach’s first biographer told a story that it soothed a count’s sleepless nights. Historians doubt it, but the young harpsichordist’s name, Goldberg, stuck.","candle"],
+    ["Every third variation, up to the 27th, is a canon, where one voice imitates another."],
+    ["This recording by Kimiko Ishizaka was crowdfunded and released into the public domain in 2012."]]
+},
+{ // Gnossienne: red, top-heavy columns of Knossos and a stave with no bar lines
+  title:"Gnossienne No. 1",composer:"Erik Satie",
+  alt:"Red, top-heavy columns of the palace of Knossos above a musical stave with no bar lines.",
+  colors:["#10141c","#1d2a3a","#2f4660","#b23a26","#7e2418","#0c0c0c","#d8b878","#e8dcc0"],
+  bg:fracture(41,[[1,2],[1,0],[6,2],[0,1]],5),
+  draw(f){planes(this.bg,f);
+    fill(rect(-1,4,162,6),5);line(-1,9,161,9,6);
+    fill(D([[-2,60],[162,59],[162,102],[-2,102]],f,.4),1,0,5);
+    for(const x of[44,80,116]){fill(D([[x-6,18],[x+6,18],[x+3.5,58],[x-3.5,58]],f,.4),3);fill(D([[x,18],[x+6,18],[x+3.5,58],[x,58]],f,.4),4,3,4);
+      fill(ell(x,15,8,3.5,0,Math.PI*2,16),5);fill(rect(x-8,10,16,3),5);fill(rect(x-5,58,10,2),6)}
+    for(let i=0;i<5;i++)line(-1,64+i*3,161,64+i*3,7);
+    const tune=[4,3,5,2,4,1,3,6,2,5,3];
+    for(let i=0;i<tune.length;i++){const x=((i*16-(f.t*2))%176+176)%176-8,y=64+tune[i]*1.5;
+      fill(ell(x,y,2.1,1.4,0,Math.PI*2,10),7);line(x+2,y,x+2,y-7,7)}
+  },
+  m:{columns:()=>[79,28],stave:()=>[71,69]},
+  facts:[["Satie’s title may come from “gnosis”, knowledge, or from an old word for a dance of Knossos on Crete.","columns"],
+    ["Satie wrote it without bar lines or a time signature.","stave"],
+    ["Besides its tempo mark, “Lent”, the score whispers odd advice to the pianist, like “Très luisant” (very shiny) and “Questionnez” (ask questions)."],
+    ["It dates from around 1890. Satie may have been inspired by music he heard at the 1889 Paris World’s Fair."]]
+},
+{ // Nocturne: a piano in a dark room by a tall window, moon and Paris rooftops outside
+  title:"Nocturne in E-flat major, Op. 9 No. 2",composer:"Frédéric Chopin",
+  alt:"A piano in a dark room by a tall window; outside, the moon over Paris rooftops.",
+  colors:["#0a0a10","#1a1a26","#262a3c","#3a4a72","#e8e2c8","#5d6478","#e9e4d4","#c79a4a"],
+  bg:fracture(53,[[0,1],[1,2],[0,2]],5),
+  draw(f){planes(this.bg,f);
+    fill(rect(61,3,38,58),0);fill(rect(63,5,34,54),3,2,3);
+    fill(ell(89,14,4,4,0,Math.PI*2,14),4);fill(ell(89,14,4,4,-Math.PI/2,Math.PI/2,8),6,4,4);
+    fill([[63,59],[63,44],[69,40],[75,44],[75,41],[83,36],[91,42],[97,39],[97,59]],1);stroke([[63,44],[69,40],[75,44],[75,41],[83,36],[91,42],[97,39]],5);
+    fill(rect(71,36,2,5),1);fill(rect(87,33,2,5),1);dot(71,35,5);dot(87,32,5);line(63,49,97,49,2);dot(80,50,7);dot(81,50,7);dot(68,52,7);
+    fill(rect(79,5,2,54),0);fill(rect(63,23,34,2),0);fill(rect(63,41,34,2),0);
+    fill(D([[63,61],[97,61],[124,102],[36,102]],f,.5),1,2,5);
+    fill(D([[34,72],[112,69],[56,56]],f,.4),0,2,3);stroke([[34,72],[112,69],[56,56]],3);
+    fill([[28,74],[112,70],[128,77],[112,84],[28,86]],0,1,2);stroke([[28,74],[112,70],[128,77],[112,84]],3);
+    fill(rect(30,76,26,3),6);for(let x=31;x<56;x+=3)if(x%7)dot(x,76,0);
+    for(const x of[32,108])thick(x,86,x,97,1);
+  },
+  m:{piano:()=>[66,72],window:()=>[70,12],rooftops:()=>[83,38]},
+  facts:[["Chopin wrote it around 1830–31, when he was about twenty, and it was published in 1832.","piano"],
+    ["The nocturne, a dreamy “night piece” for piano, was invented by the Irish composer John Field. Chopin made the form famous.","window"],
+    ["Chopin left Poland in 1830 and never went back. From 1831 he made his home in Paris.","rooftops"],
+    ["Each time the melody comes back, Chopin decorates it a little more, like an opera singer ornamenting a tune."],
+    ["It is in 12/8 time: four slow beats, each divided into three."]]
+}];
+
+// ---- scene ----
+const cv=document.getElementById("art"),ctx=cv.getContext("2d");cv.width=W;cv.height=H;
+const img=ctx.createImageData(W,H),out=new Uint32Array(img.data.buffer);
+const toPx=h=>{const n=parseInt(h.slice(1),16);return(0xff<<24)|((n&0xff)<<16)|(n&0xff00)|((n>>16)&0xff)};
+const luts=P.map(p=>Uint32Array.from(p.colors,toPx));
+const bufA=new Uint8Array(W*H),bufB=new Uint8Array(W*H),noise=new Float32Array(W*H);
+for(let y=0;y<H;y+=2)for(let x=0;x<W;x+=2){const v=Math.random();noise[y*W+x]=noise[y*W+x+1]=noise[(y+1)*W+x]=noise[(y+1)*W+x+1]=v}
+const reduce=matchMedia("(prefers-reduced-motion: reduce)");
+
+let cur=0,nxt=-1,fade=-1,sim=30,energy=.35,playing=false,last=0;
+let fi=0,ft=-1.2,shown=false,key={},env=0;
+const $=id=>document.getElementById(id),factEl=$("fact");
+
+function setTrack(i){const p=P[i];$("title").textContent=p.title;$("composer").textContent=p.composer;cv.setAttribute("aria-label","Background painting. "+p.alt)}
+function hideFact(){factEl.classList.remove("on");shown=false}
+
+function blend(x,y,rgb,a){if(x<0||y<0||x>=W||y>=H||a<=0)return;const i=y*W+x,v=out[i];
+  const r=v&255,g=(v>>8)&255,b=(v>>16)&255;
+  out[i]=(0xff<<24)|(Math.round(b+(rgb[2]-b)*a)<<16)|(Math.round(g+(rgb[1]-g)*a)<<8)|Math.round(r+(rgb[0]-r)*a)}
+// The only pointer: a 2×2 Bone dot with a faint Obsidian ring, softly blinking.
+function marker(m,a){const x=Math.round(m[0]),y=Math.round(m[1]);
+  for(let dy=-1;dy<=2;dy++)for(let dx=-1;dx<=2;dx++){const core=dx>=0&&dx<=1&&dy>=0&&dy<=1,corner=(dx===-1||dx===2)&&(dy===-1||dy===2);
+    if(corner)continue;blend(x+dx,y+dy,core?[250,250,250]:[24,24,24],core?a:a*.55)}}
+
+function draw(){
+  const f={t:sim,still:reduce.matches};
+  B=bufA;B.fill(0);P[cur].draw(f);const la=luts[cur];
+  if(fade<0){for(let i=0;i<out.length;i++)out[i]=la[bufA[i]]}
+  else{B=bufB;B.fill(0);P[nxt].draw(f);const lb=luts[nxt],p=fade/FADE;for(let i=0;i<out.length;i++)out[i]=noise[i]<p?lb[bufB[i]]:la[bufA[i]]}
+  const fact=P[cur].facts[fi];
+  if(fade<0&&fact&&fact[1]&&env>.01){
+    const pulse=reduce.matches?1:.6+.4*Math.sin(performance.now()/1000*2.4);
+    marker(P[cur].m[fact[1]](f,key),env*pulse)}
+  ctx.putImageData(img,0,0);
+}
+
+function step(dt){
+  energy+=((playing?1:.35)-energy)*.03;
+  if(!reduce.matches)sim+=dt*energy;
+  if(fade>=0){fade+=dt;if(fade>=FADE){cur=nxt;nxt=-1;fade=-1}}
+  if(playing){ft+=dt;
+    if(ft>=0&&!shown&&ft<SHOW&&fade<0){const fact=P[cur].facts[fi];key={};factEl.textContent=fact[0];
+      void factEl.offsetWidth;factEl.classList.add("on");shown=true}
+    if(ft>=SHOW){hideFact();fi=(fi+1)%P[cur].facts.length;ft=-GAP}}
+  const target=shown?1:0;env=reduce.matches?target:env+(target-env)*Math.min(1,dt*1.6);
+}
+
+function frame(ms){requestAnimationFrame(frame);if(ms-last<1000/FPS)return;
+  const dt=last?Math.min((ms-last)/1000,.25):0;last=ms;if(document.hidden)return;step(dt);draw()}
+
+function toggle(){playing=!playing;
+  $("play").setAttribute("aria-label",playing?"Pause":"Play");
+  $("playGlyph").setAttribute("d",playing?"M5 4h3.5v12H5zM11.5 4H15v12h-3.5z":"M6 3.5v13L16.5 10z");
+  if(!playing){hideFact();env=reduce.matches?0:env;ft=-1.2}}
+function next(){
+  if(fade>=0){cur=nxt;nxt=-1;fade=-1}
+  const to=(cur+1)%P.length;
+  hideFact();env=0;fi=0;
+  if(reduce.matches){cur=to;ft=-1.2}else{nxt=to;fade=0;ft=-(FADE+.6)}
+  setTrack(to);
+}
+// Title/composer switch at once; the painting below dissolves from `cur` into `nxt`.
+
+$("play").addEventListener("click",toggle);
+$("next").addEventListener("click",next);
+let vol=80,muted=false;const volEl=$("vol");
+function syncVol(){const silent=muted||vol===0;volEl.value=muted?0:vol;volEl.setAttribute("aria-valuetext",(muted?0:vol)+"%");
+  $("mute").setAttribute("aria-label",silent?"Unmute":"Mute");
+  $("volGlyph").setAttribute("d",silent?"M13.3 7.3l1.1-1.1 1.8 1.8 1.8-1.8 1.1 1.1-1.8 1.8 1.8 1.8-1.1 1.1-1.8-1.8-1.8 1.8-1.1-1.1 1.8-1.8z":"M13.2 6.6a4.8 4.8 0 0 1 0 6.8l-1.1-1.1a3.2 3.2 0 0 0 0-4.6zM15.3 4.5a7.8 7.8 0 0 1 0 11l-1.1-1.1a6.2 6.2 0 0 0 0-8.8z")}
+volEl.addEventListener("input",()=>{vol=+volEl.value;if(vol>0)muted=false;syncVol()});
+$("mute").addEventListener("click",()=>{if(vol===0){vol=60;muted=false}else muted=!muted;syncVol()});
+document.addEventListener("keydown",e=>{if(e.key!==" "||e.repeat||e.defaultPrevented)return;
+  if(e.target.closest&&e.target.closest("button,input,a,select,textarea"))return;e.preventDefault();toggle()});
+
+setTrack(cur);syncVol();draw();requestAnimationFrame(frame);
+</script>
+</body>
+</html>

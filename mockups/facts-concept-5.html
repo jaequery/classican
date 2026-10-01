@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>classican · Year in the margin</title>
+<style>
+:root{--canvas:#181818;--surface:#262626;--ink:#FAFAFA;--muted:#A3A3A3;--font:Inter,Arial,Helvetica,sans-serif;color-scheme:dark}
+*,*::before,*::after{box-sizing:border-box;margin:0}
+html,body{min-height:100%;background:var(--canvas)}
+body{color:var(--ink);font:400 16px/1.5 var(--font);letter-spacing:-.009em;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+.scene{position:fixed;inset:0;width:100%;height:100%;display:block;object-fit:cover;image-rendering:pixelated;image-rendering:crisp-edges;background:var(--canvas)}
+
+/* The margin: a year like a watermark, the place, then one fact. */
+.margin{position:fixed;top:24px;right:32px;width:min(300px,calc(100% - 32px));text-align:right;pointer-events:none;text-shadow:0 1px 10px rgba(0,0,0,.55)}
+/* a quiet shade in the corner keeps the margin legible on bright paintings */
+.margin::before{content:"";position:fixed;top:0;right:0;width:min(640px,100vw);height:min(420px,60vh);background:radial-gradient(ellipse 60% 66% at 74% 30%,rgba(14,14,14,.62),rgba(14,14,14,.34) 55%,transparent);z-index:-1}
+.margin{z-index:1}
+.year{font-weight:200;font-size:clamp(64px,13vw,168px);line-height:.82;letter-spacing:-.045em;color:rgba(250,250,250,.15);font-variant-numeric:lining-nums;white-space:nowrap}
+.circa{font-size:.24em;letter-spacing:0;vertical-align:.25em;margin-right:.08em;font-weight:300}
+.place{margin-top:10px;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:rgba(250,250,250,.5);min-height:16px}
+.fact{margin:14px 0 0 auto;max-width:260px;font-size:13px;line-height:1.5;color:var(--muted);min-height:3em}
+.swap{transition:opacity 700ms ease}
+.out{opacity:0}
+
+.player{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);width:min(448px,calc(100% - 48px));max-height:calc(100% - 48px);overflow-y:auto;padding:12px 12px 8px 20px;background:var(--surface);border-radius:16px;z-index:2}
+.now{display:flex;flex-wrap:wrap;column-gap:8px;padding-right:8px;line-height:1.18}
+.title{color:var(--ink)}.composer{color:var(--muted)}
+.controls{display:flex;flex-wrap:wrap;align-items:center;gap:4px;margin:6px 0 0 -12px}
+.control{display:grid;place-items:center;width:44px;height:44px;flex:none;padding:0;border:0;border-radius:12px;background:none;color:var(--ink);cursor:pointer;transition:opacity 120ms}
+.control svg{width:20px;height:20px;fill:currentColor}
+.control:hover{opacity:.72}
+.control.play{border-radius:50%;background:var(--ink);color:var(--canvas)}
+.volume{display:flex;align-items:center;gap:4px;flex:1 1 140px;min-width:0;margin-left:auto}
+.volume input{flex:1;min-width:64px;height:44px;margin:0 8px 0 0;accent-color:var(--ink);background:transparent;cursor:pointer}
+:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
+
+.label{position:fixed;left:16px;bottom:6px;max-width:calc(100% - 32px);font-size:10px;line-height:1.35;color:rgba(250,250,250,.45);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;z-index:1;text-shadow:0 0 6px #000,0 0 2px #000}
+.label b{font-weight:500;color:rgba(250,250,250,.7)}
+@media (min-width:1000px){.label{left:24px;bottom:24px;max-width:calc(50% - 248px);white-space:normal}.label span{display:block}}
+@media (max-width:600px){.margin{top:16px;right:16px}.fact{font-size:12.5px;max-width:230px}}
+@media (prefers-reduced-motion:reduce){.swap,.control{transition:none}}
+</style>
+</head>
+<body>
+<canvas class="scene" id="scene" width="160" height="100" role="img" aria-label=""></canvas>
+
+<aside class="margin" aria-label="About this piece">
+  <div class="swap" id="anchor">
+    <div class="year" id="year"></div>
+    <div class="place" id="place"></div>
+  </div>
+  <p class="fact swap out" id="fact"></p>
+</aside>
+
+<section class="player" aria-label="Music player">
+  <p class="now"><span class="title" id="title"></span><span class="composer" id="composer"></span></p>
+  <div class="controls">
+    <button type="button" class="control play" id="play" aria-label="Play"><svg viewBox="0 0 20 20" aria-hidden="true"><path id="pp" d="M6 3.5v13L16.5 10z"/></svg></button>
+    <button type="button" class="control" id="next" aria-label="Next piece"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M14 4h2v12h-2zM4 4v12l8.5-6z"/></svg></button>
+    <div class="volume">
+      <button type="button" class="control" id="mute" aria-label="Mute"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 7.5h3.5L11 4v12l-4.5-3.5H3z"/><path id="vw" d="M13.2 6.6a4.8 4.8 0 0 1 0 6.8l-1.1-1.1a3.2 3.2 0 0 0 0-4.6zM15.3 4.5a7.8 7.8 0 0 1 0 11l-1.1-1.1a6.2 6.2 0 0 0 0-8.8z"/></svg></button>
+      <input type="range" id="vol" min="0" max="100" step="1" value="80" aria-label="Volume" aria-valuetext="80%">
+    </div>
+  </div>
+  <p class="vh" role="status" id="status"></p>
+</section>
+
+<p class="label"><b>Concept 5 — Year in the margin</b> <span>The piece's year and place sit like a watermark; one fact at a time beneath, and the painting breathes once on what the fact names. Mock: a fact every 7s (real: one every ~40s).</span></p>
+
+<script>
+(function(){
+"use strict";
+var W=160,H=100,TAU=Math.PI*2;
+var BAY=[0,8,2,10,12,4,14,6,3,11,1,9,15,7,13,5];
+var reduce=matchMedia("(prefers-reduced-motion: reduce)");
+
+/* ---------- tiny indexed rasterizer; every pixel also records its motif ---------- */
+function Raster(){this.b=new Uint8Array(W*H);this.m=new Uint8Array(W*H);this.mk=0}
+Raster.prototype.put=function(i,c){this.b[i]=c;this.m[i]=this.mk};
+Raster.prototype.dot=function(x,y,c){x=Math.round(x);y=Math.round(y);if(x>=0&&y>=0&&x<W&&y<H)this.put(y*W+x,c)};
+/* fill a polygon; `lv` of 16 pixels take colour b (ordered dither). b<0: only paint those pixels. */
+Raster.prototype.fill=function(p,a,b,lv){
+  if(b===undefined)b=a;lv=lv||0;
+  var y0=H,y1=0,i,j;for(i=0;i<p.length;i++){if(p[i][1]<y0)y0=p[i][1];if(p[i][1]>y1)y1=p[i][1]}
+  y0=Math.max(0,Math.floor(y0));y1=Math.min(H-1,Math.ceil(y1));
+  for(var y=y0;y<=y1;y++){
+    var sy=y+.5,xs=[];
+    for(i=0,j=p.length-1;i<p.length;j=i++){var yi=p[i][1],yj=p[j][1];if((yi>sy)!==(yj>sy))xs.push(p[i][0]+(sy-yi)/(yj-yi)*(p[j][0]-p[i][0]))}
+    xs.sort(function(m,n){return m-n});
+    for(var k=0;k+1<xs.length;k+=2){
+      var xa=Math.max(0,Math.ceil(xs[k]-.5)),xb=Math.min(W-1,Math.ceil(xs[k+1]-.5)-1);
+      for(var x=xa;x<=xb;x++){var d=lv>0&&BAY[(y&3)*4+(x&3)]<lv;if(a<0&&!d)continue;this.put(y*W+x,d?b:a)}
+    }
+  }
+};
+Raster.prototype.line=function(x0,y0,x1,y1,c,th){
+  x0=Math.round(x0);y0=Math.round(y0);x1=Math.round(x1);y1=Math.round(y1);
+  var dx=Math.abs(x1-x0),dy=-Math.abs(y1-y0),sx=x0<x1?1:-1,sy=y0<y1?1:-1,e=dx+dy;
+  for(;;){this.dot(x0,y0,c);if(th)this.dot(x0+1,y0,c);if(x0===x1&&y0===y1)return;var e2=2*e;if(e2>=dy){e+=dy;x0+=sx}if(e2<=dx){e+=dx;y0+=sy}}
+};
+Raster.prototype.stroke=function(p,c){for(var i=0;i<p.length;i++){var q=p[(i+1)%p.length];this.line(p[i][0],p[i][1],q[0],q[1],c)}};
+function mirror(r){[r.b,r.m].forEach(function(a){for(var y=0;y<H;y++)a.subarray(y*W,y*W+W).reverse()})}
+function E(cx,cy,rx,ry,a0,a1,n){a0=a0||0;a1=a1===undefined?TAU:a1;n=n||24;var o=[],full=Math.abs(a1-a0-TAU)<1e-6,s=full?n:n+1;for(var i=0;i<s;i++){var a=a0+(a1-a0)*i/n;o.push([cx+Math.cos(a)*rx,cy+Math.sin(a)*ry])}return o}
+function R(x,y,w,h){return[[x,y],[x+w,y],[x+w,y+h],[x,y+h]]}
+function rng(s){return function(){s|=0;s=s+0x6D2B79F5|0;var t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function hash(x,y){var s=Math.sin(x*12.9898+y*78.233)*43758.5453;return s-Math.floor(s)}
+function cut(poly,o,n){var out=[];for(var i=0;i<poly.length;i++){var a=poly[i],b=poly[(i+1)%poly.length],da=(a[0]-o[0])*n[0]+(a[1]-o[1])*n[1],db=(b[0]-o[0])*n[0]+(b[1]-o[1])*n[1];if(da>=0)out.push(a);if((da>=0)!==(db>=0)){var s=da/(da-db);out.push([a[0]+(b[0]-a[0])*s,a[1]+(b[1]-a[1])*s])}}return out}
+/* Cubist planes: split a region by repeated steep straight cuts. */
+function fracture(seed,region,pairs,depth){
+  var r=rng(seed),out=[];
+  (function split(poly,d){
+    if(poly.length<3)return;
+    if(!d){var pr=pairs[Math.floor(r()*pairs.length)];out.push({p:poly,a:pr[0],b:pr[1],lv:[0,3,6,8][Math.floor(r()*4)],ph:r()*TAU});return}
+    var cx=0,cy=0;poly.forEach(function(q){cx+=q[0];cy+=q[1]});
+    var o=[cx/poly.length+(r()-.5)*16,cy/poly.length+(r()-.5)*12],an=(r()<.5?.35:1.2)+r()*1.1+(r()<.5?Math.PI/2:0),n=[Math.cos(an),Math.sin(an)];
+    split(cut(poly,o,n),d-1);split(cut(poly,o,[-n[0],-n[1]]),d-1);
+  })(region,depth);
+  return out;
+}
+function drift(q,f,amp){if(f.still)return q;amp=amp||.9;var kx=Math.round(q[0]*4),ky=Math.round(q[1]*4);return[q[0]+Math.sin(f.t*.31+hash(kx,ky)*TAU)*amp,q[1]+Math.cos(f.t*.23+hash(ky,kx)*TAU)*amp]}
+function wv(f,sp,ph){return f.still?0:Math.sin(f.t*sp+(ph||0))}
+function planes(r,ps,f){ps.forEach(function(p){var lv=Math.max(0,Math.min(10,p.lv+Math.round(wv(f,.09,p.ph)*2)));r.fill(p.p.map(function(q){return drift(q,f)}),p.a,p.b,lv)})}
+
+/* ---------- five paintings, one per piece ---------- */
+var PAINT=[];
+
+/* 1 · Gymnopédie: black-figure dancers round a vase frieze; Satie at a piano below. */
+(function(){
+  var bg=fracture(11,R(-8,-8,176,116),[[0,6],[6,0],[0,2]],5),fr=fracture(12,R(-4,28,168,48),[[1,2],[1,3],[3,1],[2,1]],4),low=fracture(13,R(-4,78,168,26),[[3,1],[1,3]],3);
+  function key(r,y){r.fill(R(0,y,160,6),4);for(var x=0;x<164;x+=8){r.line(x,y+1,x,y+4,5);r.line(x,y+4,x+5,y+4,5);r.line(x+5,y+4,x+5,y+2,5);r.line(x+5,y+2,x+2,y+2,5)}}
+  function dancer(r,f,x,y,ph,d){
+    var s=wv(f,.8,ph),w=wv(f,.6,ph+1);
+    r.fill(E(x+d,y-26,2.6,3,0,TAU,12),4);
+    r.fill([[x+d*2.4,y-27.2],[x+d*4.2,y-25.2],[x+d*2.4,y-24.6]],4);
+    r.fill([[x-3,y-22],[x+3,y-22],[x+2,y-13],[x-2,y-13]],4);
+    r.fill([[x-2,y-14],[x+2,y-14],[x+6+s,y-3],[x-6+s*.5,y-3]],4);
+    r.fill([[x,y-14],[x+2,y-14],[x+6+s,y-3],[x,y-3]],4,2,5);
+    r.line(x-1,y-3,x-3-s*2,y+2,4,1);r.line(x+1,y-3,x+3+s*2,y+2,4,1);
+    r.line(x,y-21,x+d*7,y-28+w*2,4,1);r.line(x,y-21,x-d*6,y-17-w,4,1);
+    r.dot(x+d*2,y-27,5);r.line(x-2,y-14,x+2,y-14,5);
+  }
+  PAINT.push({alt:"Black-figure dancers in profile moving round a terracotta vase frieze, with a small figure at a piano below.",
+    pal:["#1d1410","#b5552b","#8a3a1d","#d08a4a","#120c0a","#e6c79a","#3a2418"],
+    draw:function(r,f){
+      r.mk=0;planes(r,bg,f);
+      r.mk=2;planes(r,fr,f);key(r,24);key(r,74);
+      r.mk=1;for(var i=0;i<6;i++){var sp=(W+40)/6,x=((i*sp+f.t*1.6)%(W+40))-20;dancer(r,f,x,68,i*1.7,i%2?-1:1)}
+      r.mk=0;planes(r,low,f);
+      r.mk=3;r.fill(R(84,84,14,15),4);r.line(84,91,97,91,5);r.fill(R(68,95,9,2),4);
+      var a=wv(f,.7);r.fill(E(72,85,2.4,2.8,0,TAU,10),4);r.fill([[69,88],[75,88],[76,95],[69,95]],4);r.line(74,89,83,90+a,4,1);r.line(70,95,70,99,4);r.line(76,95,78,99,4);
+      r.mk=0;
+    }});
+})();
+
+/* 2 · Clair de lune: moonlit park, a fountain, masked figures. */
+(function(){
+  var sky=fracture(21,R(-8,-8,176,78),[[0,1],[1,2],[0,9]],5),gr=fracture(22,R(-8,64,176,44),[[5,6],[5,8],[6,5]],4);
+  function mask(r,f,x,y,sw){x+=sw;r.fill([[x-8,y+26],[x+8,y+26],[x,y+2]],8,9,5);r.fill([[x,y+2],[x+8,y+26],[x,y+26]],9,2,4);r.fill(E(x,y,3,3.5,0,TAU,10),8);r.fill(E(x,y-.5,3.2,1.6,0,TAU,10),7);r.dot(x-1,y-.5,8);r.dot(x+1,y-.5,8);r.fill([[x-4,y-3],[x+4,y-3],[x,y-9]],8)}
+  PAINT.push({alt:"Moonlight over a park at night: a fountain, cypress trees and two masked figures under the moon.",
+    pal:["#0d1626","#1b2a4a","#34507a","#e8e2c4","#9fb4cf","#10221d","#1f3d33","#d9d4e8","#07090f","#4a3c6e"],
+    draw:function(r,f){
+      r.mk=0;planes(r,sky,f);
+      r.mk=1;r.fill(E(94,22,16,16,0,TAU,20),-1,4,2);r.fill(E(94,22,9,9),3);r.fill(E(94,22,9,9,-Math.PI/2,Math.PI/2,12),3,4,6);
+      r.mk=0;planes(r,gr,f);
+      r.fill([[6,72],[22,72],[14,22]],5,6,4);r.fill([[24,72],[36,72],[30,36]],5,8,3);r.fill([[136,74],[156,74],[146,28]],5,6,5);
+      r.mk=2;
+      r.fill(E(80,82,26,5),2,4,4);r.fill(E(80,81,22,3),1,4,3);r.fill(E(72,81,2,1,0,TAU,8),3);
+      r.fill(R(78,64,4,17),4,2,6);r.fill([[69,63],[91,63],[80,68]],4,2,3);r.line(80,63,80,52,4);
+      for(var k=0;k<10;k++){var u=f.still?k/10:((f.t*.25+k/10)%1),sd=k%2?1:-1;r.dot(80+sd*u*11,52-8*u+20*u*u,u<.5?3:4)}
+      mask(r,f,50,64,wv(f,.35)*1.2);mask(r,f,112,66,wv(f,.3,2)*1.2);
+      r.mk=0;
+    }});
+})();
+
+/* 3 · Goldberg Aria: a two-keyboard harpsichord by candlelight. */
+(function(){
+  var bg=fracture(31,R(-8,-8,176,116),[[0,1],[1,0],[1,8]],5);
+  function manual(r,x,y,w){r.fill(R(x,y,w,3),4);for(var i=0;i<w;i++){var m=i%7;if(m===1||m===3||m===4||m===5)r.dot(x+i+.5,y,5)}r.line(x,y+3,x+w,y+3,5)}
+  PAINT.push({alt:"A two-keyboard harpsichord with its lid raised, lit by a single candle at night.",
+    pal:["#0e0a08","#2a1a10","#6b3f1e","#9a6230","#e9dcc0","#151110","#ffd27a","#c9772e","#5a1f16","#b8923f"],
+    draw:function(r,f){
+      var fl=wv(f,7.3)*.6+wv(f,4.1,1)*.5;
+      r.mk=0;planes(r,bg,f);
+      r.mk=3;r.fill(E(138,34,30,26,0,TAU,20),-1,7,2);r.fill(E(138,34,16,14,0,TAU,16),-1,7,5);
+      r.mk=1;
+      r.line(24,72,24,93,1,1);r.line(62,72,62,93,1,1);r.line(116,70,116,90,1,1);
+      r.fill([[30,55],[98,54],[120,17],[70,24]],8,9,2);r.stroke([[34,55],[96,54],[116,21],[71,27]],9);
+      r.fill([[14,56],[98,54],[124,62],[124,72],[14,72]],2,3,4);r.fill([[62,55],[124,62],[124,72],[84,72]],3,2,6);
+      r.line(14,72,124,72,1);
+      r.mk=2;r.fill(R(12,50,3,11),2);r.fill(R(59,50,3,11),2);manual(r,15,51,44);manual(r,15,56,44);
+      r.mk=3;r.line(138,93,138,52,9);r.line(132,52,144,52,9);r.line(134,93,142,93,9);r.fill(R(136,40,4,12),4);r.line(138,39,138,37,5);
+      r.fill(E(138+fl*.4,33,1.7,3.4+fl*.6,0,TAU,10),6);r.dot(138,35,4);
+      r.mk=0;mirror(r);
+    }});
+})();
+
+/* 4 · Gnossienne: the red, top-heavy columns of Knossos, and a stave without bar lines. */
+(function(){
+  var sky=fracture(41,R(-8,-8,176,26),[[6,8],[8,6],[6,7]],3),wall=fracture(42,R(-8,18,176,60),[[1,2],[1,0],[2,1]],4),fl=fracture(43,R(-8,74,176,34),[[7,2],[2,7]],3);
+  var notes=[[0,2],[12,4],[22,3],[30,1],[44,5],[52,3],[66,2],[74,6],[88,4],[98,3],[112,1],[122,2],[136,5],[150,4],[160,3]];
+  PAINT.push({alt:"The red, top-heavy columns of the palace of Knossos on Crete, above a musical stave with no bar lines.",
+    pal:["#3b2a16","#8f6127","#b88a45","#b3261e","#6e1410","#141010","#3e6f8f","#d9c9a6","#234257"],
+    draw:function(r,f){
+      r.mk=0;planes(r,sky,f);planes(r,wall,f);
+      r.fill(R(0,13,160,5),5);for(var x=4;x<160;x+=12)r.fill(R(x,14,4,3),3);
+      r.mk=1;[22,58,94,130].forEach(function(cx,i){
+        var lv=Math.max(0,Math.min(10,8+Math.round(wv(f,.12,i)*2)));
+        r.fill(R(cx-9,19,18,3),5);r.fill(E(cx,24,9,3,0,TAU,14),5);
+        r.fill([[cx-7.5,26],[cx+7.5,26],[cx+4.5,74],[cx-4.5,74]],3);
+        r.fill([[cx,26],[cx+7.5,26],[cx+4.5,74],[cx,74]],3,4,lv);
+      });
+      r.mk=0;planes(r,fl,f);
+      r.mk=2;for(var l=0;l<5;l++)r.line(6,80+l*3,154,80+l*3,5);
+      notes.forEach(function(n){var x=((n[0]-(f.still?0:f.t*2))%170+170)%170-5;if(x<9||x>151)return;var y=92-n[1]*1.5;r.fill(E(x,y,2,1.4,0,TAU,10),5);r.line(x+2,y,x+2,y-7,5)});
+      r.mk=0;
+    }});
+})();
+
+/* 5 · Nocturne: a piano in a dark room by a tall window; the moon and Paris rooftops outside. */
+(function(){
+  var bg=fracture(51,R(-8,-8,176,116),[[0,1],[1,2],[0,2]],5),sk=fracture(52,R(94,8,44,56),[[10,2],[2,10]],3);
+  var roofs=[[94,62],[100,58],[104,58],[104,54],[107,54],[107,58],[114,60],[120,56],[126,56],[126,51],[129,51],[129,56],[138,59],[138,80],[94,80]];
+  PAINT.push({alt:"A grand piano in a dark room beside a tall window, with the moon and Paris rooftops outside.",
+    pal:["#0b0d14","#171b28","#2a3048","#e9e4cc","#6d7fa6","#0a0a0c","#3d4560","#e7dfc8","#24304a","#c9a24a","#11182a"],
+    draw:function(r,f){
+      r.mk=0;planes(r,bg,f);
+      r.mk=2;r.fill([[94,80],[138,80],[108,100],[30,100]],-1,4,3);
+      r.fill(R(90,4,52,80),1);planes(r,sk,f);r.fill(E(124,20,6,6,0,TAU,16),3);r.fill(E(124,20,6,6,-Math.PI/2,Math.PI/2,8),3,4,6);
+      r.mk=3;r.fill(roofs,8);r.fill(R(100,64,2,2),9);r.fill(R(118,68,2,2),9);r.fill(R(130,63,2,2),f.still||wv(f,.2)>-.6?9:8);
+      r.mk=2;r.line(116,6,116,80,1);r.line(92,42,140,42,1);r.stroke(R(92,6,48,74),2);r.line(90,82,142,82,6);
+      r.mk=1;
+      r.fill([[16,58],[66,52],[60,28]],6,2,6);r.line(16,58,60,28,4);
+      r.fill([[10,58],[68,52],[84,60],[62,70],[10,70]],5,6,3);
+      r.fill(R(10,68,50,4),7);for(var i=0;i<50;i++){var m=i%7;if(m===1||m===2||m===4||m===5||m===6)r.dot(10+i,68,5)}
+      r.line(14,72,14,92,5,1);r.line(56,72,56,92,5,1);r.line(78,64,78,86,5,1);
+      r.mk=0;mirror(r);
+    }});
+})();
+
+/* ---------- the pieces and their facts (from mockups/facts.md) ---------- */
+var TRACKS=[
+ {title:"Gymnopédie No. 1",composer:"Erik Satie",year:"1888",place:"Montmartre",facts:[
+  ["Satie wrote his three Gymnopédies in 1888, in his early twenties.",[1]],
+  ["The title comes from the gymnopaedia, a festival in ancient Sparta where young men danced.",[2]],
+  ["Satie was playing piano in Montmartre's cabarets, such as Le Chat Noir, around the time he wrote them.",[3]],
+  ["The score asks for it to be played “Lent et douloureux”: slow and sorrowful.",[]],
+  ["Claude Debussy, Satie's friend, later arranged two of the Gymnopédies for orchestra.",[]]]},
+ {title:"Clair de lune",composer:"Claude Debussy",year:"1905",place:"",facts:[
+  ["“Clair de lune” means “moonlight”. It is the third of four movements in Debussy's Suite bergamasque.",[1]],
+  ["The title comes from a poem by Paul Verlaine, which pictures masked dancers and fountains under the moon.",[2]],
+  ["Debussy began the suite around 1890 but did not publish it until 1905, revising it first.",[]],
+  ["It is in D-flat major, and its opening is marked pp: very softly.",[]]]},
+ {title:"Goldberg Variations: Aria",composer:"Johann Sebastian Bach",year:"1741",place:"",facts:[
+  ["Bach published the Goldberg Variations in 1741: this Aria, thirty variations, then the Aria again.",[1,2]],
+  ["It was written for a harpsichord with two keyboards, so the hands can cross without colliding.",[2]],
+  ["Every variation is built on the bass line of this Aria, not on its tune.",[]],
+  ["Bach's first biographer told a story that it was played to soothe a count's sleepless nights. Historians doubt it, but the name of the young harpsichordist in the story, Goldberg, stuck.",[3]],
+  ["Every third variation, up to the 27th, is a canon, where one voice imitates another.",[]],
+  ["This recording by Kimiko Ishizaka was crowdfunded and released into the public domain in 2012.",[]]]},
+ {title:"Gnossienne No. 1",composer:"Erik Satie",year:"1890",circa:true,place:"",facts:[
+  ["Satie’s title may come from “gnosis”, knowledge, or from an old word for a dance of Knossos on Crete.",[1]],
+  ["Satie wrote it without bar lines or a time signature.",[2]],
+  ["Besides its tempo mark, “Lent”, the score whispers odd advice, like “Très luisant” (very shiny) and “Questionnez” (ask questions).",[]],
+  ["It dates from around 1890. Satie may have been inspired by music he heard at the 1889 Paris World's Fair.",[]]]},
+ {title:"Nocturne in E-flat major, Op. 9 No. 2",composer:"Frédéric Chopin",year:"1832",place:"Paris",facts:[
+  ["Chopin wrote it around 1830–31, when he was about twenty, and it was published in 1832.",[1]],
+  ["The nocturne, a dreamy “night piece” for piano, was invented by John Field. Chopin made the form famous.",[2]],
+  ["Chopin left Poland in 1830 and never went back. From 1831 he made his home in Paris.",[3]],
+  ["Each time the melody comes back, Chopin decorates it a little more, like an opera singer ornamenting a tune.",[]],
+  ["It is in 12/8 time: four slow beats, each divided into three.",[]]]}
+];
+PAINT.forEach(function(p){p.rgb=p.pal.map(function(h){var n=parseInt(h.slice(1),16);return[n>>16,n>>8&255,n&255]})});
+
+/* ---------- state ---------- */
+var $=function(id){return document.getElementById(id)};
+var cv=$("scene"),ctx=cv.getContext("2d"),img=ctx.createImageData(W,H),ra=new Raster(),rb=new Raster();
+var FACT_MS=7000,BREATH_MS=4200,DISSOLVE_MS=1400;
+var idx=0,prev=-1,dissolveAt=0,playing=false,factI=-1,factTimer=0,breath=null,t=0,last=performance.now();
+
+function blockOrder(x,y){return hash(x>>2,y>>2)}
+function render(now){
+  var still=reduce.matches,dt=Math.min(.1,(now-last)/1000);last=now;
+  if(!still)t+=dt*(playing?1:.35);
+  var f={t:t,still:still};
+  ra.b.fill(0);ra.m.fill(0);PAINT[idx].draw(ra,f);
+  var dp=prev>=0&&!still?(now-dissolveAt)/DISSOLVE_MS:1;
+  if(dp<1){rb.b.fill(0);rb.m.fill(0);PAINT[prev].draw(rb,f)}else prev=-1;
+  /* one slow breath: brightness rises and falls once on the named motif */
+  var k=0,set=null;
+  if(breath){set=breath.set;if(still)k=.18;else{var u=(now-breath.at)/BREATH_MS;if(u>=1)breath=null;else if(u>0){var s=Math.sin(Math.PI*u);k=s*s*.42}}}
+  var d=img.data,pal=PAINT[idx].rgb,pp=prev>=0?PAINT[prev].rgb:null;
+  for(var y=0,i=0;y<H;y++)for(var x=0;x<W;x++,i++){
+    var c,o=i*4;
+    if(dp<1&&blockOrder(x,y)>dp){c=pp[rb.b[i]]}
+    else{c=pal[ra.b[i]];if(k&&set&&set.indexOf(ra.m[i])>=0){d[o]=c[0]+(255-c[0])*k*.55+c[0]*k*.25;d[o+1]=c[1]+(255-c[1])*k*.55+c[1]*k*.25;d[o+2]=c[2]+(255-c[2])*k*.55+c[2]*k*.25;d[o+3]=255;continue}}
+    d[o]=c[0];d[o+1]=c[1];d[o+2]=c[2];d[o+3]=255;
+  }
+  ctx.putImageData(img,0,0);
+  requestAnimationFrame(render);
+}
+
+/* ---------- the margin ---------- */
+function anchorText(){var tr=TRACKS[idx];$("year").innerHTML=(tr.circa?'<span class="circa">c.</span>':"")+tr.year;$("year").setAttribute("aria-label",(tr.circa?"circa ":"")+tr.year);$("place").textContent=tr.place}
+function swap(el,fn){if(reduce.matches){fn();el.classList.remove("out");return}el.classList.add("out");setTimeout(function(){fn();el.classList.remove("out")},700)}
+function showFact(){
+  var tr=TRACKS[idx];factI=(factI+1)%tr.facts.length;var fa=tr.facts[factI],at=idx;
+  swap($("fact"),function(){if(at!==idx||!playing)return;$("fact").textContent=fa[0];breath=fa[1].length?{set:fa[1],at:performance.now()}:null});
+}
+function hideFact(){clearInterval(factTimer);clearTimeout(factTimer);factTimer=0;breath=null;$("fact").classList.add("out")}
+function startFacts(delay){hideFact();factTimer=setTimeout(function(){showFact();factTimer=setInterval(showFact,FACT_MS)},delay)}
+
+/* ---------- player ---------- */
+function setTrack(i,dissolve){
+  if(dissolve){prev=idx;dissolveAt=performance.now()}
+  idx=i;factI=-1;
+  var tr=TRACKS[idx];$("title").textContent=tr.title;$("composer").textContent=tr.composer;cv.setAttribute("aria-label",PAINT[idx].alt);
+}
+$("play").addEventListener("click",toggle);
+function toggle(){
+  playing=!playing;
+  $("play").setAttribute("aria-label",playing?"Pause":"Play");
+  $("pp").setAttribute("d",playing?"M5 4h3.5v12H5zM11.5 4H15v12h-3.5z":"M6 3.5v13L16.5 10z");
+  var tr=TRACKS[idx];$("status").textContent=playing?"Now playing "+tr.title+" by "+tr.composer+".":"Paused.";
+  if(playing)startFacts(reduce.matches?0:900);else hideFact();
+}
+$("next").addEventListener("click",function(){
+  hideFact();setTrack((idx+1)%TRACKS.length,true);
+  swap($("anchor"),anchorText);
+  if(playing){var tr=TRACKS[idx];$("status").textContent="Now playing "+tr.title+" by "+tr.composer+".";startFacts(reduce.matches?0:DISSOLVE_MS+300)}
+});
+var vol=80,muted=false;
+function vUI(){var s=muted||vol===0;$("mute").setAttribute("aria-label",s?"Unmute":"Mute");$("vw").setAttribute("d",s?"M13.3 7.3l1.1-1.1 1.8 1.8 1.8-1.8 1.1 1.1-1.8 1.8 1.8 1.8-1.1 1.1-1.8-1.8-1.8 1.8-1.1-1.1 1.8-1.8z":"M13.2 6.6a4.8 4.8 0 0 1 0 6.8l-1.1-1.1a3.2 3.2 0 0 0 0-4.6zM15.3 4.5a7.8 7.8 0 0 1 0 11l-1.1-1.1a6.2 6.2 0 0 0 0-8.8z");$("vol").value=muted?0:vol;$("vol").setAttribute("aria-valuetext",(muted?0:vol)+"%")}
+$("vol").addEventListener("input",function(e){vol=+e.target.value;if(vol>0)muted=false;vUI()});
+$("mute").addEventListener("click",function(){if(vol===0)vol=60;else muted=!muted;vUI()});
+document.addEventListener("keydown",function(e){if(e.key!==" "||e.repeat||e.defaultPrevented)return;if(e.target.closest&&e.target.closest("button,input,a,select,textarea"))return;e.preventDefault();toggle()});
+
+setTrack(0,false);anchorText();
+requestAnimationFrame(render);
+})();
+</script>
+</body>
+</html>

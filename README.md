@@ -1,9 +1,12 @@
 # classican
 
 One screen of public-domain classical music for studying and deep work. The only interface is a
-small player at bottom centre: play/pause, next and volume. Behind it,
-five original pixelated paintings in the manner of Cubist Picasso slowly shift and dissolve into
-one another every 45 seconds. No accounts, no search, no other pages.
+small player at bottom centre: play/pause, next and volume. Behind it is an original pixel
+painting of the piece that is playing: Greek dancers for Satie's Gymnopédie, Verlaine's moonlit park
+for Clair de lune, Bach's two-keyboard harpsichord, and so on. While music plays, a short fact about
+the piece's history comes every 40 seconds or so: the painting dims gently around the thing the fact
+is about, and the words sit beside that pool of light for a few seconds before the light returns.
+No accounts, no search, no other pages.
 
 ## Run
 
@@ -35,27 +38,37 @@ play tries again. Space plays and pauses from anywhere on the page; media keys a
 | --- | --- |
 | Name, tagline, description | `lib/site.ts` (`name`, `tagline`, `description`) |
 | Playlist | `lib/site.ts` (`tracks`) |
-| How long each painting stays | `lib/site.ts` (`paintingSeconds`) |
+| Facts about each piece | `lib/site.ts` (`facts` on each track) |
+| Time from one fact to the next | `lib/site.ts` (`factSeconds`) |
 | Paintings | `lib/paintings.ts` |
 | Palette of the frame | `app/globals.css` (`:root`) |
 
 **Adding a piece.** Append an entry to `tracks` with `title`, `composer`, `performer`, the Commons
-file page as `source`, and the `ogg` and `mp3` URLs. Use only recordings whose licence allows it.
+file page as `source`, the `ogg` and `mp3` URLs, the id of its `painting`, and its `facts`. Use only
+recordings whose licence allows it.
 
-**Adding a painting.** Each painting is a palette plus a `render(raster, frame)` function that draws
-into a 160×100 buffer of palette indices with `fill`, `stroke`, `line` and `dot` from
-`lib/raster.ts`. `fracture()` makes the angular background planes; `face()` and `guitar()` are
-shared pieces. Give it an `alt` that describes the picture: it becomes the background's
-accessible name. Add it to the `paintings` array.
+**Facts.** Each fact is a sentence or two a beginner can enjoy, and only something a source
+confirms. Word legends as stories. Give a fact a `motif` (a name from its painting's `motifs`) and
+the light gathers there while it shows; without one it sits in the top-left corner. Record the
+source for each fact in `mockups/facts.md`.
+
+**Adding a painting.** Each painting depicts its piece: a palette plus a `render(raster, frame)`
+function that draws into a 160×100 buffer of palette indices with `fill`, `tint`, `stroke`, `line`
+and `dot` from `lib/raster.ts`. `fracture()` makes the angular background planes. List the things a
+fact can point at in `motifs` as `[x, y, radius]` in art pixels. Give it an `alt` that describes the
+picture: it becomes the background's accessible name. Add it to the `paintings` array with a new
+`PaintingId`.
 
 **Frame palette.** The chrome uses four tokens only: `--canvas` #181818, `--surface` #262626,
 `--ink` #FAFAFA and `--muted` #A3A3A3. Colour belongs to the paintings.
 
 ## Motion
 
-While music plays the paintings drift a little faster; paused, they settle. Under
-`prefers-reduced-motion` nothing moves: paintings change with an instant swap and hover
-changes are immediate.
+While music plays the painting drifts a little faster; paused, it settles, and facts pause too.
+When the piece changes, its painting dissolves in and its facts start again from the first. On a
+narrow screen the painting pans so the lit motif stays in view above the player. Under
+`prefers-reduced-motion` nothing moves: paintings change with an instant swap, the light and the
+words appear without fading, and hover changes are immediate.
 
 ## Audio sources
 
@@ -70,4 +83,6 @@ The player uses Commons' MP3 transcode where the browser supports MP3, and the o
 | Gnossienne No. 1 | Erik Satie | La Pianista | [File:Satie - Gnossienne 1.ogg](https://commons.wikimedia.org/wiki/File:Satie_-_Gnossienne_1.ogg) |
 | Nocturne in E-flat major, Op. 9 No. 2 | Frédéric Chopin | Al Goldstein collection, Pandora Music repository at ibiblio.org | [File:Frederic Chopin - Nocturne Eb major Opus 9, number 2.ogg](https://commons.wikimedia.org/wiki/File:Frederic_Chopin_-_Nocturne_Eb_major_Opus_9,_number_2.ogg) |
 
-`mockups/` holds the design concepts explored for the first version of the site.
+`mockups/` holds the design concepts explored for the site: `concept-*.html` for the first version,
+`facts-concept-*.html` for the facts and paintings (Concept 4, Spotlight, was built), and
+`facts.md`, the fact sheet with sources.

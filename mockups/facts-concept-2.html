@@ -1,0 +1,504 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>classican · Wall label</title>
+<style>
+:root{--canvas:#181818;--surface:#262626;--ink:#fafafa;--muted:#a3a3a3;--font:Inter,Arial,Helvetica,sans-serif;color-scheme:dark}
+*,*::before,*::after{box-sizing:border-box;margin:0}
+html,body{height:100%;background:var(--canvas)}
+body{color:var(--ink);font:400 16px/1.5 var(--font);letter-spacing:-.009em;-webkit-font-smoothing:antialiased;overflow:hidden}
+.scene{position:fixed;inset:0;width:100%;height:100%;display:block;object-fit:cover;image-rendering:pixelated;image-rendering:crisp-edges;background:var(--canvas)}
+
+/* The leader: one hairline from the label to the motif the fact is about. */
+.lead{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;opacity:0;transition:opacity 1.2s ease}
+.lead.on{opacity:.8}
+.lead path,.lead circle{fill:none;stroke:var(--muted);stroke-width:1}
+
+/* The wall label: the painting's caption. */
+.label{position:fixed;top:24px;left:24px;max-width:min(320px,calc(100% - 48px));padding:11px 16px 12px;background:var(--surface);border-radius:12px}
+.subject{font-size:13px;line-height:1.35;color:var(--ink);transition:opacity .35s}
+.fact{margin-top:6px;font-size:14px;line-height:1.45;color:var(--muted);transition:opacity .35s}
+.label:not(.playing) .fact{display:none}
+
+/* The player, as on the live site. */
+.player{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);width:min(448px,calc(100% - 48px));padding:12px 12px 8px 20px;background:var(--surface);border-radius:16px}
+.now{display:flex;flex-wrap:wrap;column-gap:8px;padding-right:8px;line-height:1.18}
+.composer{color:var(--muted)}
+.controls{display:flex;flex-wrap:wrap;align-items:center;gap:4px;margin:6px 0 0 -12px}
+.control{display:grid;place-items:center;width:44px;height:44px;flex:none;padding:0;border:0;border-radius:12px;background:none;color:var(--ink);cursor:pointer;transition:opacity 120ms}
+.control svg{width:20px;height:20px;fill:currentColor}
+.control:hover{opacity:.72}
+.control.play{border-radius:50%;background:var(--ink);color:var(--canvas)}
+.volume{display:flex;align-items:center;gap:4px;flex:1 1 140px;min-width:0;margin-left:auto}
+.volume input{flex:1;min-width:64px;height:44px;margin:0 8px 0 0;accent-color:var(--ink);background:transparent;cursor:pointer}
+:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+
+.concept{position:fixed;left:16px;bottom:8px;max-width:min(420px,calc(100% - 32px));padding:4px 8px;border-radius:6px;background:var(--surface);font-size:11px;line-height:1.35;color:var(--muted)}
+.concept b{font-weight:500;color:var(--ink)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+
+/* Mock only: lift the pill so the concept note never sits under it. */
+@media (max-width:960px){.player{bottom:64px}}
+@media (max-width:600px){.label{top:16px;left:16px;max-width:calc(100% - 32px)}}
+@media (prefers-reduced-motion:reduce){.lead,.subject,.fact,.control{transition:none}}
+</style>
+</head>
+<body>
+<canvas class="scene" id="art" role="img" aria-label=""></canvas>
+<svg class="lead" id="lead" aria-hidden="true"><path id="lp" shape-rendering="crispEdges"/><circle id="lc" r="4"/></svg>
+
+<aside class="label" id="label" aria-label="About this painting">
+  <p class="subject" id="subject"></p>
+  <p class="fact" id="fact"></p>
+</aside>
+
+<section class="player" id="player" aria-label="Music player">
+  <p class="now"><span id="title"></span><span class="composer" id="composer"></span></p>
+  <div class="controls">
+    <button type="button" class="control play" id="play" aria-label="Play">
+      <svg viewBox="0 0 20 20" aria-hidden="true"><path id="playIcon" d="M6 3.5v13L16.5 10z"/></svg>
+    </button>
+    <button type="button" class="control" id="next" aria-label="Next piece">
+      <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M14 4h2v12h-2zM4 4v12l8.5-6z"/></svg>
+    </button>
+    <div class="volume">
+      <button type="button" class="control" id="mute" aria-label="Mute">
+        <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 7.5h3.5L11 4v12l-4.5-3.5H3z"/><path id="volIcon" d="M13.2 6.6a4.8 4.8 0 0 1 0 6.8l-1.1-1.1a3.2 3.2 0 0 0 0-4.6zM15.3 4.5a7.8 7.8 0 0 1 0 11l-1.1-1.1a6.2 6.2 0 0 0 0-8.8z"/></svg>
+      </button>
+      <input type="range" id="vol" min="0" max="100" step="1" value="80" aria-label="Volume">
+    </div>
+  </div>
+  <p class="sr" role="status" id="status"></p>
+</section>
+
+<p class="concept"><b>Concept 2 — Wall label</b> · The label is the painting's caption: its subject, then a fact, with a hairline drawn to the motif the fact is about. Mock: a fact every 7s (real: one every ~40s).</p>
+
+<script>
+"use strict";
+const W = 160, H = 100;
+const BAYER = [0,8,2,10,12,4,14,6,3,11,1,9,15,7,13,5];
+
+/* ---------- tiny indexed rasterizer (as lib/raster.ts) ---------- */
+function fill(b, pts, a, c2, lv) {
+  if (c2 === undefined) c2 = a; lv = lv || 0;
+  let y0 = Infinity, y1 = -Infinity;
+  for (const p of pts) { if (p[1] < y0) y0 = p[1]; if (p[1] > y1) y1 = p[1]; }
+  y0 = Math.max(0, Math.floor(y0)); y1 = Math.min(H - 1, Math.ceil(y1));
+  for (let y = y0; y <= y1; y++) {
+    const sy = y + .5, xs = [];
+    for (let i = 0, j = pts.length - 1; i < pts.length; j = i++) {
+      const xi = pts[i][0], yi = pts[i][1], xj = pts[j][0], yj = pts[j][1];
+      if ((yi > sy) !== (yj > sy)) xs.push(xi + (sy - yi) / (yj - yi) * (xj - xi));
+    }
+    xs.sort((m, n) => m - n);
+    for (let k = 0; k + 1 < xs.length; k += 2) {
+      const xa = Math.max(0, Math.ceil(xs[k] - .5)), xb = Math.min(W - 1, Math.ceil(xs[k + 1] - .5) - 1);
+      for (let x = xa; x <= xb; x++) {
+        const c = lv > 0 && BAYER[(y & 3) * 4 + (x & 3)] < lv ? c2 : a;
+        if (c >= 0) b[y * W + x] = c;
+      }
+    }
+  }
+}
+function dot(b, x, y, c) { x = Math.round(x); y = Math.round(y); if (x >= 0 && y >= 0 && x < W && y < H) b[y * W + x] = c; }
+function line(b, x0, y0, x1, y1, c) {
+  x0 = Math.round(x0); y0 = Math.round(y0); x1 = Math.round(x1); y1 = Math.round(y1);
+  const dx = Math.abs(x1 - x0), dy = -Math.abs(y1 - y0), sx = x0 < x1 ? 1 : -1, sy = y0 < y1 ? 1 : -1;
+  let err = dx + dy;
+  for (;;) {
+    dot(b, x0, y0, c);
+    if (x0 === x1 && y0 === y1) return;
+    const e2 = 2 * err;
+    if (e2 >= dy) { err += dy; x0 += sx; }
+    if (e2 <= dx) { err += dx; y0 += sy; }
+  }
+}
+function stroke(b, pts, c, closed) {
+  const n = closed === false ? pts.length - 1 : pts.length;
+  for (let i = 0; i < n; i++) { const p = pts[i], q = pts[(i + 1) % pts.length]; line(b, p[0], p[1], q[0], q[1], c); }
+}
+function seg(b, x0, y0, x1, y1, w, c) {
+  const L = Math.hypot(x1 - x0, y1 - y0) || 1, nx = -(y1 - y0) / L * w / 2, ny = (x1 - x0) / L * w / 2;
+  fill(b, [[x0 + nx, y0 + ny], [x1 + nx, y1 + ny], [x1 - nx, y1 - ny], [x0 - nx, y0 - ny]], c);
+}
+function ell(cx, cy, rx, ry, from, to, n) {
+  from = from || 0; to = to === undefined ? Math.PI * 2 : to; n = n || 24;
+  const full = Math.abs(to - from - Math.PI * 2) < 1e-6, pts = [];
+  for (let i = 0; i < (full ? n : n + 1); i++) { const a = from + (to - from) * i / n; pts.push([cx + Math.cos(a) * rx, cy + Math.sin(a) * ry]); }
+  return pts;
+}
+const rect = (x, y, w, h) => [[x, y], [x + w, y], [x + w, y + h], [x, y + h]];
+function seeded(s) { return () => { s = (s + 0x6d2b79f5) | 0; let t = Math.imul(s ^ (s >>> 15), 1 | s); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+function clipHalf(poly, o, n) {
+  const side = p => (p[0] - o[0]) * n[0] + (p[1] - o[1]) * n[1], out = [];
+  for (let i = 0; i < poly.length; i++) {
+    const p = poly[i], q = poly[(i + 1) % poly.length], sp = side(p), sq = side(q);
+    if (sp >= 0) out.push(p);
+    if ((sp >= 0) !== (sq >= 0)) { const t = sp / (sp - sq); out.push([p[0] + (q[0] - p[0]) * t, p[1] + (q[1] - p[1]) * t]); }
+  }
+  return out;
+}
+/* Split a region into angular Cubist planes by straight cuts. */
+function frac(seed, pairs, depth, poly) {
+  const rnd = seeded(seed), out = [];
+  const split = (pl, d) => {
+    if (d === 0 || pl.length < 3) {
+      const pr = pairs[Math.floor(rnd() * pairs.length)];
+      out.push({ pts: pl, a: pr[0], b: pr[1], lv: [0, 3, 6, 8][Math.floor(rnd() * 4)], ph: rnd() * 6.283 });
+      return;
+    }
+    let cx = 0, cy = 0;
+    for (const p of pl) { cx += p[0]; cy += p[1]; }
+    const o = [cx / pl.length + (rnd() - .5) * 16, cy / pl.length + (rnd() - .5) * 12];
+    const ang = (rnd() < .5 ? .35 : 1.2) + rnd() * 1.1 + (rnd() < .5 ? Math.PI / 2 : 0), n = [Math.cos(ang), Math.sin(ang)];
+    split(clipHalf(pl, o, n), d - 1);
+    split(clipHalf(pl, o, [-n[0], -n[1]]), d - 1);
+  };
+  split(poly || [[-8, -8], [W + 8, -8], [W + 8, H + 8], [-8, H + 8]], depth);
+  return out;
+}
+function hash(x, y) { const s = Math.sin(x * 12.9898 + y * 78.233) * 43758.5453; return s - Math.floor(s); }
+function drift(p, f, amp) {
+  if (f.S) return p; amp = amp || .9;
+  const kx = Math.round(p[0] * 4), ky = Math.round(p[1] * 4);
+  return [p[0] + Math.sin(f.t * .31 + hash(kx, ky) * 6.283) * amp, p[1] + Math.cos(f.t * .23 + hash(ky, kx) * 6.283) * amp];
+}
+const wave = (f, sp, ph) => f.S ? 0 : Math.sin(f.t * sp + (ph || 0));
+function planes(b, list, f) {
+  for (const p of list) fill(b, p.pts.map(q => drift(q, f)), p.a, p.b, Math.max(0, Math.min(10, p.lv + Math.round(wave(f, .09, p.ph) * 2))));
+}
+function glow(b, cx, cy, rad, c, max) {
+  for (let y = Math.max(0, Math.floor(cy - rad)); y < Math.min(H, cy + rad); y++)
+    for (let x = Math.max(0, Math.floor(cx - rad)); x < Math.min(W, cx + rad); x++) {
+      const d = Math.hypot(x - cx, y - cy) / rad;
+      if (d < 1 && BAYER[(y & 3) * 4 + (x & 3)] < Math.round((1 - d) * max)) b[y * W + x] = c;
+    }
+}
+
+/* ---------- 1. Gymnopédie: dancers on a Greek frieze ---------- */
+const g1 = frac(11, [[1, 0], [0, 1], [1, 4]], 4), g1band = frac(12, [[2, 3], [3, 2], [2, 4]], 4, rect(-4, 31, W + 8, 49));
+function dancer(b, x, ph, f) {
+  const s = wave(f, .5, ph), by = 77, P = pts => pts.map(p => [x + p[0], by + p[1]]);
+  fill(b, P([[-2, -18], [2, -18], [8 + s, -4], [-7 + s, -4]]), 0);
+  fill(b, P([[-2, -18], [0, -18], [0, -4], [-7 + s, -4]]), 0, 4, 6);
+  line(b, x + 1, by - 16, x + 4 + s, by - 6, 3);
+  fill(b, P([[-4, -30], [4, -30], [2, -18], [-2, -18]]), 0);
+  seg(b, x - 2, by - 4, x - 6 - s * 2, by, 1.6, 0);
+  seg(b, x + 3, by - 4, x + 6 + s * 2, by, 1.6, 0);
+  seg(b, x + 3, by - 29, x + 12, by - 38 + s * 3, 1.4, 0);
+  seg(b, x - 3, by - 29, x - 11, by - 23 - s * 3, 1.4, 0);
+  fill(b, rect(x - 1, by - 33, 2, 3), 0);
+  fill(b, ell(x, by - 36, 3.2, 3.8), 0);
+  fill(b, ell(x - 3.5, by - 38, 2, 2), 0);
+  fill(b, P([[2, -37], [5.5, -35], [2, -33.5]]), 0);
+  dot(b, x + 1, by - 37, 3);
+}
+function greek(b, f) {
+  planes(b, g1, f); planes(b, g1band, f);
+  for (const y of [25, 80]) {
+    fill(b, rect(0, y, W, 6), 0);
+    for (let x = -6; x < W; x += 8) stroke(b, [[x, y + 5], [x, y + 1], [x + 6, y + 1], [x + 6, y + 4], [x + 2, y + 4], [x + 2, y + 3]], 5, false);
+  }
+  fill(b, rect(0, 77, W, 1), 0);
+  [22, 48, 72, 140].forEach((x, i) => dancer(b, x, i * 1.7, f));
+  // The pianist at an upright piano, in the same black-figure manner.
+  fill(b, rect(104, 46, 12, 31), 0); stroke(b, rect(106, 49, 8, 7), 3);
+  fill(b, rect(100, 57, 5, 2), 0); fill(b, rect(100, 57, 5, 1), 5);
+  fill(b, ell(95, 43, 3, 3.5), 0); fill(b, [[97, 42.5], [100, 44.5], [97, 46]], 0); dot(b, 96, 42, 3);
+  fill(b, [[92, 47], [97, 47], [99, 59], [92, 59]], 0);
+  fill(b, rect(92, 57, 9, 3), 0); seg(b, 100, 60, 101, 77, 1.6, 0);
+  seg(b, 96, 49, 102, 56 + wave(f, 2.1) * .8, 1.3, 0);
+  fill(b, rect(89, 60, 7, 2), 0); fill(b, rect(91, 62, 2, 15), 0);
+}
+
+/* ---------- 2. Clair de lune: moonlit park, fountain, masks ---------- */
+const c1 = frac(21, [[0, 1], [1, 2], [1, 0], [2, 1]], 5), c1g = frac(22, [[5, 0], [6, 5], [5, 1]], 4, [[-8, 60], [W + 8, 56], [W + 8, H + 8], [-8, H + 8]]);
+function masker(b, x, dir) {
+  fill(b, [[x - 5, 79], [x + 5, 79], [x + 1.5, 52], [x - 1.5, 52]], 0);
+  fill(b, [[x, 52], [x + 1.5, 52], [x + 5, 79], [x, 79]], 0, 2, 5);
+  fill(b, rect(x - 3, 51.5, 6, 1), 7);
+  fill(b, ell(x, 49, 2.6, 3), 3);
+  fill(b, rect(x - 2.6, 47.5, 5.2, 2), 7); dot(b, x - 1, 48, 0); dot(b, x + 1, 48, 0);
+  fill(b, [[x - 5, 46.5], [x + 5, 46.5], [x + dir, 40]], 0);
+}
+function moonlit(b, f) {
+  planes(b, c1, f); planes(b, c1g, f);
+  fill(b, ell(96, 20, 9, 9), 4);
+  fill(b, ell(96, 20, 9, 9, -Math.PI / 2, Math.PI / 2, 12), 4, 3, 5);
+  fill(b, [[90, 29], [102, 29], [110, 74], [56, 74]], -1, 3, 2);
+  const tree = (pts, a, c, lv) => fill(b, pts.map(p => drift(p, f, .6)), a, c, lv);
+  tree([[-2, 72], [14, 18], [30, 72]], 5, 0, 4); tree([[10, 74], [26, 30], [42, 74]], 6, 5, 6);
+  tree([[124, 72], [140, 24], [158, 72]], 5, 0, 4); tree([[140, 74], [154, 36], [168, 74]], 6, 5, 6);
+  // Fountain
+  fill(b, [[64, 68], [96, 68], [91, 75], [69, 75]], 2); fill(b, rect(63, 67, 34, 1), 3); fill(b, rect(66, 68, 28, 1), 4, 3, 8);
+  fill(b, [[78, 56], [82, 56], [83, 68], [77, 68]], 2, 1, 4);
+  fill(b, [[70, 54], [90, 54], [86, 58], [74, 58]], 3);
+  const h = 12 + wave(f, 1.3) * 1.5;
+  line(b, 80, 54, 80, 54 - h, 7);
+  for (let i = 0; i < 6; i++) {
+    const s = f.S ? i / 6 : (f.t * .8 + i / 6) % 1, y = 54 - h + (h + 4) * s * s;
+    dot(b, 80 - s * 10, y, i % 2 ? 7 : 4); dot(b, 80 + s * 10, y, i % 2 ? 4 : 7);
+  }
+  masker(b, 62, 1); masker(b, 99, -1);
+}
+
+/* ---------- 3. Goldberg: two-keyboard harpsichord by candlelight ---------- */
+const h1 = frac(31, [[0, 1], [1, 0], [1, 2], [0, 7]], 5);
+function harpsichord(b, f) {
+  planes(b, h1, f);
+  const fl = wave(f, 3.1);
+  glow(b, 99, 27, 48 + fl, 2, 7); glow(b, 99, 27, 18 + fl, 3, 6);
+  fill(b, [[-8, 86], [W + 8, 84], [W + 8, H + 8], [-8, H + 8]], 1, 0, 4);
+  fill(b, [[36, 50], [92, 47], [50, 16]], 2, 3, 4); stroke(b, [[36, 50], [92, 47], [50, 16]], 4);
+  fill(b, [[34, 50], [128, 46], [128, 64], [34, 68]], 3, 2, 3);
+  fill(b, [[128, 46], [140, 40], [140, 56], [128, 64]], 2, 1, 6);
+  line(b, 34, 50, 128, 46, 4); line(b, 34, 68, 128, 64, 1);
+  fill(b, rect(52, 50, 3, 12), 1); fill(b, rect(104, 48, 3, 12), 1);
+  const manual = (x0, x1, y0, dy) => {
+    fill(b, [[x0, y0], [x1, y0 - dy], [x1, y0 - dy + 3.5], [x0, y0 + 3.5]], 6);
+    const pat = [1, 1, 0, 1, 1, 1, 0];
+    for (let x = x0 + 1, k = 0; x < x1 - 1; x += 2, k++) if (pat[k % 7]) dot(b, x, y0 - dy * (x - x0) / (x1 - x0) + .5, 0);
+  };
+  manual(56, 102, 52, 2); manual(54, 104, 57, 2);
+  seg(b, 42, 67, 40, 86, 1.6, 1); seg(b, 82, 65, 82, 85, 1.6, 1); seg(b, 122, 64, 124, 85, 1.6, 1);
+  // Candle
+  fill(b, rect(95, 44, 8, 2), 4); fill(b, rect(98, 40, 2, 4), 4);
+  fill(b, rect(97, 30, 4, 10), 6); fill(b, rect(99, 30, 2, 10), 6, 4, 4);
+  const s = fl * .6;
+  fill(b, [[99 + s, 22], [101.2, 27], [99, 29.5], [96.8, 27]], 5);
+  fill(b, [[99, 25.5], [100, 27.5], [99, 29], [98, 27.5]], 4); dot(b, 99, 29, 0);
+}
+
+/* ---------- 4. Gnossienne: Knossos columns, a stave with no bar lines ---------- */
+const k1 = frac(41, [[3, 4], [4, 3], [3, 7], [5, 4]], 5);
+function knossos(b, f) {
+  planes(b, k1, f);
+  fill(b, [[-8, 82], [W + 8, 80], [W + 8, H + 8], [-8, H + 8]], 7, 1, 4);
+  fill(b, [[-8, 12], [W + 8, 10], [W + 8, 20], [-8, 21]], 1);
+  fill(b, [[-8, 15], [W + 8, 13], [W + 8, 16], [-8, 18]], 2);
+  for (const x of [36, 66, 96, 126]) {
+    fill(b, [[x - 6, 26], [x + 6, 26], [x + 3.5, 80], [x - 3.5, 80]], 2);
+    fill(b, [[x, 26], [x + 6, 26], [x + 3.5, 80], [x, 80]], 2, 1, 6);
+    fill(b, ell(x, 26, 9, 3.5), 0); fill(b, rect(x - 10, 20, 20, 3), 0); fill(b, rect(x - 5, 80, 10, 2), 0);
+  }
+  // A strip of manuscript, collaged across the columns: five lines, no bar lines.
+  const yAt = x => 58 - (x - 6) * 3 / 148;
+  fill(b, [[4, 55.6], [156, 52.6], [156, 67], [4, 70]], 6, 4, 3);
+  for (let i = 0; i < 5; i++) line(b, 6, 58 + i * 2.2, 154, 55 + i * 2.2, 0);
+  const pitch = [3, 5, 4, 6, 2, 4, 7, 5, 3, 6];
+  for (let k = 0; k < 10; k++) {
+    const x = 8 + ((k * 15 + (f.S ? 0 : f.t * 1.5)) % 146), y = yAt(x) + 8.8 - pitch[k] * 1.1;
+    fill(b, ell(x, y, 1.5, 1.1, 0, Math.PI * 2, 10), 0); line(b, x + 1.3, y, x + 1.3, y - 6, 0);
+  }
+}
+
+/* ---------- 5. Nocturne: piano by a tall window, Paris rooftops ---------- */
+const n1 = frac(51, [[1, 0], [2, 1], [1, 2]], 5);
+function nocturne(b, f) {
+  planes(b, n1, f);
+  fill(b, [[-8, 84], [W + 8, 82], [W + 8, H + 8], [-8, H + 8]], 0, 1, 4);
+  fill(b, rect(74, 4, 46, 78), 0);
+  fill(b, rect(77, 7, 40, 36), 2, 3, 4); fill(b, rect(77, 43, 40, 36), 3, 4, 3);
+  fill(b, ell(106, 20, 5.5, 5.5), 5); fill(b, ell(106, 20, 5.5, 5.5, -Math.PI / 2, Math.PI / 2, 10), 5, 4, 5);
+  fill(b, [[77, 64], [80, 58], [88, 58], [91, 61], [91, 54], [93, 54], [93, 61], [100, 55], [108, 55], [112, 60], [112, 52], [114, 52], [114, 60], [117, 62], [117, 79], [77, 79]], 1);
+  for (const p of [[84, 64], [88, 64], [102, 62], [108, 68], [96, 70]]) dot(b, p[0], p[1], 7);
+  line(b, 97, 7, 97, 78, 0); line(b, 77, 30, 116, 30, 0); line(b, 77, 54, 116, 54, 0);
+  fill(b, rect(72, 80, 50, 3), 2);
+  fill(b, [[78, 84], [118, 84], [106, 100], [56, 100]], -1, 4, 2);
+  // Grand piano in profile, lid raised.
+  fill(b, [[16, 50], [66, 50], [30, 26]], 6); stroke(b, [[16, 50], [66, 50], [30, 26]], 3);
+  fill(b, [[12, 50], [70, 50], [72, 54], [72, 64], [12, 64]], 6);
+  fill(b, [[40, 50], [70, 50], [72, 54], [72, 64], [40, 64]], 6, 2, 3);
+  line(b, 12, 50, 70, 50, 3);
+  fill(b, rect(72, 54, 5, 3), 7); for (let x = 73; x < 77; x += 2) dot(b, x, 54, 6);
+  fill(b, [[62, 50], [66, 42], [67.5, 42], [64, 50]], 6);
+  fill(b, rect(16, 64, 3, 20), 6); fill(b, rect(64, 64, 3, 20), 6); fill(b, rect(40, 64, 2, 16), 6); fill(b, rect(38, 80, 6, 1), 4);
+}
+
+/* ---------- the five pieces: painting, label subject, facts (from mockups/facts.md) ---------- */
+const TRACKS = [
+  { title: "Gymnopédie No. 1", composer: "Erik Satie", subject: "Dancers on a Greek frieze", render: greek,
+    colors: ["#16100d", "#2b1a12", "#b5532a", "#d27a43", "#7a3018", "#e6c08f"],
+    at: { dancers: [72, 52], frieze: [86, 28], composer: [95, 46] },
+    facts: [
+      ["Satie wrote his three Gymnopédies in 1888, in his early twenties.", "dancers"],
+      ["The title comes from the gymnopaedia, a festival in ancient Sparta where young men danced.", "frieze"],
+      ["Satie was playing piano in Montmartre’s cabarets, such as Le Chat Noir, around the time he wrote them.", "composer"],
+      ["The score asks for it to be played “Lent et douloureux”: slow and sorrowful."],
+      ["Claude Debussy, Satie’s friend, later arranged two of the Gymnopédies for orchestra."] ] },
+  { title: "Clair de lune", composer: "Claude Debussy", subject: "A moonlit park, a fountain, masked figures", render: moonlit,
+    colors: ["#0b1024", "#16204a", "#2c3f7a", "#6f86b8", "#f1e6b0", "#1d3a2e", "#2f5a45", "#e9edf5"],
+    at: { moon: [96, 20], masks: [62, 48] },
+    facts: [
+      ["“Clair de lune” means “moonlight”. It is the third of four movements in Debussy’s <i>Suite bergamasque</i>.", "moon"],
+      ["The title comes from a poem by Paul Verlaine, which pictures masked dancers and fountains under the moon.", "masks"],
+      ["Debussy began the suite around 1890 but did not publish it until 1905, revising it first."],
+      ["It is in D-flat major, and its opening is marked <i>pp</i>: very softly."] ] },
+  { title: "Goldberg Variations: Aria", composer: "Johann Sebastian Bach", subject: "A two-keyboard harpsichord by candlelight", render: harpsichord,
+    colors: ["#0f0a07", "#24170e", "#4a2c16", "#7a4a22", "#c08a3e", "#f6d77e", "#efe4cc", "#3a1f12"],
+    at: { harpsichord: [62, 40], keys: [80, 55], candle: [99, 26] },
+    facts: [
+      ["Bach published the Goldberg Variations in 1741: this Aria, thirty variations, then the Aria again.", "harpsichord"],
+      ["It was written for a harpsichord with two keyboards, so the hands can cross without colliding.", "keys"],
+      ["Every variation is built on the bass line of this Aria, not on its tune."],
+      ["Bach’s first biographer told a story that it was played to soothe a count’s sleepless nights. Historians doubt it, but the name of the young harpsichordist in the story, Goldberg, stuck.", "candle"],
+      ["Every third variation, up to the 27th, is a canon, where one voice imitates another."],
+      ["This recording by Kimiko Ishizaka was crowdfunded and released into the public domain in 2012."] ] },
+  { title: "Gnossienne No. 1", composer: "Erik Satie", subject: "Red columns of Knossos, a stave without bar lines", render: knossos,
+    colors: ["#140c0a", "#5a2a1c", "#b3321f", "#d8a25a", "#e9d3a3", "#2f5d7c", "#f2ead8", "#8a5a2e"],
+    at: { columns: [66, 42], stave: [84, 61] },
+    facts: [
+      ["Satie’s title may come from “gnosis”, knowledge, or from an old word for a dance of Knossos on Crete.", "columns"],
+      ["Satie wrote it without bar lines or a time signature.", "stave"],
+      ["Besides its tempo mark, “Lent”, the score whispers odd advice to the pianist, like “Très luisant” (very shiny) and “Questionnez” (ask questions)."],
+      ["It dates from around 1890. Satie may have been inspired by music he heard at the 1889 Paris World’s Fair."] ] },
+  { title: "Nocturne in E-flat major, Op. 9 No. 2", composer: "Frédéric Chopin", subject: "A piano by a tall window, Paris rooftops beyond", render: nocturne,
+    colors: ["#0a0b12", "#171a2a", "#262b45", "#3d4f7a", "#7d93c4", "#f0e8c8", "#101014", "#e8e2d0"],
+    at: { piano: [62, 56], window: [90, 36], roofs: [102, 59] },
+    facts: [
+      ["Chopin wrote it around 1830–31, when he was about twenty, and it was published in 1832.", "piano"],
+      ["The nocturne, a dreamy “night piece” for piano, was invented by the Irish composer John Field. Chopin made the form famous.", "window"],
+      ["Chopin left Poland in 1830 and never went back. From 1831 he made his home in Paris.", "roofs"],
+      ["Each time the melody comes back, Chopin decorates it a little more, like an opera singer ornamenting a tune."],
+      ["It is in 12/8 time: four slow beats, each divided into three."] ] }
+];
+
+/* ---------- canvas: drift + pixel-block dissolve ---------- */
+const $ = id => document.getElementById(id);
+const cv = $("art"), ctx = cv.getContext("2d");
+cv.width = W; cv.height = H;
+const img = ctx.createImageData(W, H), out = new Uint32Array(img.data.buffer);
+const bufA = new Uint8Array(W * H), bufB = new Uint8Array(W * H);
+const toPx = hex => { const n = parseInt(hex.slice(1), 16); return (0xff << 24) | ((n & 0xff) << 16) | (n & 0xff00) | ((n >> 16) & 0xff); };
+const luts = TRACKS.map(t => Uint32Array.from(t.colors, toPx));
+const noise = new Float32Array(W * H);
+for (let y = 0; y < H; y += 2) for (let x = 0; x < W; x += 2) { const v = Math.random(); noise[y * W + x] = noise[y * W + x + 1] = noise[(y + 1) * W + x] = noise[(y + 1) * W + x + 1] = v; }
+
+const reduce = matchMedia("(prefers-reduced-motion: reduce)");
+const FADE = 1.6, FACT_MS = 7000;
+let cur = 0, prev = -1, fade = -1, sim = 20, energy = .35, last = 0, playing = false;
+
+function draw() {
+  const f = { t: sim, S: reduce.matches };
+  TRACKS[cur].render(bufA, f);
+  const la = luts[cur];
+  if (fade < 0 || prev < 0) { for (let i = 0; i < out.length; i++) out[i] = la[bufA[i]]; }
+  else {
+    TRACKS[prev].render(bufB, f);
+    const lb = luts[prev], p = fade / FADE;
+    for (let i = 0; i < out.length; i++) out[i] = noise[i] < p ? la[bufA[i]] : lb[bufB[i]];
+  }
+  ctx.putImageData(img, 0, 0);
+}
+function tick(ms) {
+  requestAnimationFrame(tick);
+  if (reduce.matches || ms - last < 100) return;
+  const dt = last ? Math.min((ms - last) / 1000, .25) : 0;
+  last = ms;
+  energy += ((playing ? 1 : .35) - energy) * .03;
+  sim += dt * energy;
+  if (fade >= 0 && (fade += dt) >= FADE) fade = -1;
+  draw();
+}
+requestAnimationFrame(tick);
+
+/* ---------- the wall label and its leader ---------- */
+const label = $("label"), subjectEl = $("subject"), factEl = $("fact"), lead = $("lead"), lp = $("lp"), lc = $("lc");
+let fi = 0, gen = 0, timers = [];
+const later = (fn, ms) => { const g = gen; timers.push(setTimeout(() => g === gen && fn(), ms)); };
+function stopAll() { gen++; timers.forEach(clearTimeout); timers = []; lead.classList.remove("on"); }
+
+function drawLead(key) {
+  const a = TRACKS[cur].at[key];
+  if (!a) return;
+  const vw = innerWidth, vh = innerHeight, s = Math.max(vw / W, vh / H), ox = (vw - W * s) / 2, oy = (vh - H * s) / 2;
+  const tx = Math.round(ox + (a[0] + .5) * s) + .5, ty = Math.round(oy + (a[1] + .5) * s) + .5;
+  const c = label.getBoundingClientRect(), p = $("player").getBoundingClientRect(), R = 4;
+  // Only point at what is actually on screen and clear of the label and player.
+  if (tx < 12 || tx > vw - 12 || ty < 12 || ty > vh - 12) return;
+  if (ty > p.top - 8 && tx > p.left - 8 && tx < p.right + 8) return;
+  if (tx < c.right + 8 && ty < c.bottom + 8) return;
+  let d;
+  if (ty > c.bottom + 16) { // drop from under the text, then across
+    const sx = Math.round(c.left + 16) + .5, sy = Math.round(c.bottom), dir = tx >= sx ? 1 : -1;
+    d = Math.abs(tx - sx) < R + 2 ? `M${sx} ${sy}V${ty - R}` : `M${sx} ${sy}V${ty}H${tx - dir * R}`;
+  } else { // out from the label's side, then down
+    const sx = Math.round(c.right), sy = Math.round(Math.min(Math.max(ty, c.top + 10), c.bottom - 10)) + .5, dir = ty >= sy ? 1 : -1;
+    d = Math.abs(ty - sy) < R + 2 ? `M${sx} ${sy}H${tx - R}` : `M${sx} ${sy}H${tx}V${ty - dir * R}`;
+  }
+  lp.setAttribute("d", d); lc.setAttribute("cx", tx); lc.setAttribute("cy", ty);
+  const len = lp.getTotalLength(), still = reduce.matches;
+  lp.style.transition = lc.style.transition = "none";
+  lp.style.strokeDasharray = len; lp.style.strokeDashoffset = still ? 0 : len; lc.style.opacity = still ? 1 : 0;
+  lead.getBoundingClientRect();
+  lead.classList.add("on");
+  if (!still) {
+    lp.style.transition = "stroke-dashoffset 2s cubic-bezier(.45,0,.25,1)"; lp.style.strokeDashoffset = 0;
+    lc.style.transition = "opacity .8s ease 1.8s"; lc.style.opacity = 1;
+  }
+}
+
+function showFact() {
+  stopAll();
+  const t = TRACKS[cur], f = t.facts[fi % t.facts.length], still = reduce.matches;
+  factEl.style.opacity = 0;
+  later(() => {
+    factEl.innerHTML = f[0]; factEl.style.opacity = 1;
+    if (f[1]) {
+      later(() => drawLead(f[1]), still ? 0 : 500);
+      later(() => lead.classList.remove("on"), FACT_MS - 1600);
+    }
+  }, still ? 0 : 350);
+  later(() => { fi++; showFact(); }, FACT_MS);
+}
+
+/* ---------- player ---------- */
+function setTrack() {
+  const t = TRACKS[cur];
+  $("title").textContent = t.title; $("composer").textContent = t.composer;
+  subjectEl.textContent = t.subject;
+  cv.setAttribute("aria-label", "Pixel painting: " + t.subject + ".");
+}
+function setPlaying(on) {
+  playing = on;
+  $("play").setAttribute("aria-label", on ? "Pause" : "Play");
+  $("playIcon").setAttribute("d", on ? "M5 4h3.5v12H5zM11.5 4H15v12h-3.5z" : "M6 3.5v13L16.5 10z");
+  label.classList.toggle("playing", on);
+  if (on) { $("status").textContent = `Now playing ${TRACKS[cur].title} by ${TRACKS[cur].composer}.`; showFact(); }
+  else stopAll();
+}
+function next() {
+  stopAll();
+  prev = cur; cur = (cur + 1) % TRACKS.length; fi = 0;
+  fade = reduce.matches ? -1 : 0;
+  setTrack(); draw();
+  if (playing) {
+    $("status").textContent = `Now playing ${TRACKS[cur].title} by ${TRACKS[cur].composer}.`;
+    factEl.style.opacity = 0;
+    later(showFact, reduce.matches ? 0 : FADE * 1000);
+  }
+}
+$("play").onclick = () => setPlaying(!playing);
+$("next").onclick = next;
+let muted = false;
+const vol = $("vol");
+function volUI() {
+  const silent = muted || +vol.value === 0;
+  $("mute").setAttribute("aria-label", silent ? "Unmute" : "Mute");
+  $("volIcon").setAttribute("d", silent ? "M13.3 7.3l1.1-1.1 1.8 1.8 1.8-1.8 1.1 1.1-1.8 1.8 1.8 1.8-1.1 1.1-1.8-1.8-1.8 1.8-1.1-1.1 1.8-1.8z" : "M13.2 6.6a4.8 4.8 0 0 1 0 6.8l-1.1-1.1a3.2 3.2 0 0 0 0-4.6zM15.3 4.5a7.8 7.8 0 0 1 0 11l-1.1-1.1a6.2 6.2 0 0 0 0-8.8z");
+}
+$("mute").onclick = () => { if (+vol.value === 0) { vol.value = 60; muted = false; } else muted = !muted; volUI(); };
+vol.oninput = () => { if (+vol.value > 0) muted = false; volUI(); };
+document.addEventListener("keydown", e => {
+  if (e.key !== " " || e.repeat || e.target.closest("button, input, a")) return;
+  e.preventDefault(); setPlaying(!playing);
+});
+addEventListener("resize", () => lead.classList.remove("on"));
+reduce.addEventListener("change", draw);
+
+setTrack(); draw();
+</script>
+</body>
+</html>
