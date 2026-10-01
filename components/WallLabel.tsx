@@ -44,17 +44,3 @@ export function WallLabel({ track, composer }: { track: Track; composer: Compose
     </aside>
   );
 }
-
-/** The label beside a song the visitor added: just what they told us about it. */
-export function OwnLabel({ title, artist }: { title: string; artist: string }) {
-  return (
-    <aside className="wall" aria-label="About this piece">
-      <p className="wall-who">
-        {artist || "Your song"}
-        <span>Added by you</span>
-      </p>
-      <p className="wall-what">{title}</p>
-      <p className="wall-meta wall-last">Kept in this browser, for you alone.</p>
-    </aside>
-  );
-}
