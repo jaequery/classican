@@ -1,22 +1,26 @@
 import assert from "node:assert/strict";
-import { mkdtemp } from "node:fs/promises";
-import { tmpdir } from "node:os";
-import { join } from "node:path";
-import { beforeEach, describe, test } from "node:test";
+import { PGlite } from "@electric-sql/pglite";
+import { after, before, beforeEach, describe, test } from "node:test";
 import { addComment, deleteComment, logIn, logOut, pieceSocial, setLike, signUp, userForToken } from "../lib/community";
 import { COMMENT_MAX } from "../lib/social";
-import { fileStore, type Store } from "../lib/store";
+import { withSchema, type Db, type Row } from "../lib/db";
 
 const PIECE = "erik-satie-gymnopedie-no-1";
 const OTHER = "claude-debussy-clair-de-lune";
 
-let path: string;
-let store: Store;
+// A Postgres running in this process, with the same tables lib/session.ts makes
+// on Neon, emptied before each test.
+let pg: PGlite;
+let store: Db;
 
-beforeEach(async () => {
-  path = join(await mkdtemp(join(tmpdir(), "classican-")), "data.json");
-  store = fileStore(path);
+before(() => {
+  pg = new PGlite();
+  store = withSchema(async (text, params) => (await pg.query<Row>(text, params)).rows);
 });
+
+beforeEach(() => store("TRUNCATE users, sessions, likes, comments"));
+
+after(() => pg.close());
 
 async function account(email = "clara@example.com", name = "Clara") {
   const result = await signUp(store, { email, name, password: "schumann1840" });
@@ -105,10 +109,10 @@ describe("likes", () => {
     assert.deepEqual([undone.likes, undone.liked], [0, false]);
   });
 
-  test("likes are kept on disk", async () => {
+  test("liking at the same moment from two tabs is still one like", async () => {
     const { user } = await account();
-    await setLike(store, PIECE, user.id, true);
-    assert.equal((await pieceSocial(fileStore(path), PIECE)).likes, 1);
+    await Promise.all([setLike(store, PIECE, user.id, true), setLike(store, PIECE, user.id, true)]);
+    assert.equal((await pieceSocial(store, PIECE)).likes, 1);
   });
 });
 
@@ -156,9 +160,14 @@ describe("comments", () => {
     assert.equal((await pieceSocial(store, PIECE)).comments.length, 0);
   });
 
+  test("deleting a made-up comment id is a not-found, not a crash", async () => {
+    const { user } = await account();
+    assert.deepEqual(await deleteComment(store, "not-a-uuid", user.id), { ok: false, status: 404, error: "That comment has already gone." });
+  });
+
   test("writes that arrive together are all kept", async () => {
     const { user } = await account();
     await Promise.all(Array.from({ length: 20 }, (_, i) => addComment(store, PIECE, user.id, `Comment ${i}`)));
-    assert.equal((await pieceSocial(fileStore(path), PIECE)).comments.length, 20);
+    assert.equal((await pieceSocial(store, PIECE)).comments.length, 20);
   });
 });

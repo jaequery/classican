@@ -36,14 +36,16 @@ or create an account with a name, email and password. Signed in, a listener can 
 piece, comment on it (up to 1,000 characters) and delete their own comments. Comments show the
 writer's name, never their email.
 
-Everything listeners make is kept in one JSON file on the server, `.data/classican.json` by default
-(set `CLASSICAN_DATA` to put it elsewhere). It is created on the first sign-up. Passwords are stored as
-salted scrypt hashes, and sign-ins as a hash of an httpOnly cookie that lasts 30 days. The file needs
-a server with a disk that persists between restarts; on a serverless host it would be lost, so swap
-`fileStore` in `lib/store.ts` for a database there.
+Everything listeners make is kept in Postgres on Neon, connected through Vercel's Neon integration,
+which sets `DATABASE_URL` (`POSTGRES_URL` also works). The tables (`users`, `sessions`, `likes`,
+`comments`, in `lib/db.ts`) are created on the first request if they aren't there yet, so there is no
+migration step. To run the site locally with accounts, put a Neon connection string (a dev branch, not
+production) in `.env.local` as `DATABASE_URL`; without one, the music plays but signing in fails.
+Passwords are stored as salted scrypt hashes, and sign-ins as a hash of an httpOnly cookie that lasts
+30 days.
 
 ```sh
-npm test           # account, like and comment rules (lib/community.ts)
+npm test           # account, like and comment rules (lib/community.ts), on an in-process Postgres (PGlite)
 ```
 
 ## Stack
@@ -68,7 +70,7 @@ npm test           # account, like and comment rules (lib/community.ts)
 | Who may like, comment or delete | `lib/community.ts` |
 | Comment length, shared types | `lib/social.ts` |
 | Password and session rules | `lib/auth.ts` |
-| Where accounts, likes and comments are kept | `lib/store.ts`, `CLASSICAN_DATA` |
+| Where accounts, likes and comments are kept | `lib/db.ts` (tables), `lib/session.ts` (`DATABASE_URL`) |
 
 **Adding a piece.** A piece's likes and comments are kept under an id made from its composer and
 title (`pieceId` in `lib/site.ts`), so renaming a piece leaves them behind. Append an entry to `tracks` with `title`, `composer`, `performer`, the Commons
