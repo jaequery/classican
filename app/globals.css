@@ -245,6 +245,28 @@ body {
   opacity: 0.72;
 }
 
+/* Like and comments: an icon with its count beside it. */
+.control.count {
+  display: flex;
+  gap: 6px;
+  width: auto;
+  min-width: 44px;
+  padding: 0 10px;
+  font: 600 17px var(--font);
+}
+.control.count svg {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linejoin: round;
+}
+.control.liked svg {
+  fill: currentColor;
+}
+.tally:empty {
+  display: none;
+}
+
 /* Play is the one action with weight: a Bone disc with an Obsidian glyph. */
 .control.play {
   border-radius: 50%;
@@ -275,6 +297,257 @@ body {
   outline-offset: 2px;
 }
 
+/* Comments: a panel on the left, clear of the wall label and the player. */
+.talk {
+  position: fixed;
+  left: 24px;
+  top: 24px;
+  z-index: 1;
+  width: min(380px, calc(100% - 48px));
+  max-height: calc(100% - 48px);
+  padding: 14px 20px 0;
+  background: var(--surface);
+  border-radius: 4px;
+  box-shadow: 0 10px 32px rgb(0 0 0 / 0.45);
+  overflow-y: auto;
+}
+.talk[hidden] {
+  display: none;
+}
+/* Where the panel could reach the player, it stops above it. */
+@media (max-width: 1280px) {
+  .talk {
+    max-height: calc(100% - 264px);
+  }
+}
+@media (max-width: 720px) {
+  .talk {
+    left: 16px;
+    right: 16px;
+    top: 16px;
+    width: auto;
+    max-height: calc(100% - 280px);
+    padding: 12px 16px 0;
+  }
+}
+.talk-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  margin-right: -12px;
+}
+.talk-head h2 {
+  padding-top: 6px;
+  font-family: var(--font-title);
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.25;
+}
+.talk-head h2 span {
+  display: block;
+  color: var(--muted);
+  font-family: var(--font);
+  font-size: 17px;
+  font-weight: 500;
+}
+.talk-form {
+  margin-top: 12px;
+}
+textarea,
+.auth input {
+  display: block;
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid color-mix(in srgb, var(--muted) 45%, transparent);
+  border-radius: 8px;
+  background: var(--canvas);
+  color: var(--ink);
+  font: 500 17px/1.45 var(--font);
+}
+textarea {
+  min-height: 88px;
+  max-height: 240px;
+  resize: vertical;
+}
+textarea::placeholder {
+  color: color-mix(in srgb, var(--muted) 70%, transparent);
+}
+.talk-form-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 8px;
+}
+.talk-count {
+  color: var(--muted);
+  font-size: 15px;
+}
+.talk-count.over {
+  color: var(--ink);
+  font-weight: 600;
+}
+.talk-who,
+.talk-prompt,
+.talk-note {
+  margin-top: 10px;
+  color: var(--muted);
+  font-size: 17px;
+  overflow-wrap: anywhere;
+}
+.talk-error,
+.auth-error {
+  color: var(--ink);
+  font-size: 17px;
+  font-weight: 600;
+}
+.talk-error:not(:empty) {
+  margin-top: 10px;
+  padding-left: 10px;
+  border-left: 3px solid var(--muted);
+}
+.talk-list {
+  margin: 14px 0 0;
+  padding: 0 0 12px;
+  list-style: none;
+}
+.talk-list li {
+  padding: 12px 0;
+  border-top: 1px solid color-mix(in srgb, var(--muted) 22%, transparent);
+}
+.talk-meta {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 8px;
+  color: var(--muted);
+  font-size: 15px;
+}
+.talk-meta span {
+  color: var(--ink);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+.talk-text {
+  margin-top: 2px;
+  font-size: 17px;
+  line-height: 1.45;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+/* Buttons with words. Primary is Bone on Obsidian, like play. */
+.button {
+  min-height: 44px;
+  padding: 0 18px;
+  border: 1px solid color-mix(in srgb, var(--muted) 45%, transparent);
+  border-radius: 12px;
+  background: none;
+  color: var(--ink);
+  font: 600 17px var(--font);
+  cursor: pointer;
+  transition: opacity 120ms;
+}
+.button.primary {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+.button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+.button:not(:disabled):hover {
+  opacity: 0.85;
+}
+.link {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  font: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.link.small {
+  margin-top: 4px;
+  min-height: 32px;
+  color: var(--muted);
+  font-size: 15px;
+}
+.link:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
+/* Sign in / create an account. */
+.auth {
+  width: min(420px, calc(100% - 32px));
+  max-height: calc(100% - 32px);
+  margin: auto;
+  padding: 22px 24px 18px;
+  border: 0;
+  border-radius: 16px;
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: 0 10px 32px rgb(0 0 0 / 0.45);
+}
+.auth::backdrop {
+  background: rgb(0 0 0 / 0.6);
+}
+.auth h2 {
+  font-family: var(--font-title);
+  font-size: 26px;
+  font-weight: 600;
+}
+.auth-why {
+  color: var(--muted);
+}
+.auth label {
+  display: block;
+  margin-top: 14px;
+  font-size: 17px;
+  font-weight: 600;
+}
+.auth label span {
+  color: var(--muted);
+  font-weight: 500;
+}
+.auth input {
+  margin-top: 4px;
+}
+.auth-error:not(:empty) {
+  margin-top: 14px;
+  overflow-wrap: anywhere;
+}
+.auth-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 18px;
+}
+.auth-switch {
+  margin-top: 14px;
+  color: var(--muted);
+  font-size: 17px;
+}
+
+/* A short word about something that didn't work, just above the player. */
+.notice {
+  position: fixed;
+  left: 50%;
+  bottom: 220px;
+  transform: translateX(-50%);
+  max-width: calc(100% - 32px);
+  padding: 8px 14px;
+  background: var(--surface);
+  border-left: 3px solid var(--muted);
+  border-radius: 4px;
+  font-size: 17px;
+}
+
 .noscript {
   position: fixed;
   left: 50%;
@@ -299,6 +572,7 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .control,
+  .button,
   .fact,
   .wall-more,
   .wall-toggle {

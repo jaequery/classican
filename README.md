@@ -6,7 +6,8 @@ painting of the piece that is playing: Greek dancers for Satie's Gymnopédie, Ve
 for Clair de lune, Bach's two-keyboard harpsichord, and so on. While music plays, a short fact about
 the piece's history comes every 40 seconds or so: the painting dims gently around the thing the fact
 is about, and the words sit beside that pool of light for a few seconds before the light returns.
-No accounts, no search, no other pages.
+Listeners can make an account to like pieces and leave comments on them; everyone else can read them.
+No search, no other pages.
 
 ## Run
 
@@ -26,10 +27,30 @@ A piece that fails to load is skipped; if every piece fails, the player says so 
 play tries again. Space plays and pauses from anywhere on the page; media keys and the OS
 "now playing" panel work too.
 
+## Accounts, likes and comments
+
+Beside next in the player are a heart and a comments button, each with its count for the piece now
+playing. The comments button opens a panel listing what listeners have said about that piece. Anyone
+can read likes and comments; pressing the heart, or "Sign in" in the panel, opens a dialog to sign in
+or create an account with a name, email and password. Signed in, a listener can like and unlike any
+piece, comment on it (up to 1,000 characters) and delete their own comments. Comments show the
+writer's name, never their email.
+
+Everything listeners make is kept in one JSON file on the server, `.data/classican.json` by default
+(set `CLASSICAN_DATA` to put it elsewhere). It is created on the first sign-up. Passwords are stored as
+salted scrypt hashes, and sign-ins as a hash of an httpOnly cookie that lasts 30 days. The file needs
+a server with a disk that persists between restarts; on a serverless host it would be lost, so swap
+`fileStore` in `lib/store.ts` for a database there.
+
+```sh
+npm test           # account, like and comment rules (lib/community.ts)
+```
+
 ## Stack
 
 - Next.js (App Router), React Server Components, TypeScript, plain CSS custom properties
-- `app/page.tsx` is a server component; the player and the painting canvas are the only client code
+- `app/page.tsx` is a server component; the player, the painting canvas, the comments panel and the sign-in dialog are the client code
+- `app/api/` holds small route handlers for accounts, likes and comments; the rules live in `lib/community.ts`
 - Playfair Display SemiBold (titles) and Source Serif 4 Medium/SemiBold (everything else) are self-hosted
   from `app/fonts/` (SIL Open Font License, `app/fonts/*-OFL.txt`), falling back to Georgia and serif
 - No remote images, fonts or icons. The paintings are drawn in code and the icons are inline SVG
@@ -44,8 +65,13 @@ play tries again. Space plays and pauses from anywhere on the page; media keys a
 | Time from one fact to the next | `lib/site.ts` (`factSeconds`) |
 | Paintings | `lib/paintings.ts` |
 | Palette of the frame | `app/globals.css` (`:root`) |
+| Who may like, comment or delete | `lib/community.ts` |
+| Comment length, shared types | `lib/social.ts` |
+| Password and session rules | `lib/auth.ts` |
+| Where accounts, likes and comments are kept | `lib/store.ts`, `CLASSICAN_DATA` |
 
-**Adding a piece.** Append an entry to `tracks` with `title`, `composer`, `performer`, the Commons
+**Adding a piece.** A piece's likes and comments are kept under an id made from its composer and
+title (`pieceId` in `lib/site.ts`), so renaming a piece leaves them behind. Append an entry to `tracks` with `title`, `composer`, `performer`, the Commons
 file page as `source`, the `ogg` and `mp3` URLs, the id of its `painting`, and its `facts`. Use only
 recordings whose licence allows it.
 

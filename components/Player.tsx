@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { createDeck, type Deck } from "@/lib/shuffle";
 import type { Track } from "@/lib/site";
 
@@ -12,6 +12,8 @@ type Props = {
   onPlayingChange: (playing: boolean) => void;
   /** The piece now loaded, so the painting and facts can follow it. */
   onTrackChange: (index: number) => void;
+  /** More buttons for the piece, after next. */
+  actions?: ReactNode;
 };
 
 /**
@@ -20,7 +22,7 @@ type Props = {
  * once before any repeats; then the deck is reshuffled. A piece that fails
  * to load is skipped, and if every piece fails the player says so quietly.
  */
-export function Player({ tracks, onPlayingChange, onTrackChange }: Props) {
+export function Player({ tracks, onPlayingChange, onTrackChange, actions }: Props) {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [index, setIndex] = useState(0);
   const [playing, setPlaying] = useState(false);
@@ -310,6 +312,7 @@ export function Player({ tracks, onPlayingChange, onTrackChange }: Props) {
             <path d="M14 4h2v12h-2zM4 4v12l8.5-6z" />
           </svg>
         </button>
+        {actions}
 
         <div className="volume">
           <button

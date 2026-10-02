@@ -68,6 +68,19 @@ export function ageAtWriting(details: PieceDetails, composer: Composer) {
   return details.approximate ? `about ${age}` : String(age);
 }
 
+/**
+ * A piece's lasting id, which its likes and comments are kept under, e.g.
+ * "erik-satie-gymnopedie-no-1". Renaming a piece moves it to a new id.
+ */
+export function pieceId(track: Pick<Track, "composer" | "title">) {
+  return `${track.composer} ${track.title}`
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
 const composers = {
   "Erik Satie": {
     born: 1866,
