@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { hashPassword, hashToken, newSessionToken, normalizeEmail, SESSION_DAYS, signUpProblem, verifyPassword } from "./auth";
+import { iso, type Db, type Row } from "./db";
 import { COMMENT_MAX, type Me, type PieceComment, type PieceSocial } from "./social";
-import type { Data, Store, User } from "./store";
 
 // Accounts, likes and comments: every rule about who may do what lives here,
 // so the API routes only translate HTTP to these calls and back.
@@ -11,105 +11,127 @@ export type Result<T> = { ok: true; value: T } | { ok: false; status: number; er
 const ok = <T>(value: T): Result<T> => ({ ok: true, value });
 const fail = (status: number, error: string): Result<never> => ({ ok: false, status, error });
 
+export type User = {
+  id: string;
+  /** Lower-cased, so one address can only sign up once. */
+  email: string;
+  /** Shown beside their comments; their email never is. */
+  name: string;
+  passwordHash: string;
+};
+
+const toUser = (row: Row): User => ({
+  id: String(row.id),
+  email: String(row.email),
+  name: String(row.name),
+  passwordHash: String(row.password_hash),
+});
+
 /** A password hash to check against when no account matches, so a wrong email takes as long as a wrong password. */
 const decoy = hashPassword("not a real password");
 
 export const toMe = (user: User): Me => ({ name: user.name, email: user.email });
 
-function startSession(data: Data, userId: string) {
-  const now = Date.now();
-  data.sessions = data.sessions.filter((s) => Date.parse(s.expiresAt) > now);
+async function startSession(db: Db, userId: string) {
+  await db("DELETE FROM sessions WHERE expires_at <= now()");
   const { token, tokenHash } = newSessionToken();
-  data.sessions.push({ tokenHash, userId, expiresAt: new Date(now + SESSION_DAYS * 86400_000).toISOString() });
+  const expiresAt = new Date(Date.now() + SESSION_DAYS * 86400_000).toISOString();
+  await db("INSERT INTO sessions (token_hash, user_id, expires_at) VALUES ($1, $2, $3)", [tokenHash, userId, expiresAt]);
   return token;
 }
 
 export type SignIn = { me: Me; token: string };
 
 /** Make an account and sign it in. */
-export async function signUp(store: Store, input: { email: string; name: string; password: string }): Promise<Result<SignIn>> {
+export async function signUp(db: Db, input: { email: string; name: string; password: string }): Promise<Result<SignIn>> {
   const problem = signUpProblem(input);
   if (problem) return fail(400, problem);
   const email = normalizeEmail(input.email);
   const passwordHash = await hashPassword(input.password);
-  return store.write((data) => {
-    if (data.users.some((u) => u.email === email)) return fail(409, "That email already has an account. Sign in instead.");
-    const user: User = { id: randomUUID(), email, name: input.name.trim(), passwordHash, createdAt: new Date().toISOString() };
-    data.users.push(user);
-    return ok({ me: toMe(user), token: startSession(data, user.id) });
-  });
+  const [row] = await db(
+    `INSERT INTO users (id, email, name, password_hash) VALUES ($1, $2, $3, $4)
+     ON CONFLICT (email) DO NOTHING RETURNING *`,
+    [randomUUID(), email, input.name.trim(), passwordHash],
+  );
+  if (!row) return fail(409, "That email already has an account. Sign in instead.");
+  const user = toUser(row);
+  return ok({ me: toMe(user), token: await startSession(db, user.id) });
 }
 
-export async function logIn(store: Store, input: { email: string; password: string }): Promise<Result<SignIn>> {
-  const email = normalizeEmail(input.email);
-  const user = await store.read((data) => data.users.find((u) => u.email === email));
+export async function logIn(db: Db, input: { email: string; password: string }): Promise<Result<SignIn>> {
+  const [row] = await db("SELECT * FROM users WHERE email = $1", [normalizeEmail(input.email)]);
+  const user = row ? toUser(row) : null;
   const matches = await verifyPassword(input.password, user?.passwordHash ?? (await decoy));
   if (!user || !matches) return fail(401, "That email and password don't match an account.");
-  const token = await store.write((data) => startSession(data, user.id));
-  return ok({ me: toMe(user), token });
+  return ok({ me: toMe(user), token: await startSession(db, user.id) });
 }
 
-export function logOut(store: Store, token: string) {
-  const tokenHash = hashToken(token);
-  return store.write((data) => {
-    data.sessions = data.sessions.filter((s) => s.tokenHash !== tokenHash);
-  });
+export async function logOut(db: Db, token: string) {
+  await db("DELETE FROM sessions WHERE token_hash = $1", [hashToken(token)]);
 }
 
 /** The account a session token belongs to, or null if it is unknown or expired. */
-export function userForToken(store: Store, token: string | undefined) {
-  if (!token) return Promise.resolve(null);
-  const tokenHash = hashToken(token);
-  return store.read((data) => {
-    const session = data.sessions.find((s) => s.tokenHash === tokenHash && Date.parse(s.expiresAt) > Date.now());
-    return data.users.find((u) => u.id === session?.userId) ?? null;
-  });
-}
-
-function social(data: Data, pieceId: string, userId: string | undefined): PieceSocial {
-  const likes = data.likes.filter((l) => l.pieceId === pieceId);
-  const names = new Map(data.users.map((u) => [u.id, u.name]));
-  const comments: PieceComment[] = data.comments
-    .filter((c) => c.pieceId === pieceId)
-    .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
-    .map((c) => ({ id: c.id, author: names.get(c.userId) ?? "A listener", text: c.text, createdAt: c.createdAt, mine: c.userId === userId }));
-  return { likes: likes.length, liked: likes.some((l) => l.userId === userId), comments };
+export async function userForToken(db: Db, token: string | undefined): Promise<User | null> {
+  if (!token) return null;
+  const [row] = await db(
+    `SELECT users.* FROM sessions JOIN users ON users.id = sessions.user_id
+     WHERE sessions.token_hash = $1 AND sessions.expires_at > now()`,
+    [hashToken(token)],
+  );
+  return row ? toUser(row) : null;
 }
 
 /** A piece's likes and comments, as `userId` (or a signed-out visitor) sees them. */
-export function pieceSocial(store: Store, pieceId: string, userId?: string) {
-  return store.read((data) => social(data, pieceId, userId));
+export async function pieceSocial(db: Db, pieceId: string, userId?: string): Promise<PieceSocial> {
+  const [[counts], rows] = await Promise.all([
+    db(
+      `SELECT count(*)::int AS likes, coalesce(bool_or(user_id = $2), false) AS liked
+       FROM likes WHERE piece_id = $1`,
+      [pieceId, userId ?? null],
+    ),
+    db(
+      `SELECT comments.id, comments.user_id, comments.text, comments.created_at, users.name
+       FROM comments LEFT JOIN users ON users.id = comments.user_id
+       WHERE comments.piece_id = $1 ORDER BY comments.created_at DESC, comments.id`,
+      [pieceId],
+    ),
+  ]);
+  const comments: PieceComment[] = rows.map((c) => ({
+    id: String(c.id),
+    author: c.name ? String(c.name) : "A listener",
+    text: String(c.text),
+    createdAt: iso(c.created_at),
+    mine: c.user_id === userId,
+  }));
+  return { likes: Number(counts.likes), liked: Boolean(counts.liked), comments };
 }
 
 /** Like or unlike. Liking twice is still one like, so a repeated request is harmless. */
-export function setLike(store: Store, pieceId: string, userId: string, on: boolean) {
-  return store.write((data) => {
-    const has = data.likes.some((l) => l.pieceId === pieceId && l.userId === userId);
-    if (on && !has) data.likes.push({ pieceId, userId, createdAt: new Date().toISOString() });
-    if (!on && has) data.likes = data.likes.filter((l) => !(l.pieceId === pieceId && l.userId === userId));
-    return social(data, pieceId, userId);
-  });
+export async function setLike(db: Db, pieceId: string, userId: string, on: boolean) {
+  if (on) await db("INSERT INTO likes (piece_id, user_id) VALUES ($1, $2) ON CONFLICT DO NOTHING", [pieceId, userId]);
+  else await db("DELETE FROM likes WHERE piece_id = $1 AND user_id = $2", [pieceId, userId]);
+  return pieceSocial(db, pieceId, userId);
 }
 
-export async function addComment(store: Store, pieceId: string, userId: string, text: string): Promise<Result<PieceComment>> {
+export async function addComment(db: Db, pieceId: string, userId: string, text: string): Promise<Result<PieceComment>> {
   const body = text.trim();
   if (!body) return fail(400, "Write something first.");
   if (body.length > COMMENT_MAX) return fail(400, `Keep comments to ${COMMENT_MAX} characters.`);
-  return store.write((data) => {
-    const comment = { id: randomUUID(), pieceId, userId, text: body, createdAt: new Date().toISOString() };
-    data.comments.push(comment);
-    const author = data.users.find((u) => u.id === userId)?.name ?? "A listener";
-    return ok({ id: comment.id, author, text: body, createdAt: comment.createdAt, mine: true });
-  });
+  const [row] = await db(
+    `WITH added AS (
+       INSERT INTO comments (id, piece_id, user_id, text) VALUES ($1, $2, $3, $4) RETURNING id, created_at, user_id
+     )
+     SELECT added.id, added.created_at, users.name FROM added LEFT JOIN users ON users.id = added.user_id`,
+    [randomUUID(), pieceId, userId, body],
+  );
+  return ok({ id: String(row.id), author: row.name ? String(row.name) : "A listener", text: body, createdAt: iso(row.created_at), mine: true });
 }
 
 /** Only the person who wrote a comment can delete it. */
-export function deleteComment(store: Store, commentId: string, userId: string): Promise<Result<null>> {
-  return store.write((data) => {
-    const comment = data.comments.find((c) => c.id === commentId);
-    if (!comment) return fail(404, "That comment has already gone.");
-    if (comment.userId !== userId) return fail(403, "You can only delete your own comments.");
-    data.comments = data.comments.filter((c) => c.id !== commentId);
-    return ok(null);
-  });
+export async function deleteComment(db: Db, commentId: string, userId: string): Promise<Result<null>> {
+  const [row] = await db("SELECT user_id FROM comments WHERE id::text = $1", [commentId]);
+  if (!row) return fail(404, "That comment has already gone.");
+  if (row.user_id !== userId) return fail(403, "You can only delete your own comments.");
+  await db("DELETE FROM comments WHERE id::text = $1 AND user_id = $2", [commentId, userId]);
+  return ok(null);
 }

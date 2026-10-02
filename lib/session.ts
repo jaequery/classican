@@ -1,14 +1,25 @@
 import { cookies } from "next/headers";
-import { join } from "node:path";
+import { neon } from "@neondatabase/serverless";
 import { SESSION_DAYS } from "./auth";
 import { userForToken, type Result } from "./community";
 import { pieceId, site } from "./site";
-import { fileStore } from "./store";
+import { withSchema, type Db } from "./db";
 
 // The glue between the API routes and lib/community.ts: where the data lives,
 // the session cookie, and turning results into JSON responses.
 
-export const store = fileStore(process.env.CLASSICAN_DATA ?? join(process.cwd(), ".data", "classican.json"));
+let neonDb: Db | undefined;
+
+/** The Neon database named by DATABASE_URL (set by Vercel's Neon integration), connected on first use. */
+export const db: Db = (text, params) => {
+  if (!neonDb) {
+    const url = process.env.DATABASE_URL ?? process.env.POSTGRES_URL;
+    if (!url) throw new Error("DATABASE_URL is not set, so accounts, likes and comments have nowhere to live.");
+    const sql = neon(url);
+    neonDb = withSchema((t, p) => sql.query(t, p ?? []));
+  }
+  return neonDb(text, params);
+};
 
 const COOKIE = "classican_session";
 
@@ -21,7 +32,7 @@ export async function sessionToken() {
 
 /** The signed-in account, or null. */
 export async function currentUser() {
-  return userForToken(store, await sessionToken());
+  return userForToken(db, await sessionToken());
 }
 
 export async function setSessionCookie(token: string) {
