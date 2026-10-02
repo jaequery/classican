@@ -1,16 +1,11 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { createDeck, type Deck } from "@/lib/shuffle";
 import type { Track } from "@/lib/site";
 
 const VOLUME_KEY = "classican:volume";
 const VOLUME_STEP = 5;
-
-/** A random piece other than `current` (the only piece when there is just one). */
-function shuffle(current: number, n: number) {
-  if (n < 2) return 0;
-  return (current + 1 + Math.floor(Math.random() * (n - 1))) % n;
-}
 
 type Props = {
   tracks: Track[];
@@ -21,7 +16,8 @@ type Props = {
 
 /**
  * One continuous playlist, shuffled: it opens on a random piece, tries to play
- * straight away, and each next piece is another random one. A piece that fails
+ * straight away, and deals the rest from a shuffled deck, so every piece plays
+ * once before any repeats; then the deck is reshuffled. A piece that fails
  * to load is skipped, and if every piece fails the player says so quietly.
  */
 export function Player({ tracks, onPlayingChange, onTrackChange }: Props) {
@@ -39,6 +35,7 @@ export function Player({ tracks, onPlayingChange, onTrackChange }: Props) {
   const failures = useRef(0);
   const indexRef = useRef(0);
   const history = useRef<number[]>([]); // pieces played before this one, for "previous"
+  const deck = useRef<Deck>(null); // pieces still to come this time through the list
   const blocked = useRef(false); // the browser refused to autoplay; the first gesture starts the music
 
   const track = tracks[index];
@@ -113,12 +110,15 @@ export function Player({ tracks, onPlayingChange, onTrackChange }: Props) {
   const toggle = useCallback(() => (want.current ? pause() : play()), [pause, play]);
   const next = useCallback(() => {
     history.current.push(indexRef.current);
-    go(shuffle(indexRef.current, tracks.length));
-  }, [go, tracks.length]);
+    go(deck.current!.draw(indexRef.current));
+  }, [go]);
   const prev = useCallback(() => {
     const before = history.current.pop();
-    go(before ?? shuffle(indexRef.current, tracks.length));
-  }, [go, tracks.length]);
+    if (before === undefined) return go(deck.current!.draw(indexRef.current));
+    // Stepping back keeps the piece we left at the top of the deck, so "next" returns to it.
+    deck.current!.putBack(indexRef.current);
+    go(before);
+  }, [go]);
 
   // Restore the visitor's volume from last time.
   useEffect(() => {
@@ -142,7 +142,9 @@ export function Player({ tracks, onPlayingChange, onTrackChange }: Props) {
   // key anywhere starts it. Listening on window runs after the play button and
   // the Space hotkey, so a gesture that already started the music is left alone.
   useEffect(() => {
-    load(Math.floor(Math.random() * tracks.length));
+    const first = Math.floor(Math.random() * tracks.length);
+    deck.current = createDeck(tracks.length, first);
+    load(first);
     play();
     const onGesture = () => {
       if (blocked.current && !want.current) play();
@@ -180,7 +182,7 @@ export function Player({ tracks, onPlayingChange, onTrackChange }: Props) {
         setStatus("Music is unavailable right now. Press play to try again.");
         return;
       }
-      go(indexRef.current + 1);
+      go(deck.current!.draw(indexRef.current));
     };
     // Keep the controls honest when playback changes outside the page
     // (media keys, the OS player, headphones unplugged).
