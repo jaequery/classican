@@ -1,0 +1,160 @@
+"use client";
+
+import { useEffect, useId, useState } from "react";
+import { COMMENT_MAX, timeAgo, type Me, type PieceSocial } from "@/lib/social";
+import type { AuthMode } from "./AuthDialog";
+import type { SocialStatus } from "./usePieceSocial";
+
+type Props = {
+  id: string;
+  open: boolean;
+  onClose: () => void;
+  title: string;
+  /** The signed-in visitor; null when signed out, undefined while we find out. */
+  me: Me | null | undefined;
+  data: PieceSocial | null;
+  status: SocialStatus;
+  onRetry: () => void;
+  onAuth: (mode: AuthMode) => void;
+  onSignOut: () => void;
+  addComment: (text: string) => Promise<string | null>;
+  removeComment: (id: string) => Promise<string | null>;
+};
+
+/**
+ * What listeners have said about the piece now playing. Anyone can read it;
+ * signed-in listeners can write, and delete what they wrote.
+ */
+export function Comments({ id, open, onClose, title, me, data, status, onRetry, onAuth, onSignOut, addComment, removeComment }: Props) {
+  const [text, setText] = useState("");
+  const [posting, setPosting] = useState(false);
+  const [error, setError] = useState("");
+  const [deleting, setDeleting] = useState<string | null>(null);
+  const headingId = useId();
+  const fieldId = useId();
+  const blank = !text.trim();
+  const over = text.trim().length > COMMENT_MAX;
+
+  // A draft and its error belong to the piece they were written for.
+  useEffect(() => {
+    setText("");
+    setError("");
+  }, [title]);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && !document.querySelector("dialog[open]") && onClose();
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [open, onClose]);
+
+  async function post(e: React.FormEvent) {
+    e.preventDefault();
+    if (blank || over || posting) return;
+    setPosting(true);
+    setError("");
+    const problem = await addComment(text);
+    setPosting(false);
+    if (problem) return setError(problem);
+    setText("");
+  }
+
+  async function remove(commentId: string) {
+    setDeleting(commentId);
+    setError("");
+    const problem = await removeComment(commentId);
+    setDeleting(null);
+    if (problem) setError(problem);
+  }
+
+  return (
+    <aside id={id} className="talk" aria-labelledby={headingId} hidden={!open}>
+      <header className="talk-head">
+        <h2 id={headingId}>
+          Comments <span>on {title}</span>
+        </h2>
+        <button type="button" className="control" onClick={onClose} aria-label="Close comments">
+          <svg viewBox="0 0 20 20" aria-hidden="true">
+            <path d="M5.4 4.3 10 8.9l4.6-4.6 1.1 1.1-4.6 4.6 4.6 4.6-1.1 1.1-4.6-4.6-4.6 4.6-1.1-1.1 4.6-4.6-4.6-4.6z" />
+          </svg>
+        </button>
+      </header>
+
+      {me ? (
+        <form className="talk-form" onSubmit={post}>
+          <label htmlFor={fieldId} className="visually-hidden">
+            Your comment
+          </label>
+          <textarea
+            id={fieldId}
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            placeholder="What do you hear in it?"
+            rows={3}
+            aria-invalid={over || undefined}
+          />
+          <div className="talk-form-row">
+            <span className={over ? "talk-count over" : "talk-count"} aria-live="polite">
+              {text.trim().length > COMMENT_MAX - 100 ? `${text.trim().length} / ${COMMENT_MAX}` : ""}
+            </span>
+            <button type="submit" className="button primary" disabled={blank || over || posting}>
+              {posting ? "Posting…" : "Post"}
+            </button>
+          </div>
+          <p className="talk-who">
+            Signed in as {me.name} ·{" "}
+            <button type="button" className="link" onClick={onSignOut}>
+              Sign out
+            </button>
+          </p>
+        </form>
+      ) : me === null ? (
+        <p className="talk-prompt">
+          <button type="button" className="link" onClick={() => onAuth("signin")}>
+            Sign in
+          </button>{" "}
+          or{" "}
+          <button type="button" className="link" onClick={() => onAuth("signup")}>
+            create an account
+          </button>{" "}
+          to like pieces and leave comments.
+        </p>
+      ) : null}
+
+      <p className="talk-error" role="alert">
+        {error}
+      </p>
+
+      {status === "error" ? (
+        <p className="talk-note">
+          Couldn&rsquo;t load comments.{" "}
+          <button type="button" className="link" onClick={onRetry}>
+            Try again
+          </button>
+        </p>
+      ) : !data ? (
+        <p className="talk-note" role="status">
+          Loading comments…
+        </p>
+      ) : data.comments.length === 0 ? (
+        <p className="talk-note">No comments on this piece yet.</p>
+      ) : (
+        <ol className="talk-list">
+          {data.comments.map((c) => (
+            <li key={c.id}>
+              <p className="talk-meta">
+                <span>{c.author}</span> <time dateTime={c.createdAt}>{timeAgo(c.createdAt)}</time>
+              </p>
+              <p className="talk-text">{c.text}</p>
+              {c.mine && (
+                <button type="button" className="link small" onClick={() => remove(c.id)} disabled={deleting === c.id}>
+                  {deleting === c.id ? "Deleting…" : "Delete"}
+                </button>
+              )}
+            </li>
+          ))}
+        </ol>
+      )}
+    </aside>
+  );
+}
