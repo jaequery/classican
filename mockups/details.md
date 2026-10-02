@@ -176,6 +176,325 @@ Sources: [Songs Without Words (Wikipedia)](https://en.wikipedia.org/wiki/Songs_W
 Sources: [Nocturne in E minor, Op. posth. 72 (Wikipedia)](https://en.wikipedia.org/wiki/Nocturne_in_E_minor,_Op._posth._72_(Chopin)),
 [Nocturnes (Chopin) (Wikipedia)](https://en.wikipedia.org/wiki/Nocturnes_(Chopin))
 
+### 16. Symphony No. 9 "From the New World": Largo · Antonín Dvořák
+
+- **Year:** 1893 (premiered 16 December 1893) · `composedYear: 1893`
+- **Age:** 51. He wrote it in New York in the first half of 1893, before his 52nd birthday on 8 September.
+- **Place:** New York City, United States
+- **Instruments:** Orchestra; the Largo's famous tune is played by a solo cor anglais (English horn) over muted strings
+- **Reception:** At the Carnegie Hall premiere every movement was met with "thunderous clapping" and Dvořák stood to bow, "one of the greatest public triumphs" of his career. It became one of the most popular of all symphonies.
+
+Sources: [Symphony No. 9 (Dvořák) (Wikipedia)](https://en.wikipedia.org/wiki/Symphony_No._9_(Dvo%C5%99%C3%A1k))
+
+### 17. Má vlast: Vltava (The Moldau) · Bedřich Smetana
+
+- **Year:** 1874 (20 November to 8 December; premiered 4 April 1875) · `composedYear: 1874`
+- **Age:** 50
+- **Place:** probably Prague, where he lived until 1875 (not stated directly in the source)
+- **Instruments:** Orchestra, including two harps
+- **Reception:** First performed in Prague on 4 April 1875 under Adolf Čech. It is the best known of the six poems, often performed separately.
+
+Sources: [Má vlast (Wikipedia)](https://en.wikipedia.org/wiki/M%C3%A1_vlast),
+[Bedřich Smetana (Wikipedia)](https://en.wikipedia.org/wiki/Bed%C5%99ich_Smetana)
+
+### 18. Peer Gynt: In the Hall of the Mountain King · Edvard Grieg
+
+- **Year:** 1875 (premiered with the play in 1876; in Suite No. 1, 1888) · `composedYear: 1875`
+- **Age:** about 32. The Peer Gynt music was written 1874–75, so the exact age is uncertain.
+- **Place:** Bergen, Norway, and Fredensborg, Denmark, where the score was finished in July 1875 (as for Morning Mood)
+- **Instruments:** Orchestra
+- **Reception:** The 1876 premiere in Christiania (Oslo) was a "triumphant success". The tune has since attained "iconic status in popular culture".
+
+Sources: [In the Hall of the Mountain King (Wikipedia)](https://en.wikipedia.org/wiki/In_the_Hall_of_the_Mountain_King),
+[Peer Gynt (Grieg) (Wikipedia)](https://en.wikipedia.org/wiki/Peer_Gynt_(Grieg)),
+[Bergen Public Library: Grieg biography](https://bergenbibliotek.no/grieg/english/bio2-eng)
+
+### 19. Peer Gynt: Anitra's Dance · Edvard Grieg
+
+- **Year:** 1874–75 (premiered 1876; in Suite No. 1, 1888) · `composedYear: 1874`
+- **Age:** about 31
+- **Place:** Bergen, Norway, and Fredensborg, Denmark (as for Morning Mood)
+- **Instruments:** Orchestra. Marked "Tempo di Mazurka".
+- **Reception:** Part of the 1876 Peer Gynt premiere, a "triumphant success". The suites became some of Grieg's best-known works.
+
+Sources: [Peer Gynt (Grieg) (Wikipedia)](https://en.wikipedia.org/wiki/Peer_Gynt_(Grieg)),
+[Peer-Gynt-Suite (German Wikipedia)](https://de.wikipedia.org/wiki/Peer-Gynt-Suite)
+
+### 20. Tales from the Vienna Woods, Op. 325 · Johann Strauss II
+
+- **Year:** 1868 · `composedYear: 1868`
+- **Age:** about 42 or 43 (born 25 October 1825; the month of composition is not given)
+- **Place:** Vienna, Austria (his home city; not stated directly in the source)
+- **Instruments:** Orchestra with a virtuoso zither part; a string quartet may play the zither's part instead
+- **Reception:** How it was first received is not documented in the source. It is listed among Strauss's most famous works.
+
+Sources: [Tales from the Vienna Woods (Wikipedia)](https://en.wikipedia.org/wiki/Tales_from_the_Vienna_Woods),
+[Johann Strauss II (Wikipedia)](https://en.wikipedia.org/wiki/Johann_Strauss_II)
+
+### 21. Piano Concerto No. 1 in B-flat minor, Op. 23: first movement · Pyotr Ilyich Tchaikovsky
+
+- **Year:** November 1874 to February 1875 (revised 1879 and 1888) · `composedYear: 1874`
+- **Age:** about 34
+- **Place:** Moscow, Russia, where he taught at the Conservatory and first played it to Rubinstein
+- **Instruments:** Piano and orchestra (two each of flutes, oboes, clarinets and bassoons; four horns, two trumpets, three trombones, timpani, strings)
+- **Reception:** Rubinstein called it "worthless and unplayable". At the Boston premiere (25 October 1875, Hans von Bülow) it "was a success with the audience", though "the critics were not so impressed"; by one account Bülow had to repeat the finale.
+
+Sources: [Piano Concerto No. 1 (Tchaikovsky) (Wikipedia)](https://en.wikipedia.org/wiki/Piano_Concerto_No._1_(Tchaikovsky))
+
+### 22. Piano Concerto No. 2 in C minor, Op. 18: Adagio sostenuto · Sergei Rachmaninoff
+
+- **Year:** autumn 1900 (movements 2 and 3 premiered December 1900; complete concerto 1901) · `composedYear: 1900`
+- **Age:** 27
+- **Place:** probably Moscow, Russia (not documented; he had spent the summer of 1900 in Italy)
+- **Instruments:** Piano and orchestra; the theme is introduced by flute, then a long clarinet solo
+- **Reception:** The complete work had "an astoundingly successful premiere" on 9 November 1901, and "established his fame as a concerto composer".
+
+Sources: [Piano Concerto No. 2 (Rachmaninoff) (Wikipedia)](https://en.wikipedia.org/wiki/Piano_Concerto_No._2_(Rachmaninoff)),
+[Sergei Rachmaninoff (Wikipedia)](https://en.wikipedia.org/wiki/Sergei_Rachmaninoff)
+
+### 23. Pictures at an Exhibition: The Great Gate of Kiev · Modest Mussorgsky
+
+- **Year:** June 1874 (published 1886) · `composedYear: 1874`
+- **Age:** 35
+- **Place:** Saint Petersburg, Russia
+- **Instruments:** Written for solo piano; widely known through Ravel's 1922 orchestration. Whether this Musopen recording is the piano original or an orchestration is not stated on its file page.
+- **Reception:** By a friend's (perhaps biased) account, fellow composers were "seriously puzzled", and Mussorgsky set it aside unpublished. Ravel's orchestration became "the most popular in the concert hall and on record".
+
+Sources: [Pictures at an Exhibition (Wikipedia)](https://en.wikipedia.org/wiki/Pictures_at_an_Exhibition),
+[Modest Mussorgsky (Wikipedia)](https://en.wikipedia.org/wiki/Modest_Mussorgsky)
+
+### 24. In the Steppes of Central Asia · Alexander Borodin
+
+- **Year:** 1880 (premiered 20 April 1880) · `composedYear: 1880`
+- **Age:** 46. Premiered in April, before his 47th birthday on 12 November.
+- **Place:** Saint Petersburg, Russia
+- **Instruments:** Orchestra (flutes, oboe, cor anglais, clarinets, bassoons, horns, trumpets, trombones, timpani, strings)
+- **Reception:** "A concert favorite since its first performance", conducted by Nikolai Rimsky-Korsakov in Saint Petersburg.
+
+Sources: [In the Steppes of Central Asia (Wikipedia)](https://en.wikipedia.org/wiki/In_the_Steppes_of_Central_Asia),
+[Alexander Borodin (Wikipedia)](https://en.wikipedia.org/wiki/Alexander_Borodin)
+
+### 25. Danse macabre, Op. 40 · Camille Saint-Saëns
+
+- **Year:** 1874 (premiered 24 January 1875) · `composedYear: 1874`
+- **Age:** about 38 or 39 (born 9 October 1835; the month of composition is not given)
+- **Place:** probably Paris, France (not stated directly in the source)
+- **Instruments:** Orchestra with solo violin (its E string tuned down to E-flat), xylophone and harp
+- **Reception:** At its premiere it "was not well received and caused widespread feelings of anxiety". It is now "considered one of Saint-Saëns' masterpieces".
+- **Recording:** Leopold Stokowski and the Philadelphia Orchestra, recorded 29 April 1925 (Victor 6505), the first orchestral electrical recording made in America.
+
+Sources: [Danse macabre (Saint-Saëns) (Wikipedia)](https://en.wikipedia.org/wiki/Danse_macabre_(Saint-Sa%C3%ABns)),
+[Leopold Stokowski (Wikipedia)](https://en.wikipedia.org/wiki/Leopold_Stokowski),
+[File:PhiladelphiaSymphonyOrchestra-DanseMacabre.ogg (Wikimedia Commons)](https://commons.wikimedia.org/wiki/File:PhiladelphiaSymphonyOrchestra-DanseMacabre.ogg)
+
+### 26. Jesu, Joy of Man’s Desiring · J. S. Bach
+
+- **Year:** 1723, from a 1716 cantata · `composedYear: 1723`
+- **Age:** 38 (Bach turned 38 on 31 March 1723)
+- **Place:** Leipzig, Germany
+- **Instruments:** Choir, trumpet, oboes, strings and continuo
+- **Reception:** Written for a Leipzig church service. It became world-famous two centuries later through Myra Hess's piano transcription.
+
+Sources: [Jesu, Joy of Man's Desiring (Wikipedia)](https://en.wikipedia.org/wiki/Jesu,_Joy_of_Man%27s_Desiring),
+[Herz und Mund und Tat und Leben, BWV 147 (Wikipedia)](https://en.wikipedia.org/wiki/Herz_und_Mund_und_Tat_und_Leben,_BWV_147)
+
+### 27. Orchestral Suite No. 2 in B minor: Badinerie · J. S. Bach
+
+- **Year:** c. 1738–39 · `composedYear: 1738`
+- **Age:** about 53
+- **Place:** Leipzig, Germany
+- **Instruments:** Solo flute, strings and continuo
+- **Reception:** How it was received in Bach's day is not recorded. It has since become a favourite showpiece for flautists.
+
+Sources: [Orchestral suites (Bach) (Wikipedia)](https://en.wikipedia.org/wiki/Orchestral_suites_(Bach))
+
+### 28. Harpsichord Suite No. 5 in E major: The Harmonious Blacksmith · George Frideric Handel
+
+- **Year:** Published 1720 · `composedYear: 1720`
+- **Age:** about 35 (published 1720; possibly written earlier)
+- **Place:** Probably London, England
+- **Instruments:** Harpsichord
+- **Reception:** Handel published it in his first set of harpsichord suites in 1720. Its nickname and fame as a stand-alone piece came only in the 19th century.
+
+Sources: [The Harmonious Blacksmith (Wikipedia)](https://en.wikipedia.org/wiki/The_Harmonious_Blacksmith)
+
+### 29. Mandolin Concerto in C major, RV 425 · Antonio Vivaldi
+
+- **Year:** 1725 · `composedYear: 1725`
+- **Age:** 47 (born 4 March 1678)
+- **Place:** Probably Venice, Italy
+- **Instruments:** Mandolin, strings and continuo
+- **Reception:** How it was first received is not recorded. Its first movement reached a new audience in the 1979 film Kramer vs. Kramer.
+
+Sources: [Mandolin Concerto (Vivaldi) (Wikipedia)](https://en.wikipedia.org/wiki/Mandolin_Concerto_(Vivaldi)),
+[Antonio Vivaldi (Wikipedia)](https://en.wikipedia.org/wiki/Antonio_Vivaldi)
+
+### 30. The Four Seasons, Spring: Allegro · Antonio Vivaldi
+
+- **Year:** c. 1718–23, published 1725 · `composedYear: 1720`
+- **Age:** about 42
+- **Place:** Probably Mantua, Italy
+- **Instruments:** Solo violin, strings and continuo
+- **Reception:** Published in Amsterdam in 1725. After long neglect it became famous again through recordings in the 1940s, and is now Vivaldi's best-known work.
+
+Sources: [The Four Seasons (Vivaldi) (Wikipedia)](https://en.wikipedia.org/wiki/The_Four_Seasons_(Vivaldi))
+
+### 31. Oboe Concerto in D minor, Op. 9 No. 2: Adagio · Tomaso Albinoni
+
+- **Year:** Published 1722 · `composedYear: 1722`
+- **Age:** about 51
+- **Place:** Not documented; perhaps Munich, Germany
+- **Instruments:** Oboe, strings and continuo
+- **Reception:** The Op. 9 concertos were dedicated to the Elector of Bavaria. Albinoni's instrumental collections met with considerable success and were reprinted.
+
+Sources: [12 Concerti a cinque (Albinoni) (Wikipedia)](https://en.wikipedia.org/wiki/12_Concerti_a_cinque_(Albinoni)),
+[Tomaso Albinoni (Wikipedia)](https://en.wikipedia.org/wiki/Tomaso_Albinoni)
+
+### 32. Eine kleine Nachtmusik, K. 525: Allegro · W. A. Mozart
+
+- **Year:** 1787, published c. 1827 · `composedYear: 1787`
+- **Age:** 31 (born 27 January 1756; finished 10 August 1787)
+- **Place:** Vienna, Austria
+- **Instruments:** Two violins, viola, cello and double bass
+- **Reception:** It is not known whether it was performed in Mozart's lifetime. It was published only about 1827, sold by his widow, Constanze.
+
+Sources: [Eine kleine Nachtmusik (Wikipedia)](https://en.wikipedia.org/wiki/Eine_kleine_Nachtmusik)
+
+### 33. The Magic Flute: Overture · W. A. Mozart
+
+- **Year:** 1791 · `composedYear: 1791`
+- **Age:** 35
+- **Place:** Vienna, Austria
+- **Instruments:** Orchestra: woodwind, horns, trumpets, trombones, timpani and strings
+- **Reception:** The opera was an outstanding success from its first performances, drawing huge crowds and hundreds of performances in the 1790s.
+
+Sources: [The Magic Flute (Wikipedia)](https://en.wikipedia.org/wiki/The_Magic_Flute)
+
+### 34. Pathétique Sonata: Adagio cantabile · Ludwig van Beethoven
+
+- **Year:** 1798, published 1799 · `composedYear: 1798`
+- **Age:** 27 (Wikipedia: "when the composer was 27 years old")
+- **Place:** Vienna, Austria
+- **Instruments:** Solo piano
+- **Reception:** An instant success that sold well and helped make Beethoven's name as a composer, not just as a pianist.
+
+Sources: [Piano Sonata No. 8 (Beethoven) (Wikipedia)](https://en.wikipedia.org/wiki/Piano_Sonata_No._8_(Beethoven))
+
+### 35. Symphony No. 5 in C minor: Allegro con brio · Ludwig van Beethoven
+
+- **Year:** 1804–08, first performed 1808 · `composedYear: 1806`
+- **Age:** about 36 ("mid-30s"; written 1804–08)
+- **Place:** Vienna, Austria
+- **Instruments:** Orchestra: woodwind, horns, trumpets, timpani and strings
+- **Reception:** The four-hour premiere in a freezing hall went badly, but within two years E. T. A. Hoffmann called it "one of the most important works of the time".
+
+Sources: [Symphony No. 5 (Beethoven) (Wikipedia)](https://en.wikipedia.org/wiki/Symphony_No._5_(Beethoven))
+
+### 36. Pastoral Symphony: Allegro ma non troppo · Ludwig van Beethoven
+
+- **Year:** 1802–08, first performed 1808 · `composedYear: 1808`
+- **Age:** about 37 (written 1802–08, finished before his 38th birthday in mid-December 1808)
+- **Place:** Vienna, Austria
+- **Instruments:** Orchestra: flutes, oboes, clarinets, bassoons, horns and strings
+- **Reception:** It was first played on 22 December 1808 at the Theater an der Wien in Vienna, in the same concert as his Fifth Symphony.
+
+Sources: [Symphony No. 6 (Beethoven) (Wikipedia)](https://en.wikipedia.org/wiki/Symphony_No._6_(Beethoven))
+
+### 37. Waltz in C-sharp minor, Op. 64 No. 2 · Frédéric Chopin
+
+- **Year:** 1846–47, published 1847 · `composedYear: 1846`
+- **Age:** about 36
+- **Place:** France. The source does not say where; Chopin divided his time between Paris and George Sand's house at Nohant
+- **Instruments:** Solo piano
+- **Reception:** How it was first received is not recorded. It was published in Paris in 1847 and dedicated to Madame Nathaniel de Rothschild.
+
+Sources: [Waltz in C-sharp minor, Op. 64, No. 2 (Wikipedia)](https://en.wikipedia.org/wiki/Waltz_in_C-sharp_minor,_Op._64,_No._2_(Chopin))
+
+### 38. Ballade No. 1 in G minor, Op. 23 · Frédéric Chopin
+
+- **Year:** 1835, published 1836 · `composedYear: 1835`
+- **Age:** about 25 (finished 1835; sketched at 21 in 1831)
+- **Place:** Paris, France, from sketches made in Vienna in 1831
+- **Instruments:** Solo piano
+- **Reception:** Robert Schumann told Chopin it was his favourite of his works. Chopin replied that he liked it best too, his "dearest work".
+
+Sources: [Ballade No. 1 (Chopin) (Wikipedia)](https://en.wikipedia.org/wiki/Ballade_No._1_(Chopin)),
+[Ballades (Chopin) (Wikipedia)](https://en.wikipedia.org/wiki/Ballades_(Chopin))
+
+### 39. A Midsummer Night's Dream: Wedding March · Felix Mendelssohn
+
+- **Year:** 1842, first performed 1843 · `composedYear: 1842`
+- **Age:** 33
+- **Place:** Written in 1842 for the King of Prussia; first staged at Potsdam, Germany
+- **Instruments:** Orchestra with trumpets, trombones and percussion
+- **Reception:** First heard in Potsdam on 14 October 1843. After Princess Victoria chose it for her wedding in 1858, it became a favourite at weddings.
+
+Sources: [Wedding March (Mendelssohn) (Wikipedia)](https://en.wikipedia.org/wiki/Wedding_March_(Mendelssohn)),
+[A Midsummer Night's Dream (Mendelssohn) (Wikipedia)](https://en.wikipedia.org/wiki/A_Midsummer_Night%27s_Dream_(Mendelssohn))
+
+### 40. Italian Symphony: Allegro vivace · Felix Mendelssohn
+
+- **Year:** 1830–33, first performed 1833 · `composedYear: 1833`
+- **Age:** 24 (finished 13 March 1833; born 3 February 1809)
+- **Place:** Begun on his journey through Italy (1830–31), finished in Berlin
+- **Instruments:** Orchestra: pairs of woodwind, horns and trumpets, timpani and strings
+- **Reception:** Mendelssohn conducted the first performance in London in 1833. Still unsatisfied, he revised it and never published it; it was printed in 1851, after his death.
+
+Sources: [Symphony No. 4 (Mendelssohn) (Wikipedia)](https://en.wikipedia.org/wiki/Symphony_No._4_(Mendelssohn))
+
+### 41. Piano Sonata in B-flat major, D. 960: Andante sostenuto · Franz Schubert
+
+- **Year:** 1828, published 1838–39 · `composedYear: 1828`
+- **Age:** 31
+- **Place:** Vienna, Austria
+- **Instruments:** Solo piano
+- **Reception:** Published about ten years after his death, it was largely neglected in the 19th century. Serious attention came around the 1928 centenary of his death.
+
+Sources: [Piano Sonata No. 21 (Schubert) (Wikipedia)](https://en.wikipedia.org/wiki/Piano_Sonata_No._21_(Schubert)),
+[Franz Schubert (Wikipedia)](https://en.wikipedia.org/wiki/Franz_Schubert)
+
+### 42. Intermezzo in A major, Op. 118 No. 2 · Johannes Brahms
+
+- **Year:** 1893 · `composedYear: 1893`
+- **Age:** 60
+- **Place:** Bad Ischl, Austria
+- **Instruments:** Solo piano
+- **Reception:** How it was first received is not recorded. It is now among the most often played of Brahms's late piano pieces.
+
+Sources: [Six Pieces for Piano, Op. 118 (Wikipedia)](https://en.wikipedia.org/wiki/Six_Pieces_for_Piano,_Op._118_(Brahms))
+
+### 43. Scenes from Childhood: Of Foreign Lands and Peoples · Robert Schumann
+
+- **Year:** 1838, published 1839 · `composedYear: 1838`
+- **Age:** 27 (written early 1838, before his 28th birthday on 8 June)
+- **Place:** Leipzig, Germany
+- **Instruments:** Solo piano
+- **Reception:** Schumann later called these pieces more cheerful, gentler and more melodic than his earlier works. How the public first received them is less well recorded.
+
+Sources: [Kinderszenen (Wikipedia)](https://en.wikipedia.org/wiki/Kinderszenen)
+
+### 44. Roman Carnival Overture, Op. 9 · Hector Berlioz
+
+- **Year:** 1843, first performed 1844 · `composedYear: 1843`
+- **Age:** about 40 (39 if finished before his birthday on 11 December 1843)
+- **Place:** Paris, France
+- **Instruments:** Large orchestra with a solo cor anglais
+- **Reception:** It was first played at the Salle Herz in Paris on 3 February 1844, and became far more popular than the opera its music came from.
+
+Sources: [Le carnaval romain (Wikipedia)](https://en.wikipedia.org/wiki/Le_carnaval_romain),
+[Hector Berlioz (Wikipedia)](https://en.wikipedia.org/wiki/Hector_Berlioz)
+
+### 45. Carmen: Prelude to Act 1 · Georges Bizet
+
+- **Year:** 1873–74, first performed 1875 · `composedYear: 1874`
+- **Age:** about 35
+- **Place:** Probably Paris, France (the source does not say)
+- **Instruments:** Orchestra with percussion
+- **Reception:** The 1875 premiere at the Opéra-Comique shocked audiences and played to half-empty houses. It became one of the most performed operas in the world.
+
+Sources: [Carmen (Wikipedia)](https://en.wikipedia.org/wiki/Carmen),
+[Georges Bizet (Wikipedia)](https://en.wikipedia.org/wiki/Georges_Bizet)
+
 ## Composers
 
 ### Erik Satie
@@ -258,3 +577,115 @@ Sources: [Camille Saint-Saëns (Wikipedia)](https://en.wikipedia.org/wiki/Camill
 - **Also:** In 1829 he conducted Bach's St Matthew Passion in Berlin, which sparked the Bach revival.
 
 Sources: [Felix Mendelssohn (Wikipedia)](https://en.wikipedia.org/wiki/Felix_Mendelssohn)
+
+### Antonín Dvořák
+
+- **Born:** 1841, Nelahozeves, Bohemia (now Czech Republic) · **Died:** 1904
+- **Money:** His father was "unsuccessful as an innkeeper and butcher". In New York he was paid $15,000 a year, "twenty-five times what he was paid at the Prague Conservatory".
+- **Also:** Brahms sat on the jury of the Austrian State Prize he won, and in 1877 recommended him to his publisher, Simrock.
+
+Sources: [Antonín Dvořák (Wikipedia)](https://en.wikipedia.org/wiki/Ant%C3%B3n%C3%ADn_Dvo%C5%99%C3%A1k)
+
+### Bedřich Smetana
+
+- **Born:** 1824, Litomyšl, Bohemia (now Czech Republic) · **Died:** 1884
+- **Money:** In 1848 he asked Liszt for a loan of 400 florins to open a music school. After his resignation, the theatre offered him a pension of 1,200 florins a year.
+- **Also:** He gave his first public performance at six, and is regarded in his homeland as "the father of Czech music".
+
+Sources: [Bedřich Smetana (Wikipedia)](https://en.wikipedia.org/wiki/Bed%C5%99ich_Smetana)
+
+### Johann Strauss II
+
+- **Born:** 1825, St Ulrich near Vienna, Austria · **Died:** 1899
+- **Money:** His father "did not want him to become a musician but rather a banker". He led his own orchestra and from 1863 was Music Director of the Royal Court Balls.
+- **Also:** He was known in his lifetime as "The Waltz King". His brothers Josef and Eduard also composed light music.
+
+Sources: [Johann Strauss II (Wikipedia)](https://en.wikipedia.org/wiki/Johann_Strauss_II)
+
+### Pyotr Ilyich Tchaikovsky
+
+- **Born:** 1840, Votkinsk, Russia · **Died:** 1893
+- **Money:** The widow Nadezhda von Meck was his patroness for 13 years, which "allowed him to focus exclusively on composition". They agreed never to meet.
+- **Also:** He was educated for the civil service and worked at the Ministry of Justice before entering the Saint Petersburg Conservatory.
+
+Sources: [Pyotr Ilyich Tchaikovsky (Wikipedia)](https://en.wikipedia.org/wiki/Pyotr_Ilyich_Tchaikovsky)
+
+### Sergei Rachmaninoff
+
+- **Born:** 1873, Semyonovo, near Staraya Russa, Russia · **Died:** 1943
+- **Money:** His father's "financial incompetence" forced the sale of the family's five estates. After leaving Russia in 1917 he lived from concert tours in the United States and, from 1920, a Victor recording contract that "earned him some much needed income".
+- **Also:** He began the piano at four and is "widely considered one of the finest pianists of his day".
+
+Sources: [Sergei Rachmaninoff (Wikipedia)](https://en.wikipedia.org/wiki/Sergei_Rachmaninoff)
+
+### Modest Mussorgsky
+
+- **Born:** 1839, Karevo, Pskov Governorate, Russia · **Died:** 1881
+- **Money:** He supported himself as a low-grade civil servant and was dismissed in 1880; friends then organised stipends so he could finish his operas.
+- **Also:** He entered the Cadet School of the Guards at 13, and was one of the group known as "The Five".
+
+Sources: [Modest Mussorgsky (Wikipedia)](https://en.wikipedia.org/wiki/Modest_Mussorgsky)
+
+### Alexander Borodin
+
+- **Born:** 1833, Saint Petersburg, Russia · **Died:** 1887
+- **Money:** He earned his living as professor of chemistry at the Imperial Medical-Surgical Academy, composing "in his spare time".
+- **Also:** He established medical courses for women in 1872.
+
+Sources: [Alexander Borodin (Wikipedia)](https://en.wikipedia.org/wiki/Alexander_Borodin)
+
+### George Frideric Handel
+
+- **Born:** 1685, Halle, Germany · **Died:** 1759
+- **Money:** He received £200 a year from Queen Anne from 1713, ran his own opera companies, and "died a respected and rich man".
+- **Also:** Born the same year as Bach, he settled in London in 1712 and became a naturalised British subject in 1727.
+
+Sources: [George Frideric Handel (Wikipedia)](https://en.wikipedia.org/wiki/George_Frideric_Handel)
+
+### Antonio Vivaldi
+
+- **Born:** 1678, Venice, Italy · **Died:** 1741
+- **Money:** The Ospedale della Pietà paid him to write two concertos a month. Late in life he sold his manuscripts "at paltry prices", moved to Vienna and died in poverty.
+- **Also:** He was ordained a priest at 25 and nicknamed il Prete Rosso, "the Red Priest", for his red hair.
+
+Sources: [Antonio Vivaldi (Wikipedia)](https://en.wikipedia.org/wiki/Antonio_Vivaldi)
+
+### Tomaso Albinoni
+
+- **Born:** 1671, Venice, Italy · **Died:** 1751
+- **Money:** The son of a wealthy paper merchant, he never sought a church or court post and had "independent means" to compose.
+- **Also:** He wrote at least fifty operas, most now lost; part of his work was destroyed with the Dresden State Library in the Second World War.
+
+Sources: [Tomaso Albinoni (Wikipedia)](https://en.wikipedia.org/wiki/Tomaso_Albinoni)
+
+### Franz Schubert
+
+- **Born:** 1797, Vienna, Austria · **Died:** 1828
+- **Money:** He never held a steady post and lodged with friends; his friend Spaun "furnished the impoverished Schubert with much of his manuscript paper", and publishers paid "parsimonious royalties".
+- **Also:** He wrote about 630 songs, and was a torchbearer at Beethoven's funeral a year before his own death at 31.
+
+Sources: [Franz Schubert (Wikipedia)](https://en.wikipedia.org/wiki/Franz_Schubert)
+
+### Johannes Brahms
+
+- **Born:** 1833, Hamburg, Germany · **Died:** 1897
+- **Money:** His compositions, the Hungarian Dances above all, became lucrative, yet he lived modestly in Vienna. (The source treats stories of a poverty-stricken youth playing in bars as anecdotal.)
+- **Also:** In 1853 Robert Schumann hailed him in the article "Neue Bahnen" ("New Paths").
+
+Sources: [Johannes Brahms (Wikipedia)](https://en.wikipedia.org/wiki/Johannes_Brahms)
+
+### Hector Berlioz
+
+- **Born:** 1803, La Côte-Saint-André, France · **Died:** 1869
+- **Money:** His father "reduced and sometimes withheld" his allowance after he gave up medicine, and he supplemented his income by writing music criticism, which he "excelled" at but "abhorred".
+- **Also:** He "never studied the piano"; he learned the flute and the guitar.
+
+Sources: [Hector Berlioz (Wikipedia)](https://en.wikipedia.org/wiki/Hector_Berlioz)
+
+### Georges Bizet
+
+- **Born:** 1838, Paris, France · **Died:** 1875
+- **Money:** After his Prix de Rome grant ran out he lived on piano pupils, work as a rehearsal accompanist, and piano transcriptions "for hundreds of operas" for publishers.
+- **Also:** He was admitted to the Conservatoire "two weeks before his 10th birthday" and won the Prix de Rome in 1857.
+
+Sources: [Georges Bizet (Wikipedia)](https://en.wikipedia.org/wiki/Georges_Bizet)
