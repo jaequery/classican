@@ -40,7 +40,10 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${display.variable} ${text.variable}`}>
-      <body>{children}</body>
+      <body>
+        {children}
+        <footer className="credit">Vibe coded using Fredrin</footer>
+      </body>
     </html>
   );
 }

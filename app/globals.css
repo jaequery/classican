@@ -623,6 +623,29 @@ textarea::placeholder {
   }
 }
 
+/* A maker's mark in the free bottom-right corner, small enough to ignore. */
+.credit {
+  position: fixed;
+  right: 16px;
+  bottom: 12px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1;
+  opacity: 0.6;
+  text-shadow: 0 1px 2px rgb(0 0 0 / 0.6);
+  pointer-events: none;
+}
+/* On small screens the player fills the bottom; the mark sits in the strip beneath it. */
+@media (max-width: 720px), (max-height: 500px) {
+  .credit {
+    right: 0;
+    left: 0;
+    bottom: calc(1px + env(safe-area-inset-bottom));
+    font-size: 10px;
+    text-align: center;
+  }
+}
+
 .noscript {
   position: fixed;
   left: 50%;
