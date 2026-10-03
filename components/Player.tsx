@@ -63,6 +63,8 @@ export function Player({ tracks, onPlayingChange, onTrackChange, actions }: Prop
       onTrackChange(i);
       setUnavailable(false);
       audio.src = audio.canPlayType("audio/mpeg") ? t.mp3 : t.ogg;
+      // The tab names the piece, so a listener in another tab can see what is on.
+      document.title = `${t.title} · ${t.composer} · classican`;
       if ("mediaSession" in navigator && "MediaMetadata" in window) {
         navigator.mediaSession.metadata = new MediaMetadata({ title: t.title, artist: t.composer, album: "classican" });
       }
@@ -125,8 +127,8 @@ export function Player({ tracks, onPlayingChange, onTrackChange, actions }: Prop
   // Restore the visitor's volume from last time.
   useEffect(() => {
     try {
-      const saved = Number(localStorage.getItem(VOLUME_KEY));
-      if (saved >= 0 && saved <= 100 && localStorage.getItem(VOLUME_KEY) !== null) setVolume(saved);
+      const saved = localStorage.getItem(VOLUME_KEY);
+      if (saved !== null && Number(saved) >= 0 && Number(saved) <= 100) setVolume(Number(saved));
     } catch {
       // Storage can be blocked; the default volume is fine.
     }
