@@ -25,7 +25,7 @@ next (or the end of a piece) picks another at random; Left goes back to the piec
 browsers block autoplay on a first visit, so then the visitor's first click or key starts the music.
 A piece that fails to load is skipped; if every piece fails, the player says so and pressing
 play tries again. Space plays and pauses from anywhere on the page; media keys (including
-previous) and the OS "now playing" panel work too. "More" on the wall label credits the performer
+previous) and the OS "now playing" panel work too, and the browser tab names the piece that is on. "More" on the wall label credits the performer
 and links to the recording's Commons page.
 
 ## Accounts, likes and comments
