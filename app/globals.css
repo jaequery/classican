@@ -133,6 +133,13 @@ body {
   line-height: 1.45;
   text-wrap: pretty;
 }
+.wall-more a {
+  color: inherit;
+  text-underline-offset: 3px;
+}
+.wall-more a:hover {
+  opacity: 0.72;
+}
 .wall-key {
   display: block;
   color: var(--muted);

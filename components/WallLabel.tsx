@@ -5,7 +5,8 @@ import { ageAtWriting, type Composer, type Track } from "@/lib/site";
 
 /**
  * A gallery wall label beside the painting: who wrote the piece, when, where
- * and for what. "More" opens how it was received and a short biography.
+ * and for what. "More" opens how it was received, a short biography and who
+ * made the recording.
  */
 export function WallLabel({ track, composer }: { track: Track; composer: Composer }) {
   const [open, setOpen] = useState(false);
@@ -35,6 +36,13 @@ export function WallLabel({ track, composer }: { track: Track; composer: Compose
             <span className="wall-key">The composer</span>
             Aged {ageAtWriting(details, composer)} when writing it, and born in {composer.birthplace}. {composer.money}{" "}
             {composer.also}
+          </p>
+          <p>
+            <span className="wall-key">The recording</span>
+            {track.performer}, in the public domain.{" "}
+            <a href={track.source} target="_blank" rel="noreferrer">
+              Source on Wikimedia Commons
+            </a>
           </p>
         </div>
       </div>

@@ -218,6 +218,7 @@ export function Player({ tracks, onPlayingChange, onTrackChange, actions }: Prop
       ["play", play],
       ["pause", pause],
       ["nexttrack", next],
+      ["previoustrack", prev],
     ];
     for (const [action, handler] of handlers) {
       try {
@@ -226,7 +227,7 @@ export function Player({ tracks, onPlayingChange, onTrackChange, actions }: Prop
         // Unsupported action in this browser.
       }
     }
-  }, [next, pause, play]);
+  }, [next, pause, play, prev]);
 
   const changeVolume = useCallback(
     (v: number) => {
