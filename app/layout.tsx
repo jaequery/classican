@@ -42,7 +42,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={`${display.variable} ${text.variable}`}>
       <body>
         {children}
-        <footer className="credit">Vibe coded using Fredrin</footer>
+        <footer className="credit">
+          {/* The Fredrin mark from fredrin.com/icon.svg: a top bar and a left bar, notched bottom-right. */}
+          <svg className="credit-mark" viewBox="96 96 320 320" aria-hidden="true" focusable="false">
+            <rect x="96" y="96" width="320" height="192" rx="52" />
+            <rect x="96" y="96" width="192" height="320" rx="52" />
+          </svg>
+          Vibe coded using Fredrin
+        </footer>
       </body>
     </html>
   );
