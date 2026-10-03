@@ -53,10 +53,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <svg className="credit-mark" viewBox="96 96 320 320" aria-hidden="true" focusable="false">
             <path d="M148 96H364A52 52 0 0 1 416 148V236A52 52 0 0 1 364 288H288V364A52 52 0 0 1 236 416H148A52 52 0 0 1 96 364V148A52 52 0 0 1 148 96Z" />
           </svg>
-          {/* Wording from fredrin.com's own description. */}
+          {/* A one-line caption: the name, then who it's for. */}
           <span className="credit-tip" aria-hidden="true">
             <b>Fredrin</b>
-            An agentic development environment for vibe coding: a branch, worktree and AI agent per ticket.
+            for cracked vibe coders
           </span>
         </a>
       </body>
