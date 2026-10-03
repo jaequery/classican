@@ -623,48 +623,88 @@ textarea::placeholder {
   }
 }
 
-/* A maker's mark in the free bottom-right corner: the Fredrin logo and a word, on a
-   Graphite pill so it reads at a glance over any painting. */
+/* A maker's mark tucked flush into the bottom-right corner like a printer's colophon:
+   the Fredrin logo on a small Graphite tab. Hover or focus slides a caption up out of
+   the tab saying what Fredrin is; clicking opens fredrin.com. */
 .credit {
   position: fixed;
-  right: 16px;
-  bottom: 16px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 12px 6px 8px;
+  right: 0;
+  bottom: 0;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
   color: var(--ink);
-  background: color-mix(in srgb, var(--surface) 85%, transparent);
-  border-radius: 999px;
-  box-shadow: 0 2px 8px rgb(0 0 0 / 0.4);
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 1;
-  pointer-events: none;
+  background: var(--surface);
+  border-top-left-radius: 14px;
+  transition: border-radius 0.15s;
+}
+.credit:hover,
+.credit:focus-visible {
+  border-top-left-radius: 0;
+}
+.credit:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: -4px;
 }
 .credit-mark {
-  flex: none;
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   fill: currentColor;
 }
-/* On small screens the player fills the bottom; the mark sits in the strip beneath it. */
+.credit-tip {
+  position: absolute;
+  right: 0;
+  bottom: 100%;
+  width: 260px;
+  padding: 12px 14px;
+  background: var(--surface);
+  border-top-left-radius: 14px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.4;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(4px);
+  transition:
+    opacity 0.15s,
+    transform 0.15s;
+}
+.credit-tip b {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--ink);
+  font-family: var(--font-title);
+  font-size: 16px;
+  font-weight: 600;
+}
+.credit:hover .credit-tip,
+.credit:focus-visible .credit-tip {
+  opacity: 1;
+  transform: none;
+}
+/* On small screens the player hugs the bottom corners, so the tab shrinks to a quarter
+   circle that fits in the gap beside the player's rounded corner. Touch has no hover,
+   so the caption stays hidden and a tap goes straight to fredrin.com. */
 @media (max-width: 720px), (max-height: 500px) {
   .credit {
-    right: 0;
-    left: 0;
-    bottom: calc(1px + env(safe-area-inset-bottom));
-    justify-content: center;
-    gap: 4px;
-    padding: 0;
-    background: none;
-    box-shadow: none;
-    font-size: 11px;
-    text-shadow: 0 1px 2px rgb(0 0 0 / 0.6);
+    right: env(safe-area-inset-right);
+    bottom: env(safe-area-inset-bottom);
+    width: 22px;
+    height: 22px;
+    padding: 6px 0 0 6px;
+    border-top-left-radius: 100%;
+  }
+  .credit:hover,
+  .credit:focus-visible {
+    border-top-left-radius: 100%;
   }
   .credit-mark {
     width: 10px;
     height: 10px;
+  }
+  .credit-tip {
+    display: none;
   }
 }
 
@@ -694,6 +734,8 @@ textarea::placeholder {
   .control,
   .button,
   .fact,
+  .credit,
+  .credit-tip,
   .wall-more,
   .wall-toggle {
     transition: none;

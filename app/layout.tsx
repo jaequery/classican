@@ -42,14 +42,23 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={`${display.variable} ${text.variable}`}>
       <body>
         {children}
-        <footer className="credit">
+        <a
+          className="credit"
+          href="https://fredrin.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Fredrin, an agentic development environment for vibe coding (opens fredrin.com in a new tab)"
+        >
           {/* The Fredrin mark from fredrin.com/icon.svg: a top bar and a left bar, notched bottom-right. */}
           <svg className="credit-mark" viewBox="96 96 320 320" aria-hidden="true" focusable="false">
-            <rect x="96" y="96" width="320" height="192" rx="52" />
-            <rect x="96" y="96" width="192" height="320" rx="52" />
+            <path d="M148 96H364A52 52 0 0 1 416 148V236A52 52 0 0 1 364 288H288V364A52 52 0 0 1 236 416H148A52 52 0 0 1 96 364V148A52 52 0 0 1 148 96Z" />
           </svg>
-          Vibe coded using Fredrin
-        </footer>
+          {/* Wording from fredrin.com's own description. */}
+          <span className="credit-tip" aria-hidden="true">
+            <b>Fredrin</b>
+            An agentic development environment for vibe coding: a branch, worktree and AI agent per ticket.
+          </span>
+        </a>
       </body>
     </html>
   );
