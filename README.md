@@ -24,7 +24,7 @@ Pieces play in shuffle: the page opens on a random piece and tries to play it st
 next (or the end of a piece) picks another at random; Left goes back to the piece before. Most
 browsers block autoplay on a first visit, so then the visitor's first click or key starts the music.
 A piece that fails to load is skipped; if every piece fails, the player says so and pressing
-play tries again. Space plays and pauses from anywhere on the page; media keys (including
+play tries again. Space plays and pauses from anywhere on the page, and M mutes; media keys (including
 previous) and the OS "now playing" panel work too, and the browser tab names the piece that is on. "More" on the wall label credits the performer
 and links to the recording's Commons page.
 
