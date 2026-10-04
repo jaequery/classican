@@ -244,8 +244,13 @@ export function Player({ tracks, onPlayingChange, onTrackChange, actions }: Prop
     [muted],
   );
 
+  const toggleMute = useCallback(
+    () => (volume === 0 ? changeVolume(60) : setMuted((m) => !m)),
+    [changeVolume, volume],
+  );
+
   // Hotkeys from anywhere on the page: Space plays and pauses, Left/Right change
-  // the piece, Up/Down change the volume. Form fields keep their own keys, and a
+  // the piece, Up/Down change the volume and M mutes. Form fields keep their own keys, and a
   // focused button or link keeps Space for its own click.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -271,6 +276,11 @@ export function Player({ tracks, onPlayingChange, onTrackChange, actions }: Prop
         case "ArrowDown":
           changeVolume(Math.max(0, volume - VOLUME_STEP));
           break;
+        case "m":
+        case "M":
+          if (e.repeat) return;
+          toggleMute();
+          break;
         default:
           return;
       }
@@ -278,7 +288,7 @@ export function Player({ tracks, onPlayingChange, onTrackChange, actions }: Prop
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
-  }, [changeVolume, next, prev, toggle, volume]);
+  }, [changeVolume, next, prev, toggle, toggleMute, volume]);
 
   const silent = muted || volume === 0;
 
@@ -321,7 +331,7 @@ export function Player({ tracks, onPlayingChange, onTrackChange, actions }: Prop
           <button
             type="button"
             className="control"
-            onClick={() => (volume === 0 ? changeVolume(60) : setMuted((m) => !m))}
+            onClick={toggleMute}
             aria-label={silent ? "Unmute" : "Mute"}
           >
             <svg viewBox="0 0 20 20" aria-hidden="true">
