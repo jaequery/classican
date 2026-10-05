@@ -471,3 +471,379 @@ Painting: the bullring in Seville, a toreador with his cape, a red rose on the s
 
 Sources: [Carmen (Wikipedia)](https://en.wikipedia.org/wiki/Carmen),
 [Georges Bizet (Wikipedia)](https://en.wikipedia.org/wiki/Georges_Bizet)
+
+## Piano Concerto in A minor: Allegro molto moderato · Edvard Grieg
+
+Painting: a grand piano on the shore of a Norwegian fjord, and the timpani whose roll opens the concerto.
+
+1. Grieg wrote his only finished concerto in 1868, aged 24, on a stay in Søllerød, Denmark. *(motif: the piano)*
+2. Listen for the start: a roll on the timpani, then the piano tumbles down the keyboard in a dramatic flourish. *(motif: the timpani)*
+3. That falling opening figure is typical of the folk music of Grieg's native Norway. *(motif: the fjord)*
+4. Visiting Rome in 1870, Grieg heard Franz Liszt play it at sight in front of an audience, and praise it. *(motif: the piano)*
+5. In 1909 it became the first piano concerto ever recorded, cut down to just six minutes to fit the technology of the day.
+
+Sources: [Piano Concerto (Grieg) (Wikipedia)](https://en.wikipedia.org/wiki/Piano_Concerto_(Grieg))
+
+## 1812 Overture · Pyotr Ilyich Tchaikovsky
+
+Painting: Moscow's golden-domed cathedral, a bell swinging in its tower, fireworks, and a cannon firing.
+
+1. It celebrates 1812, when Russia held off Napoleon's invading French army. *(motif: the cannon)*
+2. Listen for the finale: the score calls for real cannon fire, ringing chimes and a brass fanfare. *(motif: the cannon)*
+3. It was first played in 1882 in a tent beside Moscow's Cathedral of Christ the Saviour, built to remember the same victory and still unfinished. *(motif: the cathedral)*
+4. The plan had been to play it in the cathedral square, with all the bells of central Moscow pealing on cue. That performance never happened. *(motif: the bells)*
+5. Tchaikovsky wrote it in six weeks and called it "very loud and noisy". In the United States it now often accompanies Independence Day fireworks. *(motif: the fireworks)*
+
+Sources: [1812 Overture (Wikipedia)](https://en.wikipedia.org/wiki/1812_Overture)
+
+## Romeo and Juliet, Overture-Fantasy · Pyotr Ilyich Tchaikovsky
+
+Painting: Juliet on her moonlit balcony, Romeo in the garden below, and the crossed swords of the feuding families.
+
+1. It is based on Shakespeare's play. The composer Mily Balakirev suggested the idea, and even which keys to use.
+2. Listen for three strands: a hymn-like opening for Friar Laurence, clashing music for the feuding families, then the love theme. *(motif: the swords)*
+3. In the love theme, the cor anglais and violas stand for Romeo, and the flutes for Juliet. *(motif: Romeo)*
+4. The love theme pictures the couple's first meeting and the scene at Juliet's balcony. *(motif: the balcony)*
+5. The first performance in 1870 fell flat. Tchaikovsky rewrote it twice; this is his final version, from 1880.
+
+Sources: [Romeo and Juliet (Tchaikovsky) (Wikipedia)](https://en.wikipedia.org/wiki/Romeo_and_Juliet_(Tchaikovsky))
+
+## The Blue Danube, Op. 314 · Johann Strauss II
+
+Painting: the river winding past hills and spires at dawn, a couple waltzing on a terrace, and an autograph fan.
+
+1. Strauss first wrote it for a men's choir in Vienna; the words were added afterwards. Its premiere in 1867 was only a mild success.
+2. Listen for the opening: violins shimmer quietly while a horn spells out the waltz tune, as if the river were waking. *(motif: the river)*
+3. Strauss made a purely orchestral version for the 1867 Paris World's Fair, and there it became a great success. *(motif: the dancers)*
+4. Asked to sign Strauss's stepdaughter's fan, Brahms wrote out its first bars and added "Unfortunately not by Johannes Brahms". *(motif: the fan)*
+5. A full performance lasts about ten minutes: a chain of five waltzes, then a coda that recalls them.
+
+Sources: [The Blue Danube (Wikipedia)](https://en.wikipedia.org/wiki/The_Blue_Danube)
+
+## The Hebrides (Fingal's Cave), Op. 26 · Felix Mendelssohn
+
+Painting: Fingal's Cave on Staffa, its basalt columns over a rolling sea, gulls and a small sailing boat.
+
+1. In 1829, touring Scotland, Mendelssohn visited Fingal's Cave on the island of Staffa, a sea cave lined with black basalt pillars. *(motif: the cave)*
+2. He sent the opening phrase home in a letter, saying it "came into my head there". *(motif: the boat)*
+3. He first called it The Lonely Island. The opening theme, low in the violas, cellos and bassoons, is meant to feel lonely and solitary. *(motif: the cave)*
+4. Listen for the second theme: it pictures movement at sea and rolling waves. *(motif: the waves)*
+5. Brahms once said he would gladly give all he had written to have composed something like it.
+
+Sources: [The Hebrides (overture) (Wikipedia)](https://en.wikipedia.org/wiki/The_Hebrides_(overture))
+
+## Orpheus in the Underworld: Overture · Jacques Offenbach
+
+Painting: can-can dancers kicking on a theatre stage, the clouds of Olympus above, the flames of the underworld behind, and Orpheus's violin.
+
+1. Offenbach's comic opera pokes fun at the old myth: here Orpheus is a violin teacher who is glad to be rid of his wife. *(motif: the violin)*
+2. This famous overture is not by Offenbach. Carl Binder put it together from the opera's tunes for its first Vienna production in 1860.
+3. The opera's wild "infernal galop" later became the tune of the can-can at the Moulin Rouge and the Folies Bergère in Paris. *(motif: the dancers)*
+4. Its badly behaved gods of Olympus were widely seen as a veiled joke at the court of Emperor Napoleon III. *(motif: Olympus)*
+5. The 1858 production was a box-office hit that rescued Offenbach and his theatre from money troubles.
+
+Sources: [Orpheus in the Underworld (Wikipedia)](https://en.wikipedia.org/wiki/Orpheus_in_the_Underworld)
+
+## Il trovatore: Anvil Chorus · Giuseppe Verdi
+
+Painting: a Gypsy camp in the mountains at dawn, two smiths swinging their hammers onto anvils, sparks flying.
+
+1. In this chorus, Spanish Gypsies strike their anvils at dawn and sing the praises of hard work, good wine and Gypsy women. *(motif: the anvils)*
+2. Listen for the hammer blows: Verdi wrote two real anvils into the orchestra's percussion. *(motif: the anvils)*
+3. It begins "Vedi! Le fosche notturne…": see how the sky throws off its dark night clothes as the day breaks. *(motif: the dawn)*
+4. Il trovatore opened at the Teatro Apollo in Rome in January 1853 and was soon playing all over the world. *(motif: the camp)*
+5. The Anvil Chorus has become one of the best-known pieces of classical music, often played in concerts on its own.
+
+Sources: [Anvil Chorus (Wikipedia)](https://en.wikipedia.org/wiki/Anvil_Chorus),
+[Il trovatore (Wikipedia)](https://en.wikipedia.org/wiki/Il_trovatore)
+
+## La traviata: Libiamo ne' lieti calici · Giuseppe Verdi
+
+Painting: Violetta in white and Alfredo in black raising their glasses under a chandelier, a white camellia on the supper table.
+
+1. This is a brindisi, a drinking song. "Libiamo ne' lieti calici" means "Let's drink from the joyful cups". *(motif: the glasses)*
+2. It comes at a late-night party at Violetta's house. Alfredo, who loves her, begins the song, then Violetta and all the guests join in. *(motif: Violetta)*
+3. Listen for the lilting three-in-a-bar swing of the tune, marked Allegretto, as it passes from voice to voice. *(motif: the chandelier)*
+4. The opera is based on The Lady of the Camellias, a play by Alexandre Dumas fils that Verdi saw in Paris in 1852. *(motif: the camellia)*
+5. After the first night, Verdi wrote: "La traviata last night a failure. Was the fault mine or the singers'? Time will tell."
+
+Sources: [Libiamo ne' lieti calici (Wikipedia)](https://en.wikipedia.org/wiki/Libiamo_ne%27_lieti_calici),
+[La traviata (Wikipedia)](https://en.wikipedia.org/wiki/La_traviata)
+
+## Lohengrin: Bridal Chorus · Richard Wagner
+
+Painting: torchlit bridesmaids leading Elsa and the Swan Knight toward the glowing bridal chamber.
+
+1. In English-speaking countries this is "Here Comes the Bride", played as the bride walks in at many weddings. *(motif: the bride)*
+2. In the opera, the women of the wedding party sing it as they lead the bride, Elsa, to her bridal chamber. *(motif: the chamber)*
+3. Lohengrin comes from the legend of the Knight of the Swan. He defends Elsa on one condition: she must never ask his name. *(motif: the swan)*
+4. It became a wedding favourite after it was played at the wedding of Queen Victoria's eldest daughter in 1858. *(motif: the torches)*
+5. Wagner wrote the words as well as the music, as he did for all his stage works.
+
+Sources: [Bridal Chorus (Wikipedia)](https://en.wikipedia.org/wiki/Bridal_Chorus),
+[Lohengrin (opera) (Wikipedia)](https://en.wikipedia.org/wiki/Lohengrin_(opera)),
+[Richard Wagner (Wikipedia)](https://en.wikipedia.org/wiki/Richard_Wagner)
+
+## Flight of the Bumblebee · Nikolai Rimsky-Korsakov
+
+Painting: a bumblebee zigzagging over the sea between Prince Gvidon's island city, the Swan-Bird and the tsar's ship.
+
+1. This whirlwind comes from Rimsky-Korsakov's opera The Tale of Tsar Saltan, based on a fairy-tale poem by Pushkin. *(motif: the city)*
+2. In the story, a magic Swan-Bird turns Prince Gvidon into a bumblebee, so he can fly across the sea to visit his father, the tsar. *(motif: the swan)*
+3. Listen for the almost unbroken rush of quick notes sliding up and down, like the darting, buzzing flight of a bee. *(motif: the bee)*
+4. Because it is so fast and so hard to play, musicians often choose it to show off their skill.
+5. Rimsky-Korsakov loved the sea from childhood and served for years as an officer in the Russian navy. *(motif: the ship)*
+
+Sources: [Flight of the Bumblebee (Wikipedia)](https://en.wikipedia.org/wiki/Flight_of_the_Bumblebee),
+[The Tale of Tsar Saltan (opera) (Wikipedia)](https://en.wikipedia.org/wiki/The_Tale_of_Tsar_Saltan_(opera)),
+[Nikolai Rimsky-Korsakov (Wikipedia)](https://en.wikipedia.org/wiki/Nikolai_Rimsky-Korsakov)
+
+## Symphony No. 94 "Surprise": Andante · Joseph Haydn
+
+Painting: a London concert room, a bewigged listener dozing beside a copper kettledrum until the drumstick strikes.
+
+1. Listen: the tune tiptoes along very softly, then the whole orchestra crashes in with one sudden loud chord and a stroke on the drum. *(motif: the drum)*
+2. Afterwards the music carries on quietly as if nothing had happened. In German this is the symphony "with the drum stroke". *(motif: the tune)*
+3. The nickname "Surprise" was not Haydn's. Asked in old age if he had meant to wake the audience, he said he wanted to surprise them with something new. *(motif: the listener)*
+4. Haydn wrote it in London in 1791, on the first of his visits to England, and led the premiere seated at a fortepiano.
+
+Sources: [Symphony No. 94 (Haydn) (Wikipedia)](https://en.wikipedia.org/wiki/Symphony_No._94_(Haydn)),
+[Joseph Haydn (Wikipedia)](https://en.wikipedia.org/wiki/Joseph_Haydn)
+
+## The Marriage of Figaro: Overture · Wolfgang Amadeus Mozart
+
+Painting: a sunny room in the Count's palace near Seville, Figaro measuring the floor, Susanna trying on her bonnet at the mirror.
+
+1. The opera tells of one "mad day" in Count Almaviva's palace near Seville, in which his servants Figaro and Susanna manage to marry. *(motif: the window)*
+2. Listen for the whispering, scurrying strings at the start, marked Presto: very quick. The overture is often played on its own. *(motif: Figaro)*
+3. The curtain then rises on Figaro measuring the room for the bed, while Susanna tries on the wedding bonnet she sewed herself. *(motif: the bonnet)*
+4. The play it comes from, by Beaumarchais, was at first banned in Vienna. Mozart's librettist, Lorenzo Da Ponte, won the emperor's approval for an opera. *(motif: the mirror)*
+5. In Prague, people said no piece had ever caused such a sensation. Mozart went to hear it there and conducted it himself in January 1787.
+
+Sources: [The Marriage of Figaro (Wikipedia)](https://en.wikipedia.org/wiki/The_Marriage_of_Figaro)
+
+## Grande valse brillante in E-flat major, Op. 18 · Frédéric Chopin
+
+Painting: the 1909 Paris stage of Les Sylphides: sylphs in long white tutus dancing by moonlight in a forest glade around a poet, red curtains and footlights.
+
+1. Chopin wrote this waltz in 1833, and it was the first of his waltzes to be published, in 1834. *(motif: the stage)*
+2. He had already written at least sixteen waltzes, but those were destroyed or only published after his death.
+3. Its French title means "grand brilliant waltz". Chopin dedicated it to his pupil Laura Horsford.
+4. In 1909 Igor Stravinsky orchestrated it for Les Sylphides, a ballet with no story: sylphs in white dancing in the moonlight with a poet. *(motif: the sylphs)*
+5. Les Sylphides was first danced in Paris in June 1909, by Diaghilev's Ballets Russes, with Anna Pavlova and Vaslav Nijinsky. *(motif: the moon)*
+
+Sources: [Grande valse brillante in E-flat major (Chopin) (Wikipedia)](https://en.wikipedia.org/wiki/Grande_valse_brillante_in_E-flat_major_(Chopin)),
+[Les Sylphides (Wikipedia)](https://en.wikipedia.org/wiki/Les_Sylphides)
+
+## Étude in C minor, Op. 25 No. 12 "Ocean" · Frédéric Chopin
+
+Painting: a stormy sea of rolling waves, a great wave breaking, a lighthouse on a rock, and light breaking through the clouds.
+
+1. Apart from its last bars, the whole étude is made of rolling arpeggios: the notes of a chord swept up and down the keyboard, like waves. *(motif: the waves)*
+2. The nickname "Ocean" is not Chopin's. None of the nicknames given to his études came from him.
+3. In 1916 one editor grumbled about the new name: "ocean-waves do not always run mountain-high." *(motif: the waves)*
+4. It is the last of the twelve études of Op. 25, published in 1837 and dedicated to the Countess Marie d'Agoult.
+5. Listen for the end: after all the storm in C minor, the climax breaks out into bright C major. *(motif: the light)*
+
+Sources: [Étude Op. 25, No. 12 (Chopin) (Wikipedia)](https://en.wikipedia.org/wiki/%C3%89tude_Op._25,_No._12_(Chopin)),
+[Études (Chopin) (Wikipedia)](https://en.wikipedia.org/wiki/%C3%89tudes_(Chopin))
+
+## The Four Seasons, Winter: Largo · Antonio Vivaldi
+
+Painting: a room on a winter night: a log fire, someone in an armchair warming their hands, and rain streaking past a snowy window.
+
+1. Winter is the last of Vivaldi's Four Seasons, four violin concertos published in Amsterdam in 1725.
+2. Its sonnet gives this slow movement two lines: "Before the fire to pass peaceful, contented days while the rain outside pours down." *(motif: the fire)*
+3. Listen for the solo violin's calm, warm song: the peace of the fireside, while the rain falls outside. *(motif: the window)*
+4. The fast movements around it paint chattering teeth in an icy wind, then people slipping and falling on the ice. *(motif: the window)*
+5. Vivaldi wrote the Seasons around 1718–23, when he was court chapel master in Mantua. *(motif: the chair)*
+
+Sources: [The Four Seasons (Vivaldi) (Wikipedia)](https://en.wikipedia.org/wiki/The_Four_Seasons_(Vivaldi))
+
+## Hungarian Dance No. 1 in G minor · Johannes Brahms
+
+Painting: a village square at dusk under lanterns, a violinist playing and a couple dancing the csárdás.
+
+1. Brahms wrote 21 Hungarian Dances for two players at one piano. This first one was published in 1869. *(motif: the dancers)*
+2. As a young man Brahms accompanied the Hungarian violinist Ede Reményi, who introduced him to "gypsy-style" music like the csárdás. *(motif: the violinist)*
+3. Its tune is believed to come from a csárdás by the Hungarian composer Miska Borzó. *(motif: the dancers)*
+4. Brahms arranged this dance for orchestra himself. It has since been arranged for all kinds of ensembles, like the strings heard here. *(motif: the lanterns)*
+5. In December 1889 Brahms played part of this dance for an assistant of Thomas Edison, who recorded it. That crackly recording still survives.
+
+Sources: [Hungarian Dances (Brahms) (Wikipedia)](https://en.wikipedia.org/wiki/Hungarian_Dances_(Brahms)),
+[Johannes Brahms (Wikipedia)](https://en.wikipedia.org/wiki/Johannes_Brahms)
+
+## Academic Festival Overture, Op. 80 · Johannes Brahms
+
+Painting: a university hall with arched windows, a diploma with a red seal on the dais, and students in coloured caps raising their steins.
+
+1. Brahms wrote this overture to thank the University of Breslau, which was giving him an honorary doctorate. *(motif: the diploma)*
+2. At first he only sent a note of thanks. The conductor who nominated him wrote back: "Compose a fine symphony for us!"
+3. Brahms, a known joker, answered with a cheerful medley of student drinking songs instead. *(motif: the students)*
+4. Listen for the grand ending: the old student song "Gaudeamus igitur", played by the whole orchestra in full splendour. *(motif: the hall)*
+5. He conducted it at the ceremony itself in January 1881, to the dismay, or delight, of academics who caught the joke of drinking songs at so solemn an event. *(motif: the students)*
+
+Sources: [Academic Festival Overture (Wikipedia)](https://en.wikipedia.org/wiki/Academic_Festival_Overture),
+[Tragic Overture (Brahms) (Wikipedia)](https://en.wikipedia.org/wiki/Tragic_Overture_(Brahms))
+
+## Italian Concerto, BWV 971: First movement · Johann Sebastian Bach
+
+Painting: an Italian piazza: string players in the arches of a loggia, a lone soloist in the sun, and the two keyboards of a harpsichord in front.
+
+1. Bach called it a "Concerto in the Italian taste". It was published in 1735, paired with an Overture in the French style. *(motif: the orchestra)*
+2. An Italian concerto sets a big group of players against a smaller one. Bach does it with one player, switching between the loud and soft keyboards of a harpsichord. *(motif: the keyboards)*
+3. Listen for a full, bright opening idea that keeps coming back, with lighter passages in between, like a soloist stepping out from the orchestra. *(motif: the soloist)*
+4. Bach knew Italian concertos well: years before, at Weimar, he had arranged concertos by Vivaldi and others for keyboard. *(motif: the orchestra)*
+5. It is one of the few works by Bach that specifically asks for a harpsichord with two keyboards.
+
+Sources: [Italian Concerto (Bach) (Wikipedia)](https://en.wikipedia.org/wiki/Italian_Concerto_(Bach))
+
+## Violin Partita No. 3 in E major: Preludio · Johann Sebastian Bach
+
+Painting: a wood-panelled room at Köthen, a violin on the wall, the 1720 manuscript on a stand, its notes streaming towards a guitar.
+
+1. Bach wrote this for a violin playing entirely alone. It is the last of his six Sonatas and Partitas, in a manuscript he copied out in 1720 at Köthen. *(motif: the manuscript)*
+2. Listen for the unbroken stream of quick, even notes: the Preludio is made almost entirely of semiquavers. *(motif: the violin)*
+3. Bach liked this music enough to reuse it, turning the Preludio into the opening of two church cantatas, once with a solo organ, trumpets and oboes.
+4. He also arranged the whole partita as a suite for another instrument, long thought to be the lute. This recording plays it on guitar. *(motif: the guitar)*
+
+Sources: [Partita for Violin No. 3 (Bach) (Wikipedia)](https://en.wikipedia.org/wiki/Partita_for_Violin_No._3_(Bach)),
+[Sonatas and Partitas for Solo Violin (Bach) (Wikipedia)](https://en.wikipedia.org/wiki/Sonatas_and_Partitas_for_Solo_Violin_(Bach)),
+[Commons file page (performer: Gordon Rowland, guitar)](https://commons.wikimedia.org/wiki/File:Johann_Sebastian_Bach_-_partita_no._3_in_e_major,_bwv_1006_-_1._preludio.ogg)
+
+## Piano Concerto in A minor: Allegro affettuoso · Robert Schumann
+
+Painting: Clara Schumann at a grand piano in a gilded hall, an oboist sending four notes into the air.
+
+1. This movement began in May 1841 as a one-movement Phantasie. Clara Schumann urged her husband to expand it, and in 1845 he added two more movements. *(motif: the piano)*
+2. Listen for the start: one strike from the orchestra, then the piano tumbles down in a cascade of chords.
+3. Soon the oboe sings the gentle main theme. Its first notes, C–B–A–A, are C–H–A–A in German, spelling "Chiara", an Italian form of Clara. *(motif: the oboe)*
+4. Clara Schumann was the soloist both times: in the Phantasie at Leipzig's Gewandhaus in 1841, and in the full concerto in Dresden in 1845. *(motif: the hall)*
+5. Schumann had started several piano concertos before. This is the only one he finished.
+
+Sources: [Piano Concerto (Schumann) (Wikipedia)](https://en.wikipedia.org/wiki/Piano_Concerto_(Schumann))
+
+## Introduction and Rondo Capriccioso, Op. 28 · Camille Saint-Saëns
+
+Painting: a Paris stage between red curtains, Saint-Saëns conducting and Sarasate playing, a ring of notes circling above.
+
+1. Saint-Saëns wrote it in 1863 for Pablo de Sarasate, a brilliant Spanish violinist then still in his teens. *(motif: the violinist)*
+2. It opens slowly, marked "Andante malinconico": at a walking pace, melancholy. Then the violin breaks into quick, dazzling runs.
+3. It was first meant as the lively finale of his First Violin Concerto, but he published it on its own instead.
+4. Sarasate played the solo at the premiere in Paris on 4 April 1867, with Saint-Saëns himself conducting. *(motif: the conductor)*
+5. Sarasate played a Stradivari violin made in 1724. He left it to a Paris museum, where it is now called the "Sarasate Stradivarius". *(motif: the violin)*
+
+Sources: [Introduction and Rondo Capriccioso (Wikipedia)](https://en.wikipedia.org/wiki/Introduction_and_Rondo_Capriccioso),
+[Pablo de Sarasate (Wikipedia)](https://en.wikipedia.org/wiki/Pablo_de_Sarasate)
+
+## Der Freischütz: Overture · Carl Maria von Weber
+
+Painting: the Wolf's Glen at midnight, a huntsman with his rifle, an owl, and seven bullets glowing over the fire.
+
+1. Der Freischütz, "The Marksman", is set among huntsmen and foresters in the forests of Bohemia. *(motif: the forest)*
+2. Its hero Max must win a shooting trial to marry Agathe. Desperate, he casts seven magic bullets at midnight in the haunted Wolf's Glen. *(motif: the bullets)*
+3. Six of the bullets hit wherever he wishes. The seventh belongs to the Devil, who can guide it wherever he pleases. *(motif: the huntsman)*
+4. It opened in Berlin on 18 June 1821 and is counted as the first German Romantic opera. *(motif: the moon)*
+5. The overture and the Huntsmen's Chorus became so popular that they are often played in concerts on their own.
+
+Sources: [Der Freischütz (Wikipedia)](https://en.wikipedia.org/wiki/Der_Freisch%C3%BCtz)
+
+## Asturias (Leyenda) · Isaac Albéniz
+
+Painting: an Andalusian courtyard at night, a horseshoe arch and blue tiles, a guitarist and a flamenco dancer.
+
+1. Albéniz wrote it for piano and called it simply "Prelude". It opened his set Chants d'Espagne, published in Barcelona in 1892.
+2. The name "Asturias (Leyenda)" was given by a German publisher after his death. The music sounds less like northern Asturias than like Andalusian flamenco. *(motif: the arch)*
+3. Listen for one note repeated again and again under the tune: the piano was imitating a guitarist plucking an open string while the thumb plays the melody. *(motif: the guitar)*
+4. Albéniz never wrote for the guitar, yet this piece now belongs to it. This recording is a guitar arrangement. *(motif: the guitar)*
+5. Its fast rhythm suggests the bulería, a lively flamenco form, and its sharp accents the stamping feet of a flamenco dancer. *(motif: the dancer)*
+
+Sources: [Asturias (Leyenda) (Wikipedia)](https://en.wikipedia.org/wiki/Asturias_(Leyenda)),
+[Isaac Albéniz (Wikipedia)](https://en.wikipedia.org/wiki/Isaac_Alb%C3%A9niz),
+[Commons file page (categorised as a guitar arrangement)](https://commons.wikimedia.org/wiki/File:Isaac_Albeniz_-_suite_espanola_op._47_-_leyenda.ogg)
+
+## Carnival Overture, Op. 92 · Antonín Dvořák
+
+Painting: a city of roofs and twin spires at dusk, lanterns over a square of whirling dancers, a lone wanderer watching from the hill road.
+
+1. Dvořák described the scene: a lonely, thoughtful wanderer reaches a city at nightfall, where a carnival is in full swing. *(motif: the wanderer)*
+2. Listen for the leaping, off-beat opening that drops you straight into the shouting and dancing. *(motif: the dancers)*
+3. In Dvořák's score a quiet middle section turns back to the wanderer, with a gentle tune for cor anglais and flute. This recording is a version for wind band.
+4. It is the middle of three overtures Dvořák called "Nature, Life and Love". Carnival stands for Life. *(motif: the city)*
+5. He conducted the premiere in Prague in April 1892, just before leaving to run the National Conservatory of Music in New York.
+
+Sources: [Carnival Overture (Dvořák) (Wikipedia)](https://en.wikipedia.org/wiki/Carnival_Overture_(Dvo%C5%99%C3%A1k)),
+[Carnival Overture, programme note by Susan Key (LA Phil, archived)](https://web.archive.org/web/20180130113046/https://www.laphil.com/philpedia/music/carnival-overture-antonin-dvorak)
+
+## Egmont Overture, Op. 84 · Ludwig van Beethoven
+
+Painting: Count Egmont in armour raising the Burgundian banner before a Flemish town at dawn.
+
+1. Beethoven wrote this overture for Goethe's play Egmont, about a 16th-century nobleman from the Low Countries. *(motif: Egmont)*
+2. Count Egmont is condemned to death for taking a brave stand against oppression. Beethoven's music honours his heroic sacrifice. *(motif: the banner)*
+3. He wrote it in 1809–10, while Napoleon's empire dominated much of Europe. *(motif: the town)*
+4. Listen for its power and drive: its style is close to the Fifth Symphony, which Beethoven had finished two years before.
+5. Over a century later the overture became an unofficial anthem of the Hungarian Revolution of 1956. *(motif: the banner)*
+
+Sources: [Egmont (Beethoven) (Wikipedia)](https://en.wikipedia.org/wiki/Egmont_(Beethoven))
+
+## Night on Bald Mountain · Modest Mussorgsky
+
+Painting: Bald Mountain at night: fires on the summit, a winged dark lord, witches on broomsticks, a village church at the foot.
+
+1. This music pictures a witches' gathering on Bald Mountain on St John's Eve, a night of Russian legend. *(motif: the witches)*
+2. Mussorgsky finished his first version on that very night, 23 June 1867, after about twelve days of writing straight into full score.
+3. In the story printed in the score, the spirits of darkness gather to glorify their dark lord, Chernobog. *(motif: Chernobog)*
+4. Listen for the end: a distant village church bell rings, the spirits scatter, and morning comes. *(motif: the church)*
+5. The version usually heard is Rimsky-Korsakov's, made after Mussorgsky's death. Disney's film Fantasia made it famous again in 1940. *(motif: Chernobog)*
+
+Sources: [Night on Bald Mountain (Wikipedia)](https://en.wikipedia.org/wiki/Night_on_Bald_Mountain)
+
+## William Tell Overture · Gioachino Rossini
+
+Painting: An Alpine meadow: a storm over the peaks, cows and a herdsman's alphorn, Tell's crossbow and an apple.
+
+1. This overture paints life in the Swiss Alps, where Rossini's opera about the hero William Tell is set. *(motif: the mountains)*
+2. It runs in four linked parts: a dawn for five solo cellos, a storm, a "call to the cows", and a galloping finale. *(motif: the storm)*
+3. Listen after the storm for the Ranz des vaches, the Swiss herdsmen's call to their cows, on cor anglais and flute. *(motif: the cows)*
+4. The finale, the March of the Swiss Soldiers, became famous as the theme music of The Lone Ranger. *(motif: the crossbow)*
+5. William Tell, first staged in Paris in 1829, was the last of Rossini's 39 operas, though he lived almost 40 more years.
+
+Sources: [William Tell Overture (Wikipedia)](https://en.wikipedia.org/wiki/William_Tell_Overture),
+[Gioachino Rossini (Wikipedia)](https://en.wikipedia.org/wiki/Gioachino_Rossini)
+
+## Hungarian Rhapsody No. 2 · Franz Liszt
+
+Painting: A lantern-lit Hungarian tavern: a cimbalom player, a fiddler and a couple dancing.
+
+1. Liszt wrote this rhapsody for solo piano in 1847. It is perhaps the most famous of his 19 Hungarian Rhapsodies.
+2. He was inspired by the music he heard as a boy in Hungary, with its gypsy scale and free, spontaneous rhythms. *(motif: the fiddler)*
+3. Listen for its two halves: a slow, dark lassan, then the friska, which gathers speed into a whirlwind. *(motif: the dancers)*
+4. Despite the title, the opening tune is Romanian rather than Hungarian. *(motif: the cimbalom)*
+5. Its tunes have turned up again and again in animated cartoons. *(motif: the dancers)*
+
+Sources: [Hungarian Rhapsody No. 2 (Wikipedia)](https://en.wikipedia.org/wiki/Hungarian_Rhapsody_No._2)
+
+## Te Deum: Prelude · Marc-Antoine Charpentier
+
+Painting: A domed Baroque church in Paris with banners, two trumpeters and a timpanist.
+
+1. This march opens Charpentier's Te Deum, a grand hymn of praise for soloists, choir and instruments. *(motif: the church)*
+2. He wrote it probably between 1688 and 1698, while music director at the Jesuit church of Saint-Louis in Paris. *(motif: the church)*
+3. Charpentier thought its key, D major, "bright and very warlike", and the work calls for trumpets and drums. *(motif: the trumpets)*
+4. It may have been played to celebrate the French victory at the Battle of Steinkirk in 1692. *(motif: the timpani)*
+5. Rediscovered in 1953, it was chosen the next year as the theme played before Eurovision broadcasts, including the Song Contest.
+
+Sources: [Te Deum (Charpentier) (Wikipedia)](https://en.wikipedia.org/wiki/Te_Deum_(Charpentier))
+
+## Má vlast: Šárka · Bedřich Smetana
+
+Painting: Šárka bound to an oak with a hunting horn, the knight Ctirad riding up, the maidens' spears hidden in the rocks.
+
+1. Šárka is the third of the six symphonic poems in Smetana's Má vlast, the same cycle as Vltava.
+2. It tells a story from the old Czech legend of the Maidens' War, in which women rise up against men. Šárka is their warrior. *(motif: the maidens)*
+3. In the story, Šárka ties herself to a tree as bait. The knight Ctirad rides up, sets her free and falls in love with her. *(motif: Ctirad)*
+4. Listen for the horn call: once Ctirad and his men fall asleep from her drugged mead, Šárka blows a hunting horn to summon the other women. *(motif: Šárka)*
+5. Smetana finished it on 20 February 1875, after he had lost his hearing.
+
+Sources: [Má vlast (Wikipedia)](https://en.wikipedia.org/wiki/M%C3%A1_vlast)
