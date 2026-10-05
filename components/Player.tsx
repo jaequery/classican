@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useRef, useState, type ReactNode, type RefObject } from "react";
 import { createDeck, type Deck } from "@/lib/shuffle";
 import type { Track } from "@/lib/site";
 
@@ -14,6 +14,8 @@ type Props = {
   onTrackChange: (index: number) => void;
   /** More buttons for the piece, after next. */
   actions?: ReactNode;
+  /** Kept at the seconds played into the loaded piece, so the painting can follow its story. */
+  clock: RefObject<number>;
 };
 
 /**
@@ -22,7 +24,7 @@ type Props = {
  * once before any repeats; then the deck is reshuffled. A piece that fails
  * to load is skipped, and if every piece fails the player says so quietly.
  */
-export function Player({ tracks, onPlayingChange, onTrackChange, actions }: Props) {
+export function Player({ tracks, onPlayingChange, onTrackChange, actions, clock }: Props) {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [index, setIndex] = useState(0);
   const [playing, setPlaying] = useState(false);
@@ -59,6 +61,7 @@ export function Player({ tracks, onPlayingChange, onTrackChange, actions }: Prop
       if (!audio) return;
       const t = tracks[i];
       indexRef.current = i;
+      clock.current = 0;
       setIndex(i);
       onTrackChange(i);
       setUnavailable(false);
@@ -69,7 +72,7 @@ export function Player({ tracks, onPlayingChange, onTrackChange, actions }: Prop
         navigator.mediaSession.metadata = new MediaMetadata({ title: t.title, artist: t.composer, album: "classican" });
       }
     },
-    [onTrackChange, tracks],
+    [clock, onTrackChange, tracks],
   );
 
   const start = useCallback(() => {
@@ -195,6 +198,9 @@ export function Player({ tracks, onPlayingChange, onTrackChange, actions }: Prop
       setWant(false);
     };
     const onPlay = () => !want.current && setWant(true);
+    const onTime = () => {
+      clock.current = audio.currentTime;
+    };
 
     audio.addEventListener("waiting", onWaiting);
     audio.addEventListener("playing", onPlaying);
@@ -202,7 +208,9 @@ export function Player({ tracks, onPlayingChange, onTrackChange, actions }: Prop
     audio.addEventListener("error", onError);
     audio.addEventListener("pause", onPause);
     audio.addEventListener("play", onPlay);
+    audio.addEventListener("timeupdate", onTime);
     return () => {
+      audio.removeEventListener("timeupdate", onTime);
       audio.removeEventListener("waiting", onWaiting);
       audio.removeEventListener("playing", onPlaying);
       audio.removeEventListener("ended", next);
@@ -210,7 +218,7 @@ export function Player({ tracks, onPlayingChange, onTrackChange, actions }: Prop
       audio.removeEventListener("pause", onPause);
       audio.removeEventListener("play", onPlay);
     };
-  }, [go, next, setWant, tracks]);
+  }, [clock, go, next, setWant, tracks]);
 
   // Hardware media keys and the OS "now playing" panel.
   useEffect(() => {

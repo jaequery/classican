@@ -6,6 +6,9 @@ painting of the piece that is playing: Greek dancers for Satie's Gymnopédie, Ve
 for Clair de lune, Bach's two-keyboard harpsichord, and so on. While music plays, a short fact about
 the piece's history comes every 40 seconds or so: the painting dims gently around the thing the fact
 is about, and the words sit beside that pool of light for a few seconds before the light returns.
+A piece that tells a story follows it as it plays: when the Moldau reaches the forest hunt, the
+peasant wedding or the nymphs dancing by moonlight, the painting turns to that scene and a card
+marked "The story" says what the music is depicting.
 Listeners can make an account to like pieces and leave comments on them; everyone else can read them.
 No search, no other pages.
 
@@ -65,6 +68,7 @@ npm test           # account, like and comment rules (lib/community.ts), on an i
 | Name, tagline, description | `lib/site.ts` (`name`, `tagline`, `description`) |
 | Playlist | `lib/site.ts` (`tracks`) |
 | Facts about each piece | `lib/site.ts` (`facts` on each track) |
+| The story a piece tells, and when | `lib/site.ts` (`story` on each track) |
 | Time from one fact to the next | `lib/site.ts` (`factSeconds`) |
 | Paintings | `lib/paintings.ts` |
 | Palette of the frame | `app/globals.css` (`:root`) |
@@ -82,6 +86,12 @@ recordings whose licence allows it.
 confirms. Word legends as stories. Give a fact a `motif` (a name from its painting's `motifs`) and
 the light gathers there while it shows; without one it sits in the top-left corner. Record the
 source for each fact in `mockups/facts.md`.
+
+**Stories.** A piece whose composer wrote a story into it gets a `story`: beats in order, each with
+`at` (seconds into that recording), the `text` to show, the `scene` painting to turn to (the piece's
+own painting if absent) and a `motif` in that scene. Cue times belong to the recording, so a new
+recording needs new times. Tell only what the composer's programme or the score's section titles say,
+and record the source and how each cue was found in `mockups/story.md`.
 
 **Adding a painting.** Each painting depicts its piece: a palette plus a `render(raster, frame)`
 function that draws into a 160×100 buffer of palette indices with `fill`, `tint`, `stroke`, `line`
@@ -147,4 +157,4 @@ The player uses Commons' MP3 transcode where the browser supports MP3, and the o
 
 `mockups/` holds the design concepts explored for the site: `concept-*.html` for the first version,
 `facts-concept-*.html` for the facts and paintings (Concept 4, Spotlight, was built), and
-`facts.md`, the fact sheet with sources.
+`facts.md`, the fact sheet with sources, and `story.md`, the story sheet with cue times and sources.

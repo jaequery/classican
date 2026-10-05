@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type RefObject } from "react";
 import { ART_H, ART_W, paintings, type Frame, type PaintingId, type Spot } from "@/lib/paintings";
 import { BAYER, Raster } from "@/lib/raster";
-import type { Fact } from "@/lib/site";
+import type { Beat, Fact } from "@/lib/site";
 
 const FPS = 10;
 const FADE = 2.5; // seconds for one painting to dissolve into the next
@@ -11,6 +11,8 @@ const LEAD = 8; // seconds of music before a piece's first fact
 const DIM_IN = 1.4; // seconds for the light to gather on a motif, and to return
 const TEXT_FROM = 1.4; // seconds into a fact's turn when its words appear…
 const TEXT_TO = 13.4; // …and when they leave
+const STORY_TO = 16; // story words stay a little longer
+const AFTER_STORY = 6; // seconds after a story beat's words leave before facts resume
 const DIM_MAX = 12; // of 16 pixels outside the pool take the darker twin: about 70% brightness
 const SHADE = 0.6; // brightness of the darker twin
 const FEATHER = 7; // art pixels over which the pool's edge softens
@@ -28,6 +30,9 @@ type Props = {
   playing: boolean;
   painting: PaintingId;
   facts: Fact[];
+  story?: Beat[];
+  /** Seconds played into the piece, kept by the player. */
+  clock: RefObject<number>;
   factSeconds: number;
 };
 
@@ -35,18 +40,20 @@ type Props = {
  * The current piece's painting, full screen. While music plays, a fact about
  * the piece comes every `factSeconds`: the painting dims gently around the
  * thing the fact is about, the words sit beside that pool of light, then the
- * light returns. When the piece changes, its painting dissolves in. Under
- * reduced motion nothing drifts, fades or pans.
+ * light returns. When the piece changes, its painting dissolves in. A piece
+ * with a story follows it as the music plays: at each beat the painting
+ * dissolves to that scene and the beat's words show, and facts wait their
+ * turn around them. Under reduced motion nothing drifts, fades or pans.
  */
-export function Scene({ playing, painting, facts, factSeconds }: Props) {
+export function Scene({ playing, painting, facts, story, clock, factSeconds }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const factRef = useRef<HTMLParagraphElement>(null);
-  const props = useRef({ playing, painting, facts, factSeconds });
+  const props = useRef({ playing, painting, facts, story, factSeconds });
   const [label, setLabel] = useState("");
 
   useEffect(() => {
-    props.current = { playing, painting, facts, factSeconds };
-  }, [playing, painting, facts, factSeconds]);
+    props.current = { playing, painting, facts, story, factSeconds };
+  }, [playing, painting, facts, story, factSeconds]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -76,15 +83,19 @@ export function Scene({ playing, painting, facts, factSeconds }: Props) {
 
     const reduce = matchMedia("(prefers-reduced-motion: reduce)");
     const find = (id: PaintingId) => Math.max(0, paintings.findIndex((p) => p.id === id));
-    let current = find(props.current.painting);
+    let piece = props.current.painting; // the loaded piece's own painting
+    let current = find(piece);
     let next = current;
+    let arriving = false; // the dissolve under way brings in a new piece, not a scene of the same one
     let fade = -1; // seconds into a dissolve, or -1
     let sim = 30;
     let energy = props.current.playing ? 1 : 0.35;
     let fact = 0; // which of the piece's facts is next or showing
     let turn = -LEAD; // seconds into the current fact's turn; negative while waiting for the first
     let dim = 0; // 0 = full light, 1 = pool on the motif
-    let pool: Spot | null = null; // where the current fact's light falls, if it names a motif
+    let beat = -1; // the story beat the music has reached, or -1
+    let told = Infinity; // seconds into telling the current beat; Infinity once told
+    let pool: Spot | null = null; // where the current words' light falls, if they name a motif
     let focus: Spot | null = null; // the pool while it is lit: the view pans to keep it on screen
     let words = false;
     const view = { s: 1, x: 0, y: 0, tx: 0, ty: 0 };
@@ -120,11 +131,28 @@ export function Scene({ playing, painting, facts, factSeconds }: Props) {
       canvas.style.transform = `translate(${view.x}px, ${view.y}px)`;
     };
 
+    const show = (text: string, motif: string | undefined, eyebrow: string) => {
+      pool = motif ? (paintings[current].motifs[motif] ?? null) : null;
+      const words: Node[] = [document.createTextNode(text)];
+      if (eyebrow) {
+        const span = document.createElement("span");
+        span.className = "fact-eyebrow";
+        span.textContent = eyebrow;
+        words.unshift(span);
+      }
+      factEl.replaceChildren(...words);
+      factEl.classList.toggle("story", Boolean(eyebrow));
+    };
+
+    const telling = () => told <= STORY_TO + 0.5;
+
+    /** Put up the words that are due: the story beat being told, else the next fact. */
     const showFact = () => {
-      const list = props.current.facts;
+      const { facts: list, story: beats } = props.current;
+      const b = beats?.[beat];
+      if (b && telling()) return show(b.text, b.motif, "The story");
       const f = list[fact % list.length];
-      pool = f?.motif ? (paintings[current].motifs[f.motif] ?? null) : null;
-      factEl.textContent = f?.text ?? "";
+      show(f?.text ?? "", f?.motif, "");
     };
 
     const setWords = (on: boolean) => {
@@ -192,19 +220,43 @@ export function Scene({ playing, painting, facts, factSeconds }: Props) {
     };
 
     const step = (dt: number) => {
-      const { playing, painting, factSeconds } = props.current;
+      const { playing, painting, story: beats, factSeconds } = props.current;
       const still = reduce.matches;
 
-      // Follow the piece the player has loaded.
-      const want = find(painting);
+      // Follow the piece the player has loaded, and the beat of its story the music has reached.
+      if (painting !== piece) {
+        piece = painting;
+        arriving = true;
+        beat = -1;
+        told = Infinity;
+      }
+      // Beats only move forward: the clock drops to 0 a frame before the next piece's painting arrives.
+      let reached = -1;
+      if (beats) for (let i = 0; i < beats.length && beats[i].at <= (clock.current ?? 0); i++) reached = i;
+      if (reached > beat) {
+        beat = reached;
+        // A fact already on screen has been read; the next one comes after the story.
+        if (turn >= TEXT_FROM) fact++;
+        turn = -Infinity;
+        told = 0;
+        if (fade < 0) {
+          dim = 0;
+          setWords(false);
+          showFact();
+        }
+      }
+      const want = find(beats?.[beat]?.scene ?? piece);
       if (fade < 0 && want !== current) {
         pool = null;
         dim = 0;
         setWords(false);
         if (still) {
           current = next = want;
-          fact = 0;
-          turn = -LEAD;
+          if (arriving) {
+            fact = 0;
+            turn = -LEAD;
+          }
+          arriving = false;
           announce();
           showFact();
           since = 1; // redraw now
@@ -218,16 +270,26 @@ export function Scene({ playing, painting, facts, factSeconds }: Props) {
         if (fade >= FADE) {
           fade = -1;
           current = next;
-          fact = 0;
-          turn = -LEAD;
+          if (arriving) {
+            fact = 0;
+            turn = -LEAD;
+          }
+          arriving = false;
           announce();
           showFact();
         }
       }
 
-      // One fact per turn, only while music plays.
+      // The story's words first, then one fact per turn; both only while music plays.
       const cycling = playing && fade < 0;
-      if (cycling) {
+      const story = cycling && telling();
+      if (cycling && telling()) {
+        told += dt;
+        if (!telling()) {
+          turn = -AFTER_STORY;
+          showFact();
+        }
+      } else if (cycling) {
         turn += dt;
         if (turn >= factSeconds) {
           turn = 0;
@@ -236,7 +298,7 @@ export function Scene({ playing, painting, facts, factSeconds }: Props) {
         }
       }
       const showing = cycling && turn >= 0;
-      const lit = showing && pool !== null && turn < TEXT_TO + 0.5;
+      const lit = pool !== null && (story ? told < STORY_TO + 0.5 : showing && turn < TEXT_TO + 0.5);
       const target = lit ? 1 : 0;
       const before = dim;
       dim = still ? target : dim + Math.sign(target - dim) * Math.min(Math.abs(target - dim), dt / DIM_IN);
@@ -250,7 +312,7 @@ export function Scene({ playing, painting, facts, factSeconds }: Props) {
       view.y += (view.ty - view.y) * ease;
       canvas.style.transform = `translate(${view.x.toFixed(1)}px, ${view.y.toFixed(1)}px)`;
 
-      setWords(showing && turn >= TEXT_FROM && turn < TEXT_TO);
+      setWords(story ? told >= TEXT_FROM && told < STORY_TO : showing && turn >= TEXT_FROM && turn < TEXT_TO);
       if (words) placeFact();
 
       energy += ((playing ? 1 : 0.35) - energy) * 0.03;

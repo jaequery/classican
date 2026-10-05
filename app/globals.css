@@ -71,6 +71,19 @@ body {
 .fact.on {
   opacity: 1;
 }
+/* A beat of the piece's story: marked with a small heading and a bright edge. */
+.fact.story {
+  border-left-color: var(--ink);
+}
+.fact-eyebrow {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
 
 /* The wall label: a gallery caption beside the painting, top right. */
 .wall {
