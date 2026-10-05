@@ -100,7 +100,7 @@ export function Studio({ site }: { site: Site }) {
         addComment={social.addComment}
         removeComment={social.removeComment}
       />
-      <Player tracks={site.tracks} onPlayingChange={setPlaying} onTrackChange={setIndex} actions={actions} clock={clock} />
+      <Player tracks={site.tracks} index={index} onPlayingChange={setPlaying} onTrackChange={setIndex} actions={actions} clock={clock} />
       <AuthDialog mode={auth} onModeChange={setAuth} onSignedIn={setMe} />
       <p className={social.message ? "notice" : "visually-hidden"} role="status">
         {social.message}
