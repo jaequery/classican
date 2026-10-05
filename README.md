@@ -10,6 +10,8 @@ A piece that tells a story follows it as it plays: when the Moldau reaches the f
 peasant wedding or the nymphs dancing by moonlight, the painting turns to that scene and a card
 marked "The story" says what the music is depicting.
 Listeners can make an account to like pieces and leave comments on them; everyone else can read them.
+A thin bar along the top says what changed on the site lately, marked "New" and dated; × dismisses
+it until the next update.
 No search, no other pages.
 
 ## Run
@@ -70,6 +72,7 @@ npm test           # account, like and comment rules (lib/community.ts), on an i
 | Facts about each piece | `lib/site.ts` (`facts` on each track) |
 | The story a piece tells, and when | `lib/site.ts` (`story` on each track) |
 | Time from one fact to the next | `lib/site.ts` (`factSeconds`) |
+| What's new in the top bar, and its date | `lib/site.ts` (`update`; leave it out to hide the bar) |
 | Paintings | `lib/paintings.ts` |
 | Palette of the frame | `app/globals.css` (`:root`) |
 | Who may like, comment or delete | `lib/community.ts` |

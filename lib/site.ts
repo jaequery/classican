@@ -63,12 +63,22 @@ export type Track = {
   story?: Beat[];
 };
 
+/** The latest change to the site, announced in the bar along the top until the visitor dismisses it. */
+export type Update = {
+  /** What changed, in a sentence. Only something that has actually shipped. */
+  text: string;
+  /** The day it shipped, as YYYY-MM-DD. */
+  date: string;
+};
+
 export type Site = {
   name: string;
   tagline: string;
   description: string;
   /** Seconds from one fact to the next while music plays. */
   factSeconds: number;
+  /** Leave out to hide the bar. A new text or date shows it again to visitors who dismissed the last one. */
+  update?: Update;
   composers: typeof composers;
   tracks: Track[];
 };
@@ -375,6 +385,7 @@ export const site: Site = {
   description:
     "A continuous playlist of public-domain classical recordings, each set to a pixel painting of what the music is about, with notes on what to listen for and the lives of the composers who wrote it. Press play and let it carry you.",
   factSeconds: 40,
+  update: { text: "30 more classical pieces, each with its own painting, facts and details.", date: "2026-10-04" },
   composers,
   tracks: [
     {
