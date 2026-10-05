@@ -9,8 +9,9 @@ const VOLUME_STEP = 5;
 
 type Props = {
   tracks: Track[];
+  /** The piece now loaded; the parent keeps it so the painting and facts can follow it. */
+  index: number;
   onPlayingChange: (playing: boolean) => void;
-  /** The piece now loaded, so the painting and facts can follow it. */
   onTrackChange: (index: number) => void;
   /** More buttons for the piece, after next. */
   actions?: ReactNode;
@@ -24,9 +25,8 @@ type Props = {
  * once before any repeats; then the deck is reshuffled. A piece that fails
  * to load is skipped, and if every piece fails the player says so quietly.
  */
-export function Player({ tracks, onPlayingChange, onTrackChange, actions, clock }: Props) {
+export function Player({ tracks, index, onPlayingChange, onTrackChange, actions, clock }: Props) {
   const audioRef = useRef<HTMLAudioElement>(null);
-  const [index, setIndex] = useState(0);
   const [playing, setPlaying] = useState(false);
   const [loading, setLoading] = useState(false);
   const [volume, setVolume] = useState(80);
@@ -62,7 +62,6 @@ export function Player({ tracks, onPlayingChange, onTrackChange, actions, clock 
       const t = tracks[i];
       indexRef.current = i;
       clock.current = 0;
-      setIndex(i);
       onTrackChange(i);
       setUnavailable(false);
       audio.src = audio.canPlayType("audio/mpeg") ? t.mp3 : t.ogg;
