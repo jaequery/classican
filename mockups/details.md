@@ -6,7 +6,8 @@ used. Where a source is uncertain the wording says so ("c.", "about", "probably"
 is documented it says "Not documented".
 
 Age at writing = `composedYear` − composer's birth year, less one when the piece was finished before
-that year's birthday (Satie, Schumann, Beethoven, Saint-Saëns). "About" marks cases where the birthday or a
+that year's birthday (Satie, Schumann, Beethoven, Saint-Saëns, Grieg, Dvořák, Borodin, Smetana,
+Weber, Verdi, Wagner). "About" marks cases where the birthday or a
 date range makes it uncertain.
 
 ## Pieces
@@ -495,6 +496,330 @@ Sources: [Le carnaval romain (Wikipedia)](https://en.wikipedia.org/wiki/Le_carna
 Sources: [Carmen (Wikipedia)](https://en.wikipedia.org/wiki/Carmen),
 [Georges Bizet (Wikipedia)](https://en.wikipedia.org/wiki/Georges_Bizet)
 
+### 46. Piano Concerto in A minor: Allegro molto moderato · Edvard Grieg
+
+- **Year:** 1868, first performed 1869 · `composedYear: 1868`
+- **Age:** about 24 (Wikipedia: "written by the 24-year-old composer in 1868"; he turned 25 on 15 June 1868, so it was begun before then)
+- **Place:** Søllerød, Denmark
+- **Instruments:** Piano and orchestra
+- **Reception:** Edmund Neupert gave the premiere in Copenhagen in April 1869. Liszt praised it in 1870, and it became one of the most popular piano concertos of all.
+
+Sources: [Piano Concerto (Grieg) (Wikipedia)](https://en.wikipedia.org/wiki/Piano_Concerto_(Grieg)),
+[Edvard Grieg (Wikipedia)](https://en.wikipedia.org/wiki/Edvard_Grieg)
+
+### 47. 1812 Overture · Pyotr Ilyich Tchaikovsky
+
+- **Year:** 1880, first performed 1882 · `composedYear: 1880`
+- **Age:** 40 (begun 12 October 1880, after his 40th birthday on 7 May)
+- **Place:** Russia (the source does not say where it was written)
+- **Instruments:** Orchestra with chimes, a brass band and cannon
+- **Reception:** Tchaikovsky thought little of it, but it became one of his most performed and recorded works.
+
+Sources: [1812 Overture (Wikipedia)](https://en.wikipedia.org/wiki/1812_Overture)
+
+### 48. Romeo and Juliet, Overture-Fantasy · Pyotr Ilyich Tchaikovsky
+
+- **Year:** 1869, revised 1870 and 1880 · `composedYear: 1869`
+- **Age:** about 29 (Wikipedia calls him 28 in 1869; he turned 29 on 7 May 1869)
+- **Place:** Moscow, Russia (he was a professor at the Moscow Conservatory)
+- **Instruments:** Orchestra
+- **Reception:** The 1870 premiere in Moscow went almost unnoticed, and in 1876 it was hissed in Vienna. Saint-Saëns was among the musicians who admired it.
+
+Sources: [Romeo and Juliet (Tchaikovsky) (Wikipedia)](https://en.wikipedia.org/wiki/Romeo_and_Juliet_(Tchaikovsky))
+
+### 49. The Blue Danube, Op. 314 · Johann Strauss II
+
+- **Year:** 1866, first performed 1867 · `composedYear: 1866`
+- **Age:** about 41 (the month it was written is not documented; he turned 41 on 25 October 1866)
+- **Place:** Vienna, Austria
+- **Instruments:** Orchestra (first written for men's choir)
+- **Reception:** Its first performance in February 1867 was only a mild success. The orchestral version was a great success at the Paris World's Fair that year, and it has been popular ever since.
+
+Sources: [The Blue Danube (Wikipedia)](https://en.wikipedia.org/wiki/The_Blue_Danube)
+
+### 50. The Hebrides (Fingal's Cave), Op. 26 · Felix Mendelssohn
+
+- **Year:** 1830, revised 1832 · `composedYear: 1830`
+- **Age:** 21 (completed 16 December 1830; born 3 February 1809)
+- **Place:** Begun in Scotland (the opening came to him on his 1829 visit)
+- **Instruments:** Orchestra: pairs of woodwind, horns and trumpets, timpani and strings
+- **Reception:** The revised version was first played in London in May 1832. It joined the standard orchestral repertoire and has stayed there.
+
+Sources: [The Hebrides (overture) (Wikipedia)](https://en.wikipedia.org/wiki/The_Hebrides_(overture))
+
+### 51. Orpheus in the Underworld: Overture · Jacques Offenbach
+
+- **Year:** 1858 (this overture arranged by Carl Binder, 1860) · `composedYear: 1858`
+- **Age:** about 39 (premiered 21 October 1858; he turned 39 on 20 June 1858)
+- **Place:** Paris, France (the overture was put together in Vienna, Austria)
+- **Instruments:** Orchestra
+- **Reception:** The 1858 premiere at the Bouffes-Parisiens was a box-office hit that ran into the next year. Some critics were outraged by its mockery of classical myth; others praised it.
+
+Sources: [Orpheus in the Underworld (Wikipedia)](https://en.wikipedia.org/wiki/Orpheus_in_the_Underworld),
+[Jacques Offenbach (Wikipedia)](https://en.wikipedia.org/wiki/Jacques_Offenbach)
+
+### 52. Il trovatore: Anvil Chorus · Giuseppe Verdi
+
+- **Year:** 1850–53 (Verdi first proposed the subject in January 1850), first performed 1853 · `composedYear: 1853`
+- **Age:** 39. The opera opened on 19 January 1853, before his 40th birthday on 9/10 October.
+- **Place:** Busseto and Rome, Italy (Verdi lived near Busseto; he and the librettist Bardare met in Rome in December 1852 to finish it)
+- **Instruments:** Chorus and orchestra; the percussion includes two anvils
+- **Reception:** It opened at the Teatro Apollo in Rome on 19 January 1853 and was a huge popular hit, with some 229 productions worldwide in its first three years.
+
+Sources: [Il trovatore (Wikipedia)](https://en.wikipedia.org/wiki/Il_trovatore),
+[Anvil Chorus (Wikipedia)](https://en.wikipedia.org/wiki/Anvil_Chorus),
+[Giuseppe Verdi (Wikipedia)](https://en.wikipedia.org/wiki/Giuseppe_Verdi)
+
+### 53. La traviata: Libiamo ne' lieti calici · Giuseppe Verdi
+
+- **Year:** 1852–53, first performed 1853 · `composedYear: 1853`
+- **Age:** 39. It premiered on 6 March 1853, before his 40th birthday in October.
+- **Place:** Probably Sant'Agata, near Busseto, Italy (Piave came there to work on it with Verdi; rehearsals were in Venice)
+- **Instruments:** Tenor and soprano with chorus and orchestra
+- **Reception:** The premiere at La Fenice, Venice, on 6 March 1853 was a failure ("La traviata last night a failure"). A revised staging in Venice on 6 May 1854 was a great success, and it is now among the most frequently performed of all operas.
+
+Sources: [La traviata (Wikipedia)](https://en.wikipedia.org/wiki/La_traviata),
+[Libiamo ne' lieti calici (Wikipedia)](https://en.wikipedia.org/wiki/Libiamo_ne%27_lieti_calici)
+
+### 54. Lohengrin: Bridal Chorus · Richard Wagner
+
+- **Year:** 1845–48, first performed 1850 · `composedYear: 1848`
+- **Age:** 34. The composition was complete on 28 April 1848, before his 35th birthday on 22 May.
+- **Place:** Dresden, Germany (he was Kapellmeister at the Dresden court)
+- **Instruments:** Chorus and orchestra
+- **Reception:** Franz Liszt conducted the premiere at Weimar on 28 August 1850; despite a weak lead tenor it was a success. Wagner, exiled after the 1849 Dresden uprising, first saw a full performance in Vienna in 1861.
+
+Sources: [Lohengrin (opera) (Wikipedia)](https://en.wikipedia.org/wiki/Lohengrin_(opera)),
+[Bridal Chorus (Wikipedia)](https://en.wikipedia.org/wiki/Bridal_Chorus)
+
+### 55. Flight of the Bumblebee · Nikolai Rimsky-Korsakov
+
+- **Year:** 1899–1900, first performed 1900 · `composedYear: 1900`
+- **Age:** about 56 (born March 1844; composed across 1899–1900)
+- **Place:** Probably Saint Petersburg, Russia, where he lived and taught (the sources do not say)
+- **Instruments:** Orchestra; an interlude in the opera The Tale of Tsar Saltan. This recording is by the United States Army Band.
+- **Reception:** The opera, written for Pushkin's centenary, opened in Moscow on 3 November 1900. The interlude, an incidental part of it, is now one of the more familiar classical works.
+
+Sources: [Flight of the Bumblebee (Wikipedia)](https://en.wikipedia.org/wiki/Flight_of_the_Bumblebee),
+[The Tale of Tsar Saltan (opera) (Wikipedia)](https://en.wikipedia.org/wiki/The_Tale_of_Tsar_Saltan_(opera))
+
+### 56. Symphony No. 94 "Surprise": Andante · Joseph Haydn
+
+- **Year:** 1791, first performed 1792 · `composedYear: 1791`
+- **Age:** about 59 (born 31 March or 1 April 1732; the month of writing in 1791 is not given)
+- **Place:** London, England
+- **Instruments:** Orchestra: pairs of flutes, oboes, bassoons, horns and trumpets, timpani and strings
+- **Reception:** Popular from its premiere at the Hanover Square Rooms on 23 March 1792. The Woodfall's Register critic called it "simple, profound, and sublime" and wrote that the andante "was particularly admired".
+
+Sources: [Symphony No. 94 (Haydn) (Wikipedia)](https://en.wikipedia.org/wiki/Symphony_No._94_(Haydn))
+
+### 57. The Marriage of Figaro: Overture · Wolfgang Amadeus Mozart
+
+- **Year:** 1786 · `composedYear: 1786`
+- **Age:** 30 (born 27 January 1756; the opera premiered on 1 May 1786)
+- **Place:** Vienna, Austria
+- **Instruments:** Orchestra: pairs of flutes, oboes, clarinets, bassoons, horns and trumpets, timpani and strings
+- **Reception:** At the Burgtheater premiere on 1 May 1786, five numbers were encored. The Prague production from December 1786 was "a tremendous success": "no piece ... has ever caused such a sensation."
+
+Sources: [The Marriage of Figaro (Wikipedia)](https://en.wikipedia.org/wiki/The_Marriage_of_Figaro)
+
+### 58. Grande valse brillante in E-flat major, Op. 18 · Frédéric Chopin
+
+- **Year:** 1833, published 1834 · `composedYear: 1833`
+- **Age:** about 23 (born 1 March 1810; the month of composition in 1833 is not documented)
+- **Place:** Paris, France (Chopin had settled there; the Op. 10 études of the same year find him "already famous ... in the salons of Paris")
+- **Instruments:** Solo piano
+- **Reception:** How it was first received is not recorded. It was Chopin's first published waltz, and in 1909 Stravinsky orchestrated it for the ballet Les Sylphides.
+
+Sources: [Grande valse brillante in E-flat major (Chopin) (Wikipedia)](https://en.wikipedia.org/wiki/Grande_valse_brillante_in_E-flat_major_(Chopin)),
+[Études (Chopin) (Wikipedia)](https://en.wikipedia.org/wiki/%C3%89tudes_(Chopin)),
+[Les Sylphides (Wikipedia)](https://en.wikipedia.org/wiki/Les_Sylphides)
+
+### 59. Étude in C minor, Op. 25 No. 12 "Ocean" · Frédéric Chopin
+
+- **Year:** 1832–35, published 1837 · `composedYear: 1834`
+- **Age:** about 24 (the Op. 25 études were "composed at various times between 1832 and 1835", all before 30 June 1835)
+- **Place:** probably Paris, France (the source does not say)
+- **Instruments:** Solo piano
+- **Reception:** Chopin's études were "the first to become a regular part of the concert repertoire", and Liszt revised his own concert études after meeting Chopin.
+
+Sources: [Étude Op. 25, No. 12 (Chopin) (Wikipedia)](https://en.wikipedia.org/wiki/%C3%89tude_Op._25,_No._12_(Chopin)),
+[Études (Chopin) (Wikipedia)](https://en.wikipedia.org/wiki/%C3%89tudes_(Chopin))
+
+### 60. The Four Seasons, Winter: Largo · Antonio Vivaldi
+
+- **Year:** c. 1718–23, published 1725 · `composedYear: 1720`
+- **Age:** about 42
+- **Place:** probably Mantua, Italy, where Vivaldi was court chapel master (one scholar dates them as early as 1716–17)
+- **Instruments:** Solo violin, strings and continuo
+- **Reception:** Published in Amsterdam in 1725. It is now Vivaldi's best-known work; the first electrical recording of The Four Seasons was made in 1942.
+
+Sources: [The Four Seasons (Vivaldi) (Wikipedia)](https://en.wikipedia.org/wiki/The_Four_Seasons_(Vivaldi))
+
+### 61. Hungarian Dance No. 1 in G minor · Johannes Brahms
+
+- **Year:** published 1869 (Book 1) · `composedYear: 1869`
+- **Age:** about 36 (the date of composition before publication is not documented)
+- **Place:** probably Vienna, Austria, which Brahms had made his home from the 1860s (the source does not say)
+- **Instruments:** Piano four hands; Brahms also arranged No. 1 for orchestra. This recording is an arrangement for strings by Charles Granovsky.
+- **Reception:** How it was first received is not recorded. The Hungarian Dances became among Brahms's most popular works, and the most profitable for him.
+
+Sources: [Hungarian Dances (Brahms) (Wikipedia)](https://en.wikipedia.org/wiki/Hungarian_Dances_(Brahms)),
+[Johannes Brahms (Wikipedia)](https://en.wikipedia.org/wiki/Johannes_Brahms),
+[the recording's Commons page](https://commons.wikimedia.org/wiki/File:Hungarian_Dance_No._1_Brahms_US_Air_Force_Bands.ogg)
+
+### 62. Academic Festival Overture, Op. 80 · Johannes Brahms
+
+- **Year:** 1880, first performed 1881 · `composedYear: 1880`
+- **Age:** 47 (composed in the summer of 1880, after his birthday on 7 May)
+- **Place:** Not documented; written in the summer of 1880
+- **Instruments:** Large orchestra with piccolo, contrabassoon, tuba and percussion (bass drum, cymbals, triangle)
+- **Reception:** Brahms conducted the premiere himself at a convocation of the University of Breslau on 4 January 1881. Its "excitement and humor" have kept it a staple of the concert hall.
+
+Sources: [Academic Festival Overture (Wikipedia)](https://en.wikipedia.org/wiki/Academic_Festival_Overture),
+[Tragic Overture (Brahms) (Wikipedia)](https://en.wikipedia.org/wiki/Tragic_Overture_(Brahms))
+
+### 63. Italian Concerto, BWV 971: First movement · J. S. Bach
+
+- **Year:** published 1735 · `composedYear: 1735`
+- **Age:** about 50 (when it was composed before publication is not documented)
+- **Place:** probably Leipzig, Germany, where Bach was cantor of St Thomas (the source does not say)
+- **Instruments:** Harpsichord with two keyboards; played here on piano by Radek Materka
+- **Reception:** Published in 1735 as the first half of Clavier-Übung II. It "has become popular among Bach's keyboard works", recorded on harpsichord and piano alike.
+
+Sources: [Italian Concerto (Bach) (Wikipedia)](https://en.wikipedia.org/wiki/Italian_Concerto_(Bach))
+
+### 64. Violin Partita No. 3 in E major: Preludio · J. S. Bach
+
+- **Year:** completed by 1720, published 1802 · `composedYear: 1720`
+- **Age:** about 35 (the surviving manuscript is dated 1720; when in the year it was finished is not documented)
+- **Place:** Köthen, Germany, where Bach made the surviving manuscript as Kapellmeister
+- **Instruments:** Solo violin (this recording is played on guitar by Gordon Rowland)
+- **Reception:** It is not known whether these solos were performed in Bach's lifetime. Published in 1802, the set was largely ignored until Joseph Joachim began performing it.
+
+Sources: [Sonatas and Partitas for Solo Violin (Bach) (Wikipedia)](https://en.wikipedia.org/wiki/Sonatas_and_Partitas_for_Solo_Violin_(Bach)),
+[Partita for Violin No. 3 (Bach) (Wikipedia)](https://en.wikipedia.org/wiki/Partita_for_Violin_No._3_(Bach))
+
+### 65. Piano Concerto in A minor: Allegro affettuoso · Robert Schumann
+
+- **Year:** 1841 (as the Phantasie), completed as a concerto 1845 · `composedYear: 1841`
+- **Age:** 30. The Phantasie was written on 17–20 May 1841, before his 31st birthday on 8 June.
+- **Place:** Leipzig, Germany, where the Schumanns lived until December 1844; the last two movements were added in Dresden in 1845
+- **Instruments:** Solo piano and orchestra (pairs of woodwind, horns and trumpets, timpani and strings)
+- **Reception:** "Consistently positive": the Leipzig Allgemeine Musikzeitung praised how it gave the orchestra room "without diminishing the role of the piano". It became one of the most widely performed Romantic piano concertos.
+
+Sources: [Piano Concerto (Schumann) (Wikipedia)](https://en.wikipedia.org/wiki/Piano_Concerto_(Schumann)),
+[Robert Schumann (Wikipedia)](https://en.wikipedia.org/wiki/Robert_Schumann)
+
+### 66. Introduction and Rondo Capriccioso, Op. 28 · Camille Saint-Saëns
+
+- **Year:** 1863, first performed 1867 · `composedYear: 1863`
+- **Age:** about 28 (born 9 October 1835; the month of composition is not documented, so 27 or 28)
+- **Place:** probably Paris, France (the source does not say)
+- **Instruments:** Solo violin and orchestra
+- **Reception:** Its success as a solo piece at its first performance, on 4 April 1867 with Sarasate, led Saint-Saëns to publish it separately. Bizet and Debussy later arranged it.
+
+Sources: [Introduction and Rondo Capriccioso (Wikipedia)](https://en.wikipedia.org/wiki/Introduction_and_Rondo_Capriccioso),
+[Camille Saint-Saëns (Wikipedia)](https://en.wikipedia.org/wiki/Camille_Saint-Sa%C3%ABns)
+
+### 67. Der Freischütz: Overture · Carl Maria von Weber
+
+- **Year:** first performed 1821 · `composedYear: 1821` (the years of composition are not given by the source)
+- **Age:** about 34. Born around 18 November 1786; the premiere was on 18 June 1821.
+- **Place:** probably Dresden, Germany, where Weber directed the opera from 1817 (the source does not say where it was written)
+- **Instruments:** Orchestra of piccolos, flutes, oboes, clarinets, bassoons, four horns, trumpets, trombones, timpani and strings
+- **Reception:** It "surpassed Weber's own hopes" and quickly became an international success: Vienna the same year, then many German cities, Prague, Riga and Copenhagen, and four London theatres in 1824.
+
+Sources: [Der Freischütz (Wikipedia)](https://en.wikipedia.org/wiki/Der_Freisch%C3%BCtz),
+[Carl Maria von Weber (Wikipedia)](https://en.wikipedia.org/wiki/Carl_Maria_von_Weber)
+
+### 68. Asturias (Leyenda) · Isaac Albéniz
+
+- **Year:** published 1892 · `composedYear: 1892`
+- **Age:** about 32 (only the publication year is documented)
+- **Place:** Not documented; first published in Barcelona, Spain. Albéniz lived in London and Paris during the 1890s.
+- **Instruments:** Solo piano (this recording is a guitar arrangement)
+- **Reception:** How it was first received is not documented. Guitar transcriptions made it famous, Andrés Segovia's "the most famous and most influential".
+
+Sources: [Asturias (Leyenda) (Wikipedia)](https://en.wikipedia.org/wiki/Asturias_(Leyenda)),
+[Isaac Albéniz (Wikipedia)](https://en.wikipedia.org/wiki/Isaac_Alb%C3%A9niz)
+
+### 69. Carnival Overture, Op. 92 · Antonín Dvořák
+
+- **Year:** 1891, first performed 1892 · `composedYear: 1891`
+- **Age:** about 50 (born 8 September 1841; the month of composition is not documented)
+- **Place:** probably Prague, Bohemia (the source does not say)
+- **Instruments:** Orchestra with cor anglais, harp, triangle, cymbals and tambourine (this recording is a wind-band arrangement by Leigh Steiger, played by the US Air Force Band)
+- **Reception:** Dvořák conducted the premiere at the Rudolfinum in Prague on 28 April 1892, and reprised it at Carnegie Hall on his first American programme.
+
+Sources: [Carnival Overture (Dvořák) (Wikipedia)](https://en.wikipedia.org/wiki/Carnival_Overture_(Dvo%C5%99%C3%A1k)),
+[programme note by Susan Key (LA Phil, archived)](https://web.archive.org/web/20180130113046/https://www.laphil.com/philpedia/music/carnival-overture-antonin-dvorak),
+[Antonín Dvořák (Wikipedia)](https://en.wikipedia.org/wiki/Anton%C3%ADn_Dvo%C5%99%C3%A1k)
+
+### 70. Egmont Overture, Op. 84 · Ludwig van Beethoven
+
+- **Year:** 1809–10, first performed 15 June 1810 · `composedYear: 1810`, `beforeBirthday: true`
+- **Age:** 39. The music was written between October 1809 and June 1810, before his 40th birthday in December 1810.
+- **Place:** Vienna, Austria (where Beethoven lived; the source does not name the place of writing)
+- **Instruments:** Orchestra (the full incidental music adds a soprano and an optional narrator)
+- **Reception:** E. T. A. Hoffmann praised the music, and Goethe declared Beethoven had expressed his intentions with "a remarkable genius". The overture became an unofficial anthem of the Hungarian Revolution of 1956.
+
+Sources: [Egmont (Beethoven) (Wikipedia)](https://en.wikipedia.org/wiki/Egmont_(Beethoven)),
+[Ludwig van Beethoven (Wikipedia)](https://en.wikipedia.org/wiki/Ludwig_van_Beethoven)
+
+### 71. Night on Bald Mountain · Modest Mussorgsky
+
+- **Year:** 1867; best known in Rimsky-Korsakov's 1886 version · `composedYear: 1867`
+- **Age:** 28. The score is inscribed as finished on 23 June 1867; he was born in March 1839.
+- **Place:** Minkino Farm, Luga District, Russia (inscribed on the score)
+- **Instruments:** Orchestra; Rimsky-Korsakov's version uses tam-tam and bell. The Musopen file page does not say which version is played.
+- **Reception:** Balakirev was "savagely critical", and the piece was never performed in any form during Mussorgsky's lifetime. Rimsky-Korsakov's version premiered in St Petersburg on 15 October 1886 and "was demanded again and again".
+
+Sources: [Night on Bald Mountain (Wikipedia)](https://en.wikipedia.org/wiki/Night_on_Bald_Mountain)
+
+### 72. William Tell Overture · Gioachino Rossini
+
+- **Year:** 1829 (the opera premiered in August 1829) · `composedYear: 1829`
+- **Age:** 37 (born 29 February 1792)
+- **Place:** Paris, France (written for the Paris Opéra)
+- **Instruments:** Orchestra, opening with five solo cellos. This recording is Wenzel Sedlak's transcription for military band, played by the United States Marine Band.
+- **Reception:** The opera "was well received" and "frequently revived"; in 1868 Rossini attended its 500th performance at the Opéra.
+
+Sources: [William Tell Overture (Wikipedia)](https://en.wikipedia.org/wiki/William_Tell_Overture),
+[Gioachino Rossini (Wikipedia)](https://en.wikipedia.org/wiki/Gioachino_Rossini)
+
+### 73. Hungarian Rhapsody No. 2 · Franz Liszt
+
+- **Year:** 1847, published 1851 · `composedYear: 1847`, `approximate: true`
+- **Age:** about 36 (born 22 October 1811; the month of writing is not documented)
+- **Place:** Not documented. Liszt spent 1847 on concert tours, including Kyiv.
+- **Instruments:** Solo piano. This recording is an arrangement for concert band played by the U.S. Navy Band.
+- **Reception:** Its "immediate success and popularity on the concert stage" led to an orchestrated version by Liszt and Franz Doppler. It is "perhaps the most famous" of the set.
+
+Sources: [Hungarian Rhapsody No. 2 (Wikipedia)](https://en.wikipedia.org/wiki/Hungarian_Rhapsody_No._2),
+[Franz Liszt (Wikipedia)](https://en.wikipedia.org/wiki/Franz_Liszt)
+
+### 74. Te Deum: Prelude · Marc-Antoine Charpentier
+
+- **Year:** c. 1688–98 · `composedYear: 1693` (middle of the range), `approximate: true`
+- **Age:** about 50 (born 1643)
+- **Place:** Paris, France (Jesuit church of Saint-Louis, where he was musical director)
+- **Instruments:** Soloists, choir, recorders, oboes, trumpets, timpani, strings and continuo. This recording is an organ arrangement played by Ian Dollins.
+- **Reception:** It is thought to have been performed for the victory celebrations after the Battle of Steinkirk in August 1692. Rediscovered in 1953, its prelude became the Eurovision theme in 1954.
+
+Sources: [Te Deum (Charpentier) (Wikipedia)](https://en.wikipedia.org/wiki/Te_Deum_(Charpentier)),
+[Marc-Antoine Charpentier (Wikipedia)](https://en.wikipedia.org/wiki/Marc-Antoine_Charpentier)
+
+### 75. Má vlast: Šárka · Bedřich Smetana
+
+- **Year:** finished 20 February 1875 · `composedYear: 1875`, `beforeBirthday: true`
+- **Age:** 50. Finished before his 51st birthday on 2 March 1875.
+- **Place:** Probably Prague, Bohemia (now Czech Republic), as for Vltava
+- **Instruments:** Orchestra
+- **Reception:** First performed under Adolf Čech (sources disagree whether on 10 December 1876 or 17 March 1877). The complete Má vlast premiered in Prague on 5 November 1882.
+
+Sources: [Má vlast (Wikipedia)](https://en.wikipedia.org/wiki/M%C3%A1_vlast)
+
 ## Composers
 
 ### Erik Satie
@@ -689,3 +1014,84 @@ Sources: [Hector Berlioz (Wikipedia)](https://en.wikipedia.org/wiki/Hector_Berli
 - **Also:** He was admitted to the Conservatoire "two weeks before his 10th birthday" and won the Prix de Rome in 1857.
 
 Sources: [Georges Bizet (Wikipedia)](https://en.wikipedia.org/wiki/Georges_Bizet)
+
+### Jacques Offenbach
+
+- **Born:** 1819, Cologne, Germany · **Died:** 1880
+- **Money:** He earned his living as a cellist from 1835 to 1855. As a theatre manager he "spent money without counting", and after the costly failure of La haine at the Gaîté in 1874 he had to sell his interest in the theatre and mortgage future royalties.
+- **Also:** Rossini called him "the Mozart of the Champs-Élysées". He died in 1880, before the premiere of The Tales of Hoffmann.
+
+Sources: [Jacques Offenbach (Wikipedia)](https://en.wikipedia.org/wiki/Jacques_Offenbach)
+
+### Giuseppe Verdi
+
+- **Born:** 1813, Le Roncole, near Busseto, Italy · **Died:** 1901
+- **Money:** As he became successful he used "his growing prosperity to invest in land near his birthplace", buying farmland in 1844 and the Sant'Agata estate in 1848.
+- **Also:** He "applied unsuccessfully to study" at the Milan Conservatory, and studied privately with Vincenzo Lavigna instead.
+
+Sources: [Giuseppe Verdi (Wikipedia)](https://en.wikipedia.org/wiki/Giuseppe_Verdi)
+
+### Richard Wagner
+
+- **Born:** 1813, Leipzig, Germany · **Died:** 1883
+- **Money:** "Debts plagued Wagner for most of his life"; in 1839 he and his wife "fled Riga on the run from creditors". King Ludwig II of Bavaria's patronage later gave him the means to finish the Ring and build Bayreuth.
+- **Also:** "Unlike most composers, Wagner wrote both the libretti and the music for all of his stage works."
+
+Sources: [Richard Wagner (Wikipedia)](https://en.wikipedia.org/wiki/Richard_Wagner),
+[Lohengrin (opera) (Wikipedia)](https://en.wikipedia.org/wiki/Lohengrin_(opera))
+
+### Nikolai Rimsky-Korsakov
+
+- **Born:** 1844, Tikhvin, Russia · **Died:** 1908
+- **Money:** He combined composing and teaching with a career in the navy: first an officer, then from 1873 to 1884 the civilian Inspector of Naval Bands, which "kept him on the navy payroll".
+- **Also:** He sailed "a two-year-and-eight-month cruise aboard the clipper Almaz" from late 1862.
+
+Sources: [Nikolai Rimsky-Korsakov (Wikipedia)](https://en.wikipedia.org/wiki/Nikolai_Rimsky-Korsakov)
+
+### Joseph Haydn
+
+- **Born:** 1732, Rohrau, Austria · **Died:** 1809
+- **Money:** He worked nearly thirty years for the "immensely wealthy" Esterházy family; in London "he augmented his fame and made large profits, thus becoming financially secure".
+- **Also:** He began as a chorister at St. Stephen's Cathedral, Vienna.
+
+Sources: [Joseph Haydn (Wikipedia)](https://en.wikipedia.org/wiki/Joseph_Haydn)
+
+### Carl Maria von Weber
+
+- **Born:** 1786, Eutin, Germany · **Died:** 1826
+- **Money:** As private secretary to Duke Ludwig in Stuttgart he "fell deeply into debt" and was arrested on charges of embezzlement he could disprove; he paid the costs, the last in 1816. From 1817 he directed the opera in Dresden.
+- **Also:** Mozart's wife Constanze was his cousin.
+
+Sources: [Carl Maria von Weber (Wikipedia)](https://en.wikipedia.org/wiki/Carl_Maria_von_Weber)
+
+### Isaac Albéniz
+
+- **Born:** 1860, Camprodon, Spain · **Died:** 1909
+- **Money:** A touring concert pianist; in London the wealthy Francis Money-Coutts "commissioned and provided him with librettos" for his operas.
+- **Also:** He appeared on stage in Barcelona at four, and at seven passed the Paris Conservatoire's piano entrance exam but was refused admission as too young.
+
+Sources: [Isaac Albéniz (Wikipedia)](https://en.wikipedia.org/wiki/Isaac_Alb%C3%A9niz)
+
+### Gioachino Rossini
+
+- **Born:** 1792, Pesaro, Papal States (now Italy) · **Died:** 1868
+- **Money:** His London stay of 1823–24 was "financially rewarding" (the press reported he earned over £30,000), and he negotiated "a sizeable annuity from the French government".
+- **Also:** Born on 29 February. He wrote 39 operas and withdrew from opera "for the last 40 years of his life".
+
+Sources: [Gioachino Rossini (Wikipedia)](https://en.wikipedia.org/wiki/Gioachino_Rossini)
+
+### Franz Liszt
+
+- **Born:** 1811, Doborján (now Raiding, Austria), Kingdom of Hungary · **Died:** 1886
+- **Money:** He "gave away much of the proceeds of his work to charity and humanitarian causes", and "did not charge for lessons".
+- **Also:** Carl Czerny, once Beethoven's student, taught him "free of charge"; his stardom on tour was dubbed "Lisztomania".
+
+Sources: [Franz Liszt (Wikipedia)](https://en.wikipedia.org/wiki/Franz_Liszt)
+
+### Marc-Antoine Charpentier
+
+- **Born:** 1643, in or near Paris, France · **Died:** 1704
+- **Money:** For about seventeen years he was house composer to Mlle de Guise, who gave him an "apartment" in the Hôtel de Guise; later he was music master to the Jesuits and, from 1698, at the Sainte-Chapelle.
+- **Also:** He registered for law school at eighteen, withdrew after one semester, and studied in Rome with Giacomo Carissimi.
+
+Sources: [Marc-Antoine Charpentier (Wikipedia)](https://en.wikipedia.org/wiki/Marc-Antoine_Charpentier)
