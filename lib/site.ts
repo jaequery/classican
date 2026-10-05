@@ -9,6 +9,15 @@ import type { PaintingId } from "./paintings";
  */
 export type Fact = { text: string; motif?: string };
 
+/**
+ * A moment in the story the music tells, at `at` seconds into this recording.
+ * From then until the next beat the background shows `scene` (a painting id,
+ * the piece's own painting if absent), and the words show for a few seconds
+ * with the light on `motif`. Cue times are matched to the recording by ear and
+ * by its loudness; each beat's source is in mockups/story.md.
+ */
+export type Beat = { at: number; text: string; scene?: PaintingId; motif?: string };
+
 /** Where and when a piece was written, and how it was received. Every value is sourced in mockups/details.md. */
 export type PieceDetails = {
   /** As shown, e.g. "c. 1890, published 1905". */
@@ -50,6 +59,8 @@ export type Track = {
   details: PieceDetails;
   /** Shown one at a time while the piece plays. Keep each to a sentence or two, and only what a source confirms. */
   facts: Fact[];
+  /** The story the composer wrote into the music, in order, timed to this recording. */
+  story?: Beat[];
 };
 
 export type Site = {
@@ -701,6 +712,18 @@ export const site: Site = {
         { text: "On the way, Smetana wrote, the river passes a farmers’ wedding, mermaids dancing by moonlight, and the St John’s Rapids.", motif: "river" },
         { text: "Near the end it flows past Vyšehrad, the high castle of the first Czech kings, and the castle’s theme returns.", motif: "castle" },
         { text: "Smetana wrote it in under three weeks at the end of 1874, just after he had become completely deaf." },
+      ],
+      story: [
+        { at: 0, text: "Two little springs bubble up in the Bohemian forest, one warm and one cold: listen to the flutes, then the clarinets, rippling over each other.", motif: "springs" },
+        { at: 70, text: "The springs join into one stream, and the violins sing the river’s own broad tune as the Vltava sets off across the country.", motif: "river" },
+        { at: 200, text: "The river runs through a forest where a hunt is on: hunting horns ring out from the trees.", scene: "moldau-hunt", motif: "hunter" },
+        { at: 280, text: "Past a village a farmers’ wedding is under way, and the music turns into a polka for the dancing couples.", scene: "moldau-wedding", motif: "dancers" },
+        { at: 370, text: "Night falls. Water nymphs dance in the moonlight on the shining river while flutes ripple over hushed strings; castles and ruins look down from the rocks.", scene: "moldau-nymphs", motif: "nymphs" },
+        { at: 525, text: "Day returns, and so does the river’s tune, flowing on.", motif: "river" },
+        { at: 580, text: "The St John’s Rapids: the river hurls itself between the rocks, and the whole orchestra crashes and foams.", scene: "moldau-rapids", motif: "rapids" },
+        { at: 735, text: "Through the rapids, the river widens. Its tune returns, now bright and strong in a major key, as it rolls on toward Prague.", scene: "moldau-vysehrad", motif: "river" },
+        { at: 795, text: "It flows past Vyšehrad, the ancient castle of the Czech kings, and the brass call out the castle’s theme from the first poem of Má vlast.", scene: "moldau-vysehrad", motif: "castle" },
+        { at: 855, text: "The river flows on out of sight, toward the Elbe, and two last chords end the journey.", scene: "moldau-vysehrad", motif: "river" },
       ],
     },
     {

@@ -42,6 +42,11 @@ export type PaintingId =
   | "warsaw"
   | "new-world"
   | "moldau"
+  | "moldau-hunt"
+  | "moldau-wedding"
+  | "moldau-nymphs"
+  | "moldau-rapids"
+  | "moldau-vysehrad"
   | "mountain-king"
   | "anitra"
   | "vienna-woods"
@@ -1182,6 +1187,275 @@ function renderMoldauA(r: Raster, f: Frame) {
   r.fill([[123, 22], [131, 22], [127, 15]], c.roof);
   r.fill([[119, 32], [143, 32], [139, 27], [123, 27]], c.roof);
   for (const x of [123, 129, 135]) r.fill(rect(x, 36, 2, 3), c.rockD);
+}
+
+// The Moldau's story scenes, which the painting turns to as the river reaches them.
+
+// Forest hunt: hunting horns ring through a pine wood on the riverbank; a stag leaps away.
+const vltHunt = palette({
+  sky: "#2a3a30",
+  skyL: "#3e5240",
+  pine: "#16261c",
+  pineL: "#24402a",
+  floor: "#3a3420",
+  floorL: "#54482a",
+  river: "#3a6070",
+  riverL: "#6a98a6",
+  coat: "#7a2a1a",
+  horse: "#3a2418",
+  brass: "#e0b03a",
+  stag: "#8a5a32",
+  pale: "#e6dcc0",
+});
+const vltHuntBack = fracture(311, [[vltHunt.c.sky, vltHunt.c.skyL], [vltHunt.c.skyL, vltHunt.c.sky]], 3, [-8, -8, 168, 60]);
+const vltHuntFloor = fracture(313, [[vltHunt.c.floor, vltHunt.c.floorL], [vltHunt.c.floorL, vltHunt.c.floor]], 3, [-8, 64, 168, 108]);
+
+function pine(r: Raster, x: number, base: number, h: number, a: number, b: number) {
+  r.fill(rect(x - 1, base - h * 0.3, 2, h * 0.3), a);
+  for (let k = 0; k < 4; k++) {
+    const y = base - h * 0.25 - k * h * 0.2;
+    const w = h * 0.24 * (1 - k * 0.2);
+    r.fill([[x - w, y], [x + w, y], [x, y - h * 0.32]], a, b, 3);
+  }
+}
+
+function renderMoldauHunt(r: Raster, f: Frame) {
+  const { c } = vltHunt;
+  paintPlanes(r, vltHuntBack, f);
+  for (let i = 0; i < 9; i++) pine(r, 4 + i * 19, 66, 44 + (i % 3) * 10, c.pine, c.pineL);
+  paintPlanes(r, vltHuntFloor, f);
+  // The river slips past behind the trees.
+  r.fill([[-4, 62], [164, 58], [164, 66], [-4, 70]], c.river, c.riverL, 5);
+  for (let k = 0; k < 5; k++) {
+    const x = f.still ? k * 34 : (f.t * 6 + k * 34) % 172 - 6;
+    r.fill(rect(x, 63 - x * 0.025, 5, 1), c.riverL);
+  }
+  // The hunter on horseback, horn raised.
+  const bob = wave(f, 1.6) * 0.8;
+  r.fill(ellipse(54, 80 + bob, 13, 6, 0, Math.PI * 2, 18), c.horse);
+  r.fill([[64, 76 + bob], [72, 66 + bob], [76, 68 + bob], [70, 80 + bob]], c.horse);
+  for (const [x, d] of [[44, 1], [48, -1], [60, 1], [64, -1]] as const) thick(r, x, 84 + bob, x + d * 2, 94, c.horse);
+  r.fill(rect(50, 64 + bob, 7, 12), c.coat);
+  r.fill(ellipse(53.5, 61 + bob, 3, 3, 0, Math.PI * 2, 12), c.pale);
+  r.fill([[56, 60 + bob], [64, 56 + bob], [66, 60 + bob], [58, 63 + bob]], c.brass);
+  r.fill(ellipse(66, 58 + bob, 2.5, 3, 0, Math.PI * 2, 10), c.brass);
+  // The stag bounds away across the clearing.
+  const leap = f.still ? 0 : Math.abs(Math.sin(f.t * 1.4)) * 4;
+  const sx = 122;
+  const sy = 78 - leap;
+  r.fill(ellipse(sx, sy, 10, 4.5, -0.15, Math.PI * 2, 16), c.stag);
+  r.fill([[sx + 7, sy - 2], [sx + 12, sy - 10], [sx + 15, sy - 9], [sx + 11, sy]], c.stag);
+  r.line(sx + 12, sy - 10, sx + 10, sy - 17, c.pale);
+  r.line(sx + 11, sy - 14, sx + 7, sy - 16, c.pale);
+  r.line(sx + 14, sy - 10, sx + 17, sy - 17, c.pale);
+  r.line(sx + 15, sy - 14, sx + 19, sy - 15, c.pale);
+  thick(r, sx - 7, sy + 2, sx - 14, sy + 10, c.stag);
+  thick(r, sx + 6, sy + 2, sx + 13, sy + 9, c.stag);
+}
+
+// Peasant wedding: couples dance a polka on the green by the river, a fiddler on a barrel.
+const vltWed = palette({
+  sky: "#e8b870",
+  skyL: "#f2d496",
+  grass: "#5a7a34",
+  grassL: "#7a9a44",
+  river: "#4a7a8a",
+  riverL: "#8ab6c0",
+  wall: "#e8dcc0",
+  roof: "#8a3a2a",
+  wood: "#5a3a22",
+  red: "#c0302a",
+  blue: "#2a4a8a",
+  white: "#f6f0e2",
+  skin: "#e0b08a",
+  ink: "#2a1a12",
+  flag: "#e0b03a",
+});
+const vltWedSky = fracture(321, [[vltWed.c.sky, vltWed.c.skyL], [vltWed.c.skyL, vltWed.c.sky]], 3, [-8, -8, 168, 50]);
+const vltWedGreen = fracture(323, [[vltWed.c.grass, vltWed.c.grassL], [vltWed.c.grassL, vltWed.c.grass]], 3, [-8, 56, 168, 108]);
+
+function polka(r: Raster, f: Frame, x: number, y: number, phase: number, skirt: number) {
+  const { c } = vltWed;
+  const spin = f.still ? 0 : Math.sin(f.t * 3.2 + phase);
+  const hop = f.still ? 0 : Math.abs(Math.sin(f.t * 3.2 + phase)) * 1.5;
+  y -= hop;
+  // Her: a full skirt that swings as they turn.
+  r.fill([[x - 3, y], [x, y], [x + 1 + spin * 2, y + 12], [x - 8 + spin * 2, y + 12]], skirt, c.white, 2);
+  r.fill(rect(x - 3, y - 7, 4, 7), c.white);
+  r.fill(ellipse(x - 1, y - 9, 2.2, 2.4, 0, Math.PI * 2, 10), c.skin);
+  // Him: dark breeches and a waistcoat.
+  r.fill(rect(x + 2, y - 7, 4, 8), c.blue);
+  r.fill(ellipse(x + 4, y - 9.5, 2.2, 2.4, 0, Math.PI * 2, 10), c.skin);
+  thick(r, x + 2, y + 1, x + 1 - spin, y + 12 + hop, c.ink);
+  thick(r, x + 5, y + 1, x + 6 + spin, y + 12 + hop, c.ink);
+  r.line(x, y - 5, x + 3, y - 5, c.skin);
+}
+
+function renderMoldauWedding(r: Raster, f: Frame) {
+  const { c } = vltWed;
+  paintPlanes(r, vltWedSky, f);
+  r.fill([[-4, 50], [164, 46], [164, 58], [-4, 60]], c.river, c.riverL, 4);
+  paintPlanes(r, vltWedGreen, f);
+  // A whitewashed cottage with a red roof.
+  r.fill(rect(112, 34, 34, 22), c.wall);
+  r.fill([[108, 35], [150, 35], [129, 18]], c.roof);
+  r.fill(rect(126, 44, 6, 12), c.wood);
+  r.fill(rect(116, 40, 5, 5), c.blue);
+  r.fill(rect(137, 40, 5, 5), c.blue);
+  // Garland strung across the green.
+  const sag = (i: number): Pt => [8 + i * 8, 30 + Math.sin((i / 12) * Math.PI) * 8];
+  for (let i = 0; i < 12; i++) r.line(...sag(i), ...sag(i + 1), c.wood);
+  for (let i = 0; i <= 12; i++) {
+    const [x, y] = sag(i);
+    r.fill([[x - 2, y], [x + 2, y], [x, y + 3]], i % 2 ? c.red : c.flag);
+  }
+  // The fiddler on his barrel.
+  const bow = wave(f, 6) * 2;
+  r.fill(ellipse(22, 82, 6, 8, 0, Math.PI * 2, 14), c.wood);
+  r.fill(rect(19, 62, 6, 12), c.red);
+  r.fill(ellipse(22, 59, 2.5, 2.7, 0, Math.PI * 2, 10), c.skin);
+  r.fill(ellipse(28, 64, 3, 2, -0.5, Math.PI * 2, 10), c.wood);
+  r.line(26 + bow, 60, 34 + bow, 68, c.ink);
+  // Three couples whirling in a polka.
+  polka(r, f, 50, 70, 0, c.red);
+  polka(r, f, 74, 76, 1.6, c.blue);
+  polka(r, f, 98, 70, 3.1, c.red);
+}
+
+// Moonlight, the nymphs' round dance: water nymphs glide in a ring on the silvered river,
+// castle ruins on the rocks above.
+const vltNym = palette({
+  n0: "#0c1424",
+  n1: "#16223a",
+  n2: "#24345a",
+  moon: "#f2ecd0",
+  halo: "#8a96b8",
+  water: "#1e3050",
+  silver: "#b8c6dc",
+  rock: "#141a28",
+  rockL: "#26304a",
+  nymph: "#e8eef6",
+  veil: "#9ab0d6",
+});
+const vltNymSky = fracture(331, [[vltNym.c.n0, vltNym.c.n1], [vltNym.c.n1, vltNym.c.n2], [vltNym.c.n1, vltNym.c.n0]], 4, [-8, -8, 168, 64]);
+
+function renderMoldauNymphs(r: Raster, f: Frame) {
+  const { c } = vltNym;
+  paintPlanes(r, vltNymSky, f);
+  r.tint(ellipse(118, 20, 18, 18, 0, Math.PI * 2, 20), { [c.n0]: c.n1, [c.n1]: c.n2, [c.n2]: c.halo }, 6);
+  r.fill(ellipse(118, 20, 8, 8, 0, Math.PI * 2, 20), c.moon);
+  // Ruined castle walls on the dark rocks.
+  r.fill([[-4, 58], [6, 34], [28, 30], [40, 50], [44, 62], [-4, 64]], c.rock, c.rockL, 3);
+  r.fill(rect(10, 22, 7, 12), c.rockL);
+  r.fill(rect(22, 26, 5, 6), c.rockL);
+  for (const x of [10, 13, 16]) r.fill(rect(x, 20, 1, 2), c.rockL);
+  r.fill([[150, 60], [156, 40], [164, 38], [164, 62]], c.rock, c.rockL, 3);
+  // The river under the moon, a path of silver light.
+  r.fill(rect(-4, 60, 168, 44), c.water);
+  for (let y = 62; y < 100; y += 3) {
+    const w = 4 + (y - 60) * 0.5;
+    const sh = f.still ? 0 : Math.sin(f.t * 1.3 + y) * 3;
+    r.fill(rect(118 - w / 2 + sh, y, w, 1), c.silver);
+  }
+  // Seven nymphs dancing in a slow ring on the water.
+  const turn = f.still ? 0 : f.t * 0.35;
+  for (let k = 0; k < 7; k++) {
+    const a = turn + (k / 7) * Math.PI * 2;
+    const x = 70 + Math.cos(a) * 30;
+    const y = 76 + Math.sin(a) * 9;
+    const s = 0.8 + (Math.sin(a) + 1) * 0.15;
+    r.fill([[x - 4 * s, y + 6 * s], [x + 4 * s, y + 6 * s], [x + 1.5 * s, y - 4 * s], [x - 1.5 * s, y - 4 * s]], c.nymph, c.veil, 5);
+    r.fill(ellipse(x, y - 6 * s, 1.8 * s, 2 * s, 0, Math.PI * 2, 10), c.nymph);
+    r.line(x - 1, y - 3 * s, x - 6 * s, y - 8 * s, c.veil);
+    r.line(x + 1, y - 3 * s, x + 6 * s, y - 8 * s, c.veil);
+  }
+}
+
+// St John's Rapids: the river crashes white between rocks in a narrow gorge.
+const vltRap = palette({
+  sky: "#5a6670",
+  skyL: "#7a8690",
+  cliff: "#2a2a2a",
+  cliffL: "#4a4642",
+  water: "#2a4a5a",
+  waterL: "#4a7a8a",
+  foam: "#e8f0f2",
+  spray: "#b0c4cc",
+  rock: "#1a1816",
+});
+const vltRapSky = fracture(341, [[vltRap.c.sky, vltRap.c.skyL], [vltRap.c.skyL, vltRap.c.sky]], 3, [-8, -8, 168, 40]);
+const vltRapLeft = fracture(343, [[vltRap.c.cliff, vltRap.c.cliffL], [vltRap.c.cliffL, vltRap.c.cliff]], 3, [-8, -8, 56, 108]);
+const vltRapRight = fracture(345, [[vltRap.c.cliff, vltRap.c.cliffL], [vltRap.c.cliffL, vltRap.c.cliff]], 3, [104, -8, 168, 108]);
+const vltRapRocks: [number, number, number][] = [[62, 62, 6], [92, 70, 7], [74, 84, 8], [104, 88, 6], [52, 92, 7]];
+
+function renderMoldauRapids(r: Raster, f: Frame) {
+  const { c } = vltRap;
+  paintPlanes(r, vltRapSky, f);
+  r.fill([[40, 20], [120, 20], [168, 108], [-8, 108]], c.water, c.waterL, 5);
+  // Streaks of white water racing down toward us.
+  for (let k = 0; k < 26; k++) {
+    const lane = (k * 37) % 23;
+    const p = f.still ? (k * 0.37) % 1 : (f.t * 0.5 + k * 0.37) % 1;
+    const y = 22 + p * 84;
+    const half = 40 + (y - 20) * 0.5;
+    const x = 80 - half + (lane / 22) * half * 2;
+    r.fill(rect(x, y, 2 + p * 6, 1 + p), k % 3 ? c.foam : c.spray);
+  }
+  // Rocks the river breaks over, each with a collar of foam.
+  for (const [x, y, s] of vltRapRocks) {
+    const sp = wave(f, 4, x) * 1.2;
+    r.fill(ellipse(x, y - 2, s + 3 + sp, s * 0.7 + 2, Math.PI, Math.PI * 2, 14), c.foam, c.spray, 6);
+    r.fill(ellipse(x, y, s, s * 0.6, 0, Math.PI * 2, 14), c.rock);
+  }
+  paintPlanes(r, vltRapLeft.map((p) => ({ ...p, pts: clipConvex(p.pts, [[-8, -8], [44, -8], [36, 30], [20, 108], [-8, 108]]) })), f);
+  paintPlanes(r, vltRapRight.map((p) => ({ ...p, pts: clipConvex(p.pts, [[116, -8], [168, -8], [168, 108], [140, 108], [124, 30]]) })), f);
+}
+
+// The broad river and Vyšehrad: the Vltava flows wide and majestic past the old royal
+// castle on its high rock, toward the spires of Prague.
+const vltVys = palette({
+  sky: "#e8a868",
+  skyL: "#f4cc8a",
+  skyH: "#c8784a",
+  river: "#4a6a8a",
+  riverL: "#9ab8d0",
+  gold: "#f2d07a",
+  rock: "#5a4434",
+  rockL: "#7a5a40",
+  wall: "#d8c09a",
+  roof: "#3a5a4a",
+  city: "#7a5a5a",
+  cityD: "#5a4048",
+  bank: "#3a4a2a",
+});
+const vltVysSky = fracture(351, [[vltVys.c.sky, vltVys.c.skyL], [vltVys.c.skyH, vltVys.c.sky], [vltVys.c.skyL, vltVys.c.sky]], 4, [-8, -8, 168, 56]);
+
+function renderMoldauVysehrad(r: Raster, f: Frame) {
+  const { c } = vltVys;
+  paintPlanes(r, vltVysSky, f);
+  r.fill(ellipse(40, 46, 9, 9, Math.PI, Math.PI * 2, 16), c.gold);
+  // Prague's spires in the haze downstream.
+  for (const [x, h] of [[18, 10], [26, 16], [34, 8], [46, 14], [58, 9], [66, 12]] as const) {
+    r.fill(rect(x - 2, 54 - h, 4, h), c.city, c.cityD, 4);
+    r.fill([[x - 2, 54 - h], [x + 2, 54 - h], [x, 48 - h]], c.cityD);
+  }
+  // The river, wide and calm, light gliding across it.
+  r.fill([[-4, 54], [164, 52], [164, 104], [-4, 104]], c.river, c.riverL, 3);
+  for (let k = 0; k < 10; k++) {
+    const y = 58 + k * 4.4;
+    const x = f.still ? (k * 47) % 160 : (f.t * (2 + k * 0.4) + k * 47) % 180 - 10;
+    r.fill(rect(x, y, 6 + k, 1), k < 4 ? c.gold : c.riverL);
+  }
+  r.fill([[-4, 96], [60, 90], [80, 104], [-4, 104]], c.bank);
+  // Vyšehrad on its rock: walls, towers, the church's twin spires.
+  r.fill([[88, 104], [94, 60], [108, 40], [164, 34], [164, 104]], c.rock, c.rockL, 5);
+  r.fill(rect(104, 28, 60, 14), c.wall);
+  for (let x = 104; x < 164; x += 5) r.fill(rect(x, 26, 3, 2), c.wall);
+  r.fill(rect(124, 6, 5, 22), c.wall);
+  r.fill(rect(136, 6, 5, 22), c.wall);
+  r.fill([[123, 6], [130, 6], [126.5, -4]], c.roof);
+  r.fill([[135, 6], [142, 6], [138.5, -4]], c.roof);
+  r.fill([[122, 20], [143, 20], [139, 14], [126, 14]], c.roof);
 }
 
 // ---------------------------------------------------------------------------
@@ -3156,6 +3430,41 @@ export const paintings: Painting[] = [
     colors: vltA.colors,
     motifs: { springs: [50, 32, 14], river: [70, 78, 20], castle: [132, 38, 18] },
     render: renderMoldauA,
+  },
+  {
+    id: "moldau-hunt",
+    alt: "A hunter on horseback blowing a brass horn in a dark pine forest by the river, a stag leaping away.",
+    colors: vltHunt.colors,
+    motifs: { hunter: [56, 72, 18], stag: [124, 72, 16] },
+    render: renderMoldauHunt,
+  },
+  {
+    id: "moldau-wedding",
+    alt: "A village wedding on a riverside green: couples whirling in a polka under a garland, a fiddler on a barrel and a red-roofed cottage.",
+    colors: vltWed.colors,
+    motifs: { dancers: [74, 68, 26], fiddler: [24, 68, 12], cottage: [129, 38, 18] },
+    render: renderMoldauWedding,
+  },
+  {
+    id: "moldau-nymphs",
+    alt: "Night on the river: pale water nymphs dancing in a ring on silvery water under a full moon, castle ruins on the rocks.",
+    colors: vltNym.colors,
+    motifs: { nymphs: [70, 74, 30], moon: [118, 20, 12], ruins: [18, 30, 16] },
+    render: renderMoldauNymphs,
+  },
+  {
+    id: "moldau-rapids",
+    alt: "White water crashing between dark rocks in a narrow gorge, spray flying.",
+    colors: vltRap.colors,
+    motifs: { rapids: [80, 76, 26] },
+    render: renderMoldauRapids,
+  },
+  {
+    id: "moldau-vysehrad",
+    alt: "The wide river at sunset flowing past Vyšehrad castle on its high rock, the spires of Prague in the haze.",
+    colors: vltVys.colors,
+    motifs: { castle: [132, 24, 22], river: [60, 76, 24], prague: [42, 44, 16] },
+    render: renderMoldauVysehrad,
   },
   {
     id: "mountain-king",

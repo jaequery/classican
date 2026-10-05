@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useId, useState } from "react";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { pieceId, type Site } from "@/lib/site";
 import { formatCount, type Me } from "@/lib/social";
 import { AuthDialog, type AuthMode } from "./AuthDialog";
@@ -11,7 +11,8 @@ import { usePieceSocial } from "./usePieceSocial";
 import { WallLabel } from "./WallLabel";
 
 /**
- * The painting and its wall label follow the piece the player has loaded; its facts only rotate while music plays.
+ * The painting and its wall label follow the piece the player has loaded; its facts only rotate while music plays,
+ * and a piece with a story turns its painting to each scene as the music reaches it.
  * Its likes and comments follow it too: anyone can read them, and signed-in listeners can add their own.
  */
 export function Studio({ site }: { site: Site }) {
@@ -21,6 +22,7 @@ export function Studio({ site }: { site: Site }) {
   const [auth, setAuth] = useState<AuthMode | null>(null);
   const [talking, setTalking] = useState(false);
   const commentsId = useId();
+  const clock = useRef(0);
   const track = site.tracks[index];
 
   useEffect(() => {
@@ -73,7 +75,14 @@ export function Studio({ site }: { site: Site }) {
 
   return (
     <>
-      <Scene playing={playing} painting={track.painting} facts={track.facts} factSeconds={site.factSeconds} />
+      <Scene
+        playing={playing}
+        painting={track.painting}
+        facts={track.facts}
+        story={track.story}
+        clock={clock}
+        factSeconds={site.factSeconds}
+      />
       <WallLabel track={track} composer={site.composers[track.composer]} />
       <Comments
         id={commentsId}
@@ -89,7 +98,7 @@ export function Studio({ site }: { site: Site }) {
         addComment={social.addComment}
         removeComment={social.removeComment}
       />
-      <Player tracks={site.tracks} onPlayingChange={setPlaying} onTrackChange={setIndex} actions={actions} />
+      <Player tracks={site.tracks} onPlayingChange={setPlaying} onTrackChange={setIndex} actions={actions} clock={clock} />
       <AuthDialog mode={auth} onModeChange={setAuth} onSignedIn={setMe} />
       <p className={social.message ? "notice" : "visually-hidden"} role="status">
         {social.message}
