@@ -7,6 +7,7 @@ import { AuthDialog, type AuthMode } from "./AuthDialog";
 import { Comments } from "./Comments";
 import { Player } from "./Player";
 import { Scene } from "./Scene";
+import { UpdateBar } from "./UpdateBar";
 import { usePieceSocial } from "./usePieceSocial";
 import { WallLabel } from "./WallLabel";
 
@@ -83,6 +84,7 @@ export function Studio({ site }: { site: Site }) {
         clock={clock}
         factSeconds={site.factSeconds}
       />
+      {site.update && <UpdateBar update={site.update} />}
       <WallLabel track={track} composer={site.composers[track.composer]} />
       <Comments
         id={commentsId}

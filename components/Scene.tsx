@@ -162,13 +162,14 @@ export function Scene({ playing, painting, facts, story, clock, factSeconds }: P
       factEl.setAttribute("aria-hidden", String(!on));
     };
 
-    /** Beside the pool: right of it, else left, else above or below; always inside the gutters, above the player and clear of the wall label. */
+    /** Beside the pool: right of it, else left, else above or below; always inside the gutters, below the update bar, above the player and clear of the wall label. */
     const placeFact = () => {
       const gutter = innerWidth < 600 ? 16 : 24;
+      const top = (document.querySelector(".update")?.getBoundingClientRect().bottom ?? 0) + gutter;
       const w = factEl.offsetWidth;
       const h = factEl.offsetHeight;
       let x = gutter;
-      let y = gutter;
+      let y = top;
       if (pool) {
         const cx = view.x + pool[0] * view.s;
         const cy = view.y + pool[1] * view.s;
@@ -179,11 +180,11 @@ export function Scene({ playing, painting, facts, story, clock, factSeconds }: P
         else if (cx - r - gap - w >= gutter) x = cx - r - gap - w;
         else {
           x = cx - w / 2;
-          y = cy - r - gap - h < gutter ? cy + r + gap : cy - r - gap - h;
+          y = cy - r - gap - h < top ? cy + r + gap : cy - r - gap - h;
         }
       }
       x = Math.max(gutter, Math.min(innerWidth - gutter - w, x));
-      y = Math.max(gutter, Math.min(playerTop() - 12 - h, y));
+      y = Math.max(top, Math.min(playerTop() - 12 - h, y));
       // Keep clear of the wall label: step below it, or beside it if there is no room below.
       const label = document.querySelector(".wall")?.getBoundingClientRect();
       if (label && x < label.right + 12 && x + w > label.left - 12 && y < label.bottom + 12 && y + h > label.top - 12) {
