@@ -45,6 +45,9 @@ or create an account with a name, email and password. Signed in, a listener can 
 piece, comment on it (up to 1,000 characters) and delete their own comments. Comments show the
 writer's name, never their email.
 
+Use Show beside the password field to check what you typed, and Hide to mask it again.
+Passwords start hidden when opening the dialog or switching between sign-in and account creation.
+
 Everything listeners make is kept in Postgres on Neon, connected through Vercel's Neon integration,
 which sets `DATABASE_URL` (`POSTGRES_URL` also works). The tables (`users`, `sessions`, `likes`,
 `comments`, in `lib/db.ts`) are created on the first request if they aren't there yet, so there is no

@@ -18,8 +18,10 @@ export function AuthDialog({ mode, onModeChange, onSignedIn }: Props) {
   const ref = useRef<HTMLDialogElement>(null);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+  const [passwordVisible, setPasswordVisible] = useState(false);
   const titleId = useId();
   const errorId = useId();
+  const passwordId = useId();
   const signup = mode === "signup";
 
   useEffect(() => {
@@ -28,6 +30,7 @@ export function AuthDialog({ mode, onModeChange, onSignedIn }: Props) {
     if (mode && !dialog.open) dialog.showModal();
     if (!mode && dialog.open) dialog.close();
     setError("");
+    setPasswordVisible(false);
   }, [mode]);
 
   async function submit(e: React.FormEvent<HTMLFormElement>) {
@@ -62,18 +65,30 @@ export function AuthDialog({ mode, onModeChange, onSignedIn }: Props) {
           Email
           <input name="email" type="email" autoComplete="email" required aria-describedby={error ? errorId : undefined} />
         </label>
-        <label>
+        <label htmlFor={passwordId}>
           Password {signup && <span>at least 8 characters</span>}
+        </label>
+        <div className="auth-password">
           <input
+            id={passwordId}
             name="password"
-            type="password"
+            type={passwordVisible ? "text" : "password"}
             autoComplete={signup ? "new-password" : "current-password"}
             required
             minLength={signup ? 8 : undefined}
             maxLength={200}
             aria-describedby={error ? errorId : undefined}
           />
-        </label>
+          <button
+            type="button"
+            className="button auth-password-toggle"
+            aria-label={passwordVisible ? "Hide password" : "Show password"}
+            aria-controls={passwordId}
+            onClick={() => setPasswordVisible((visible) => !visible)}
+          >
+            {passwordVisible ? "Hide" : "Show"}
+          </button>
+        </div>
         <p id={errorId} className="auth-error" role="alert">
           {error}
         </p>
