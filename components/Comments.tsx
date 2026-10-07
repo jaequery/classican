@@ -89,84 +89,86 @@ export function Comments({ id, open, onClose, title, me, data, status, onRetry, 
         </button>
       </header>
 
-      {me ? (
-        <form className="talk-form" onSubmit={post}>
-          <label htmlFor={fieldId} className="visually-hidden">
-            Your comment
-          </label>
-          <textarea
-            id={fieldId}
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            placeholder="What do you hear in it?"
-            rows={3}
-            aria-invalid={over || undefined}
-            aria-describedby={countId}
-          />
-          <div className="talk-form-row">
-            <span id={countId} className={over ? "talk-count over" : "talk-count"} aria-live="polite" aria-atomic="true">
-              {over
-                ? `Remove ${excess} ${excess === 1 ? "character" : "characters"} to post.`
-                : `${length} / ${COMMENT_MAX} characters`}
-            </span>
-            <button type="submit" className="button primary" disabled={blank || over || posting}>
-              {posting ? "Posting…" : "Post"}
-            </button>
-          </div>
-          <p className="talk-who">
-            Signed in as {me.name} ·{" "}
-            <button type="button" className="link" onClick={onSignOut}>
-              Sign out
+      <div className="talk-body">
+        {me ? (
+          <form className="talk-form" onSubmit={post}>
+            <label htmlFor={fieldId} className="visually-hidden">
+              Your comment
+            </label>
+            <textarea
+              id={fieldId}
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              placeholder="What do you hear in it?"
+              rows={3}
+              aria-invalid={over || undefined}
+              aria-describedby={countId}
+            />
+            <div className="talk-form-row">
+              <span id={countId} className={over ? "talk-count over" : "talk-count"} aria-live="polite" aria-atomic="true">
+                {over
+                  ? `Remove ${excess} ${excess === 1 ? "character" : "characters"} to post.`
+                  : `${length} / ${COMMENT_MAX} characters`}
+              </span>
+              <button type="submit" className="button primary" disabled={blank || over || posting}>
+                {posting ? "Posting…" : "Post"}
+              </button>
+            </div>
+            <p className="talk-who">
+              Signed in as {me.name} ·{" "}
+              <button type="button" className="link" onClick={onSignOut}>
+                Sign out
+              </button>
+            </p>
+          </form>
+        ) : me === null ? (
+          <p className="talk-prompt">
+            <button type="button" className="link" onClick={() => onAuth("signin")}>
+              Sign in
+            </button>{" "}
+            or{" "}
+            <button type="button" className="link" onClick={() => onAuth("signup")}>
+              create an account
+            </button>{" "}
+            to like pieces and leave comments.
+          </p>
+        ) : null}
+
+        <p className="talk-error" role="alert">
+          {error}
+        </p>
+
+        {status === "error" ? (
+          <p className="talk-note">
+            Couldn&rsquo;t load comments.{" "}
+            <button type="button" className="link" onClick={onRetry}>
+              Try again
             </button>
           </p>
-        </form>
-      ) : me === null ? (
-        <p className="talk-prompt">
-          <button type="button" className="link" onClick={() => onAuth("signin")}>
-            Sign in
-          </button>{" "}
-          or{" "}
-          <button type="button" className="link" onClick={() => onAuth("signup")}>
-            create an account
-          </button>{" "}
-          to like pieces and leave comments.
-        </p>
-      ) : null}
-
-      <p className="talk-error" role="alert">
-        {error}
-      </p>
-
-      {status === "error" ? (
-        <p className="talk-note">
-          Couldn&rsquo;t load comments.{" "}
-          <button type="button" className="link" onClick={onRetry}>
-            Try again
-          </button>
-        </p>
-      ) : !data ? (
-        <p className="talk-note" role="status">
-          Loading comments…
-        </p>
-      ) : data.comments.length === 0 ? (
-        <p className="talk-note">No comments on this piece yet.</p>
-      ) : (
-        <ol className="talk-list">
-          {data.comments.map((c) => (
-            <li key={c.id}>
-              <p className="talk-meta">
-                <span>{c.author}</span> <time dateTime={c.createdAt}>{timeAgo(c.createdAt)}</time>
-              </p>
-              <p className="talk-text">{c.text}</p>
-              {c.mine && (
-                <button type="button" className="link small" onClick={() => remove(c.id)} disabled={deleting === c.id}>
-                  {deleting === c.id ? "Deleting…" : "Delete"}
-                </button>
-              )}
-            </li>
-          ))}
-        </ol>
-      )}
+        ) : !data ? (
+          <p className="talk-note" role="status">
+            Loading comments…
+          </p>
+        ) : data.comments.length === 0 ? (
+          <p className="talk-note">No comments on this piece yet.</p>
+        ) : (
+          <ol className="talk-list">
+            {data.comments.map((c) => (
+              <li key={c.id}>
+                <p className="talk-meta">
+                  <span>{c.author}</span> <time dateTime={c.createdAt}>{timeAgo(c.createdAt)}</time>
+                </p>
+                <p className="talk-text">{c.text}</p>
+                {c.mine && (
+                  <button type="button" className="link small" onClick={() => remove(c.id)} disabled={deleting === c.id}>
+                    {deleting === c.id ? "Deleting…" : "Delete"}
+                  </button>
+                )}
+              </li>
+            ))}
+          </ol>
+        )}
+      </div>
     </aside>
   );
 }
