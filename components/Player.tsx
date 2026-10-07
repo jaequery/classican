@@ -5,6 +5,7 @@ import { createDeck, type Deck } from "@/lib/shuffle";
 import type { Track } from "@/lib/site";
 
 const VOLUME_KEY = "classican:volume";
+const MUTED_KEY = "classican:muted";
 const VOLUME_STEP = 5;
 
 type Props = {
@@ -129,16 +130,6 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
     go(before);
   }, [go]);
 
-  // Restore the visitor's volume from last time.
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem(VOLUME_KEY);
-      if (saved !== null && Number(saved) >= 0 && Number(saved) <= 100) setVolume(Number(saved));
-    } catch {
-      // Storage can be blocked; the default volume is fine.
-    }
-  }, []);
-
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -152,6 +143,22 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
   // runs after the play button and the Space hotkey, so a gesture that already
   // started the music is left alone.
   useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    // Apply saved sound settings before attempting playback, without waiting
+    // for the state updates to render. A muted visit must start muted too.
+    try {
+      const saved = localStorage.getItem(VOLUME_KEY);
+      if (saved !== null && Number(saved) >= 0 && Number(saved) <= 100) {
+        setVolume(Number(saved));
+        audio.volume = Number(saved) / 100;
+      }
+      const savedMuted = localStorage.getItem(MUTED_KEY) === "true";
+      setMuted(savedMuted);
+      audio.muted = savedMuted;
+    } catch {
+      // Storage can be blocked; keep this visit's default sound settings.
+    }
     const first = Math.floor(Math.random() * tracks.length);
     deck.current = createDeck(tracks.length, first);
     load(first);
@@ -243,22 +250,31 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
     }
   }, [next, pause, play, prev]);
 
+  const changeMute = useCallback((value: boolean) => {
+    setMuted(value);
+    try {
+      localStorage.setItem(MUTED_KEY, String(value));
+    } catch {
+      // Not saved; it still applies for this visit.
+    }
+  }, []);
+
   const changeVolume = useCallback(
     (v: number) => {
       setVolume(v);
-      if (v > 0 && muted) setMuted(false);
+      if (v > 0 && muted) changeMute(false);
       try {
         localStorage.setItem(VOLUME_KEY, String(v));
       } catch {
         // Not saved; it still applies for this visit.
       }
     },
-    [muted],
+    [changeMute, muted],
   );
 
   const toggleMute = useCallback(
-    () => (volume === 0 ? changeVolume(60) : setMuted((m) => !m)),
-    [changeVolume, volume],
+    () => (volume === 0 ? changeVolume(60) : changeMute(!muted)),
+    [changeMute, changeVolume, muted, volume],
   );
 
   // Hotkeys from anywhere on the page: Space plays and pauses, Left/Right change

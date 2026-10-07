@@ -37,6 +37,8 @@ previous) and the OS "now playing" panel work too, and the browser tab names the
 and links to the recording's Commons page.
 The volume button shows the player's current percentage, or “Muted” while muted. Up and Down adjust
 the level; on phones, use the device's volume buttons for the listening volume.
+Volume and mute are remembered between visits and applied before playback starts. Unmute or raise
+the player's volume to hear music again. If browser storage is blocked, settings last for this visit.
 Open “Keyboard shortcuts” beneath the player controls for a quick guide to all the keys.
 It starts collapsed, and opening or closing it does not start the music. While typing, keys work as
 usual; Space activates a focused control.
