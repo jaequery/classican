@@ -148,14 +148,16 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
 
   // Open on a random piece and try to play it at once. Browsers often refuse
   // until the visitor has interacted with the page; then the first click or
-  // key anywhere starts it. Listening on window runs after the play button and
-  // the Space hotkey, so a gesture that already started the music is left alone.
+  // key starts it, except when opening the keyboard guide. Listening on window
+  // runs after the play button and the Space hotkey, so a gesture that already
+  // started the music is left alone.
   useEffect(() => {
     const first = Math.floor(Math.random() * tracks.length);
     deck.current = createDeck(tracks.length, first);
     load(first);
     play();
-    const onGesture = () => {
+    const onGesture = (e: Event) => {
+      if (e.target instanceof Element && e.target.closest(".player-shortcuts")) return;
       if (blocked.current && !want.current) play();
     };
     window.addEventListener("click", onGesture);
@@ -261,7 +263,7 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
 
   // Hotkeys from anywhere on the page: Space plays and pauses, Left/Right change
   // the piece, Up/Down change the volume and M mutes. Form fields keep their own keys, and a
-  // focused button or link keeps Space for its own click.
+  // focused button, link or disclosure keeps Space for its own click.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.defaultPrevented || e.ctrlKey || e.metaKey || e.altKey) return;
@@ -269,7 +271,7 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
       if (target?.closest?.("input, select, textarea, [contenteditable]:not([contenteditable='false'])")) return;
       switch (e.key) {
         case " ":
-          if (e.repeat || target?.closest?.("button, a")) return;
+          if (e.repeat || target?.closest?.("button, a, summary")) return;
           toggle();
           break;
         case "ArrowRight":
@@ -376,6 +378,21 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
           />
         </div>
       </div>
+
+      <details className="player-shortcuts">
+        <summary>Keyboard shortcuts</summary>
+        <dl>
+          <dt><kbd>Space</kbd></dt>
+          <dd>Play / pause</dd>
+          <dt><kbd>←</kbd> / <kbd>→</kbd></dt>
+          <dd>Previous / next piece</dd>
+          <dt><kbd>↓</kbd> / <kbd>↑</kbd></dt>
+          <dd>Volume down / up</dd>
+          <dt><kbd>M</kbd></dt>
+          <dd>Mute / unmute</dd>
+        </dl>
+        <p>While typing, keys work as usual. Space activates a focused control.</p>
+      </details>
 
       <p className="visually-hidden" role="status">
         {status}
