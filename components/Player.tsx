@@ -8,6 +8,13 @@ const VOLUME_KEY = "classican:volume";
 const MUTED_KEY = "classican:muted";
 const VOLUME_STEP = 5;
 
+function formatTime(seconds: number) {
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const rest = String(seconds % 60).padStart(2, "0");
+  return hours ? `${hours}:${String(minutes).padStart(2, "0")}:${rest}` : `${minutes}:${rest}`;
+}
+
 type Props = {
   tracks: Track[];
   /** The piece now loaded; the parent keeps it so the painting and facts can follow it. */
@@ -35,6 +42,8 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
   const [unavailable, setUnavailable] = useState(false);
   const [hasPrevious, setHasPrevious] = useState(false);
   const [status, setStatus] = useState("");
+  const [elapsed, setElapsed] = useState(0);
+  const [duration, setDuration] = useState<number | null>(null);
 
   const want = useRef(false); // the visitor's intent to hear music
   const switching = useRef(false); // a track change is under way; ignore the pause it causes
@@ -64,6 +73,8 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
       const t = tracks[i];
       indexRef.current = i;
       clock.current = 0;
+      setElapsed(0);
+      setDuration(null);
       onTrackChange(i);
       setUnavailable(false);
       audio.src = audio.canPlayType("audio/mpeg") ? t.mp3 : t.ogg;
@@ -211,7 +222,15 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
     const onPlay = () => !want.current && setWant(true);
     const onTime = () => {
       clock.current = audio.currentTime;
+      setElapsed(Math.floor(audio.currentTime));
     };
+    const onDuration = () => {
+      setDuration(Number.isFinite(audio.duration) && audio.duration > 0 ? Math.floor(audio.duration) : null);
+    };
+
+    // Metadata may already be ready when these listeners attach.
+    onTime();
+    onDuration();
 
     audio.addEventListener("waiting", onWaiting);
     audio.addEventListener("playing", onPlaying);
@@ -220,7 +239,9 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
     audio.addEventListener("pause", onPause);
     audio.addEventListener("play", onPlay);
     audio.addEventListener("timeupdate", onTime);
+    audio.addEventListener("durationchange", onDuration);
     return () => {
+      audio.removeEventListener("durationchange", onDuration);
       audio.removeEventListener("timeupdate", onTime);
       audio.removeEventListener("waiting", onWaiting);
       audio.removeEventListener("playing", onPlaying);
@@ -335,6 +356,15 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
               {track.composer}
               {loading ? " · Loading" : ""}
             </span>
+            {duration !== null && (
+              <span className="playback-time">
+                <span className="visually-hidden">Elapsed </span>
+                {formatTime(elapsed)}
+                <span aria-hidden="true"> / </span>
+                <span className="visually-hidden"> of </span>
+                {formatTime(duration)}
+              </span>
+            )}
           </>
         )}
       </p>
