@@ -231,10 +231,10 @@ export function Scene({ playing, painting, facts, story, clock, factSeconds }: P
         beat = -1;
         told = Infinity;
       }
-      // Beats only move forward: the clock drops to 0 a frame before the next piece's painting arrives.
+      // Follow the clock in either direction, including a listener seeking backward.
       let reached = -1;
       if (beats) for (let i = 0; i < beats.length && beats[i].at <= (clock.current ?? 0); i++) reached = i;
-      if (reached > beat) {
+      if (reached !== beat) {
         beat = reached;
         // A fact already on screen has been read; the next one comes after the story.
         if (turn >= TEXT_FROM) fact++;

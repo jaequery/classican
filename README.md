@@ -35,6 +35,8 @@ A piece that fails to load is skipped; if every piece fails, the player says so 
 “Press play to try again.” beneath the message. Pressing play retries the recording.
 Once the recording has loaded, elapsed and total time appear beneath the composer. The readout
 follows playback, holds its place while paused, and clears when changing pieces until the new duration is known.
+Drag the progress slider beside the time to move within the piece, or focus it and use the arrow keys.
+Seeking keeps music playing or paused as it was, and story paintings follow the new position in either direction.
 Space plays and pauses from anywhere on the page, and M mutes; media keys (including
 previous) and the OS "now playing" panel work too, and the browser tab names the piece that is on. "More" on the wall label credits the performer
 and links to the recording's Commons page.
