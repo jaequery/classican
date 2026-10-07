@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { COMMENT_MAX, timeAgo, type Me, type PieceSocial } from "@/lib/social";
 import type { AuthMode } from "./AuthDialog";
 import type { SocialStatus } from "./usePieceSocial";
@@ -30,6 +30,7 @@ export function Comments({ id, open, onClose, title, me, data, status, onRetry, 
   const [posting, setPosting] = useState(false);
   const [error, setError] = useState("");
   const [deleting, setDeleting] = useState<string | null>(null);
+  const closeButton = useRef<HTMLButtonElement>(null);
   const headingId = useId();
   const fieldId = useId();
   const countId = useId();
@@ -46,9 +47,14 @@ export function Comments({ id, open, onClose, title, me, data, status, onRetry, 
 
   useEffect(() => {
     if (!open) return;
+    const opener = document.activeElement;
+    closeButton.current?.focus();
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && !document.querySelector("dialog[open]") && onClose();
     document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      if (opener instanceof HTMLElement && opener.isConnected) opener.focus();
+    };
   }, [open, onClose]);
 
   async function post(e: React.FormEvent) {
@@ -76,7 +82,7 @@ export function Comments({ id, open, onClose, title, me, data, status, onRetry, 
         <h2 id={headingId}>
           Comments <span>on {title}</span>
         </h2>
-        <button type="button" className="control" onClick={onClose} aria-label="Close comments">
+        <button ref={closeButton} type="button" className="control" onClick={onClose} aria-label="Close comments">
           <svg viewBox="0 0 20 20" aria-hidden="true">
             <path d="M5.4 4.3 10 8.9l4.6-4.6 1.1 1.1-4.6 4.6 4.6 4.6-1.1 1.1-4.6-4.6-4.6 4.6-1.1-1.1 4.6-4.6-4.6-4.6z" />
           </svg>

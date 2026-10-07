@@ -52,6 +52,8 @@ usual; Space activates a focused control.
 
 Beside next in the player are a heart and a comments button, each with its count for the piece now
 playing. The comments button opens a panel listing what listeners have said about that piece. Anyone
+using a keyboard starts on the panel's close button and can Tab through its actions. Closing the panel
+with that button or Escape returns focus to the control that opened it. Anyone
 can read likes and comments; pressing the heart, or "Sign in" in the panel, opens a dialog to sign in
 or create an account with a name, email and password. Signed in, a listener can like and unlike any
 piece, comment on it (up to 1,000 characters) and delete their own comments. Comments show the
