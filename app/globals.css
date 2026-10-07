@@ -740,11 +740,11 @@ textarea::placeholder {
   font-size: 17px;
 }
 
-/* A short word about something that didn't work, just above the player. */
+/* Keep feedback above the player as titles wrap or the keyboard guide opens. */
 .notice {
   position: fixed;
   left: 50%;
-  bottom: 220px;
+  bottom: calc(var(--player-bottom) + var(--player-height, 204px) + 12px);
   transform: translateX(-50%);
   max-width: calc(100% - 32px);
   padding: 8px 14px;
@@ -752,11 +752,6 @@ textarea::placeholder {
   border-left: 3px solid var(--muted);
   border-radius: 4px;
   font-size: 17px;
-}
-@media (max-width: 720px), (max-height: 500px) {
-  .notice {
-    bottom: calc(160px + env(safe-area-inset-bottom));
-  }
 }
 
 /* A maker's mark tucked flush into the bottom-right corner like a printer's colophon:
