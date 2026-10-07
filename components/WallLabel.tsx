@@ -14,36 +14,38 @@ export function WallLabel({ track, composer }: { track: Track; composer: Compose
   const { details } = track;
   return (
     <aside className="wall" aria-label="About this piece">
-      <p className="wall-who">
-        {track.composer}
-        <span>
-          {composer.origin}, {composer.born}–{composer.died}
-        </span>
-      </p>
-      <p className="wall-what">
-        {track.title}, <span>{details.year}</span>
-      </p>
-      <p className="wall-meta">
-        {details.instruments} · {details.place}
-      </p>
-      <div id={moreId} className={open ? "wall-more open" : "wall-more"} inert={!open}>
-        <div>
-          <p>
-            <span className="wall-key">In its day</span>
-            {details.reception}
-          </p>
-          <p>
-            <span className="wall-key">The composer</span>
-            Aged {ageAtWriting(details, composer)} when writing it, and born in {composer.birthplace}. {composer.money}{" "}
-            {composer.also}
-          </p>
-          <p>
-            <span className="wall-key">The recording</span>
-            {track.performer}, in the public domain.{" "}
-            <a href={track.source} target="_blank" rel="noreferrer">
-              Source on Wikimedia Commons
-            </a>
-          </p>
+      <div className="wall-body">
+        <p className="wall-who">
+          {track.composer}
+          <span>
+            {composer.origin}, {composer.born}–{composer.died}
+          </span>
+        </p>
+        <p className="wall-what">
+          {track.title}, <span>{details.year}</span>
+        </p>
+        <p className="wall-meta">
+          {details.instruments} · {details.place}
+        </p>
+        <div id={moreId} className={open ? "wall-more open" : "wall-more"} inert={!open}>
+          <div>
+            <p>
+              <span className="wall-key">In its day</span>
+              {details.reception}
+            </p>
+            <p>
+              <span className="wall-key">The composer</span>
+              Aged {ageAtWriting(details, composer)} when writing it, and born in {composer.birthplace}. {composer.money}{" "}
+              {composer.also}
+            </p>
+            <p>
+              <span className="wall-key">The recording</span>
+              {track.performer}, in the public domain.{" "}
+              <a href={track.source} target="_blank" rel="noreferrer">
+                Source on Wikimedia Commons
+              </a>
+            </p>
+          </div>
         </div>
       </div>
       <button type="button" className="wall-toggle" aria-expanded={open} aria-controls={moreId} onClick={() => setOpen((o) => !o)}>

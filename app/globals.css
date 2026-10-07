@@ -89,15 +89,24 @@ body {
 /* The wall label: a gallery caption beside the painting, top right. */
 .wall {
   position: fixed;
+  display: flex;
+  flex-direction: column;
   right: 24px;
   top: calc(24px + var(--update-bar));
   width: min(380px, calc(100% - 48px));
   max-height: calc(100% - 48px - var(--update-bar));
-  overflow-y: auto;
+  overflow: hidden;
   padding: 18px 20px 6px;
   background: var(--surface);
   border-radius: 4px;
   box-shadow: 0 10px 32px rgb(0 0 0 / 0.45);
+}
+/* Keep the disclosure in view while the piece details scroll. */
+.wall-body {
+  min-height: 0;
+  overflow-y: auto;
+  margin: 0 -4px;
+  padding: 0 4px;
 }
 .wall-who {
   font-size: 19px;
@@ -163,6 +172,8 @@ body {
   text-transform: uppercase;
 }
 .wall-toggle {
+  flex-shrink: 0;
+  align-self: flex-start;
   height: 44px;
   margin: 2px 0 0 -12px;
   padding: 0 12px;

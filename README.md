@@ -40,7 +40,8 @@ Seeking keeps music playing or paused as it was, and story paintings follow the 
 Space plays and pauses from anywhere on the page, and M mutes; media keys (including
 previous) and the OS "now playing" panel work too, and the browser tab names the piece that is on.
 “Piece & recording details” on the wall label opens the piece's background, composer biography,
-performer credit and recording's Commons page. “Hide details” closes it again.
+performer credit and recording's Commons page. “Hide details” closes it again and stays visible
+while you scroll through the details on a smaller screen.
 The volume button shows the player's current percentage, or “Muted” while muted. Up and Down adjust
 the level; on phones, use the device's volume buttons for the listening volume.
 Volume and mute are remembered between visits and applied before playback starts. Unmute or raise
