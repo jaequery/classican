@@ -349,6 +349,16 @@ body {
   background: transparent;
   cursor: pointer;
 }
+.volume .control {
+  grid-template-rows: 20px 12px;
+  align-content: center;
+  row-gap: 2px;
+}
+.volume-level {
+  color: var(--muted);
+  font: 600 12px/1 var(--font);
+  font-variant-numeric: tabular-nums;
+}
 
 /* On small screens the player hugs the bottom edge and keeps to one row of controls:
    phones set loudness with their own buttons, so only mute stays. */

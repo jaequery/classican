@@ -360,6 +360,9 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
                 <path d="M13.2 6.6a4.8 4.8 0 0 1 0 6.8l-1.1-1.1a3.2 3.2 0 0 0 0-4.6zM15.3 4.5a7.8 7.8 0 0 1 0 11l-1.1-1.1a6.2 6.2 0 0 0 0-8.8z" />
               )}
             </svg>
+            <span className="volume-level" aria-hidden="true">
+              {muted ? "Muted" : `${volume}%`}
+            </span>
           </button>
           <input
             type="range"
