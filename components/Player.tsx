@@ -32,6 +32,7 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
   const [volume, setVolume] = useState(80);
   const [muted, setMuted] = useState(false);
   const [unavailable, setUnavailable] = useState(false);
+  const [hasPrevious, setHasPrevious] = useState(false);
   const [status, setStatus] = useState("");
 
   const want = useRef(false); // the visitor's intent to hear music
@@ -116,11 +117,13 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
   const toggle = useCallback(() => (want.current ? pause() : play()), [pause, play]);
   const next = useCallback(() => {
     history.current.push(indexRef.current);
+    setHasPrevious(true);
     go(deck.current!.draw(indexRef.current));
   }, [go]);
   const prev = useCallback(() => {
     const before = history.current.pop();
-    if (before === undefined) return go(deck.current!.draw(indexRef.current));
+    if (before === undefined) return;
+    setHasPrevious(history.current.length > 0);
     // Stepping back keeps the piece we left at the top of the deck, so "next" returns to it.
     deck.current!.putBack(indexRef.current);
     go(before);
@@ -319,6 +322,11 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
       </p>
 
       <div className="controls">
+        <button type="button" className="control" onClick={prev} aria-label="Previous piece" disabled={!hasPrevious}>
+          <svg viewBox="0 0 20 20" aria-hidden="true">
+            <path d="M4 4h2v12H4zM16 4v12l-8.5-6z" />
+          </svg>
+        </button>
         <button type="button" className="control play" onClick={toggle} aria-label={playing ? "Pause" : "Play"}>
           {playing ? (
             <svg viewBox="0 0 20 20" aria-hidden="true">
