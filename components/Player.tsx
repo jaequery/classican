@@ -303,7 +303,10 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
     <section className="player" aria-label="Music player">
       <p className="now">
         {unavailable ? (
-          <span className="title">Music is unavailable right now.</span>
+          <>
+            <span className="title">Music is unavailable right now.</span>
+            <span className="composer">Press play to try again.</span>
+          </>
         ) : (
           <>
             <span className="title">{track.title}</span>
