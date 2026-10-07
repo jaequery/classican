@@ -34,6 +34,7 @@ type Props = {
  * to load is skipped, and if every piece fails the player says so quietly.
  */
 export function Player({ tracks, index, onPlayingChange, onTrackChange, actions, clock }: Props) {
+  const playerRef = useRef<HTMLElement>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
   const [playing, setPlaying] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -54,6 +55,21 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
   const blocked = useRef(false); // the browser refused to autoplay; the first gesture starts the music
 
   const track = tracks[index];
+
+  // Comments leave room for the player as titles wrap or the keyboard guide opens.
+  useEffect(() => {
+    const player = playerRef.current;
+    if (!player) return;
+    const root = document.documentElement;
+    const observer = new ResizeObserver(() => {
+      root.style.setProperty("--player-height", `${player.getBoundingClientRect().height}px`);
+    });
+    observer.observe(player);
+    return () => {
+      observer.disconnect();
+      root.style.removeProperty("--player-height");
+    };
+  }, []);
 
   const setWant = useCallback(
     (on: boolean) => {
@@ -351,7 +367,7 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
   const silent = muted || volume === 0;
 
   return (
-    <section className="player" aria-label="Music player">
+    <section ref={playerRef} className="player" aria-label="Music player">
       <p className="now">
         {unavailable ? (
           <>

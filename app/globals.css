@@ -9,6 +9,7 @@
   --font: var(--font-text), Georgia, "Times New Roman", serif;
   --font-title: var(--font-display), Georgia, "Times New Roman", serif;
   --update-bar: 0px; /* The update bar's height while it shows; UpdateBar sets it. */
+  --player-bottom: 24px;
   color-scheme: dark;
 }
 
@@ -245,7 +246,7 @@ body {
 .player {
   position: fixed;
   left: 50%;
-  bottom: 24px;
+  bottom: var(--player-bottom);
   transform: translateX(-50%);
   width: min(560px, calc(100% - 32px));
   max-height: calc(100% - 48px);
@@ -424,8 +425,10 @@ body {
 /* On small screens the player hugs the bottom edge and keeps to one row of controls:
    phones set loudness with their own buttons, so only mute stays. */
 @media (max-width: 720px), (max-height: 500px) {
+  :root {
+    --player-bottom: calc(12px + env(safe-area-inset-bottom));
+  }
   .player {
-    bottom: calc(12px + env(safe-area-inset-bottom));
     width: min(560px, calc(100% - 24px));
     padding: 10px 8px 4px 16px;
   }
@@ -493,9 +496,9 @@ body {
   display: none;
 }
 /* Where the panel could reach the player, it stops above it. */
-@media (max-width: 1280px) {
+@media (max-width: 1368px) {
   .talk {
-    max-height: calc(100% - 264px - var(--update-bar));
+    max-height: calc(100% - 36px - var(--update-bar) - var(--player-height, 204px) - var(--player-bottom));
   }
 }
 @media (max-width: 720px) {
@@ -504,7 +507,7 @@ body {
     right: 12px;
     top: calc(12px + max(env(safe-area-inset-top), var(--update-bar)));
     width: auto;
-    max-height: calc(100% - 180px - var(--update-bar));
+    max-height: calc(100% - 24px - max(env(safe-area-inset-top), var(--update-bar)) - var(--player-height, 144px) - var(--player-bottom));
     padding: 12px 16px 0;
   }
 }
