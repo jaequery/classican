@@ -32,8 +32,11 @@ export function Comments({ id, open, onClose, title, me, data, status, onRetry, 
   const [deleting, setDeleting] = useState<string | null>(null);
   const headingId = useId();
   const fieldId = useId();
-  const blank = !text.trim();
-  const over = text.trim().length > COMMENT_MAX;
+  const countId = useId();
+  const length = text.trim().length;
+  const blank = length === 0;
+  const excess = length - COMMENT_MAX;
+  const over = excess > 0;
 
   // A draft and its error belong to the piece they were written for.
   useEffect(() => {
@@ -92,10 +95,13 @@ export function Comments({ id, open, onClose, title, me, data, status, onRetry, 
             placeholder="What do you hear in it?"
             rows={3}
             aria-invalid={over || undefined}
+            aria-describedby={countId}
           />
           <div className="talk-form-row">
-            <span className={over ? "talk-count over" : "talk-count"} aria-live="polite">
-              {text.trim().length > COMMENT_MAX - 100 ? `${text.trim().length} / ${COMMENT_MAX}` : ""}
+            <span id={countId} className={over ? "talk-count over" : "talk-count"} aria-live="polite" aria-atomic="true">
+              {over
+                ? `Remove ${excess} ${excess === 1 ? "character" : "characters"} to post.`
+                : `${length} / ${COMMENT_MAX} characters`}
             </span>
             <button type="submit" className="button primary" disabled={blank || over || posting}>
               {posting ? "Posting…" : "Post"}
