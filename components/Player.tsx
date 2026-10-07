@@ -354,7 +354,7 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
             <span className="title">{track.title}</span>
             <span className="composer">
               {track.composer}
-              {loading ? " · Loading" : ""}
+              {loading ? " · Loading" : !playing ? " · Paused" : ""}
             </span>
             {duration !== null && (
               <span className="playback-time">
