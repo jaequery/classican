@@ -30,6 +30,7 @@ next (or the end of a piece) picks another at random. Previous, or Left, goes ba
 before; it is unavailable until there is a previous piece. Next then returns to the piece you left.
 Going back keeps music playing or paused as it was. Most
 browsers block autoplay on a first visit, so then the visitor's first click or key starts the music.
+The composer line says “Paused” when music is paused, including when the browser blocks autoplay.
 A piece that fails to load is skipped; if every piece fails, the player says so and shows
 “Press play to try again.” beneath the message. Pressing play retries the recording.
 Once the recording has loaded, elapsed and total time appear beneath the composer. The readout
