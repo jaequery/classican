@@ -38,8 +38,9 @@ follows playback, holds its place while paused, and clears when changing pieces 
 Drag the progress slider beside the time to move within the piece, or focus it and use the arrow keys.
 Seeking keeps music playing or paused as it was, and story paintings follow the new position in either direction.
 Space plays and pauses from anywhere on the page, and M mutes; media keys (including
-previous) and the OS "now playing" panel work too, and the browser tab names the piece that is on. "More" on the wall label credits the performer
-and links to the recording's Commons page.
+previous) and the OS "now playing" panel work too, and the browser tab names the piece that is on.
+“Piece & recording details” on the wall label opens the piece's background, composer biography,
+performer credit and recording's Commons page. “Hide details” closes it again.
 The volume button shows the player's current percentage, or “Muted” while muted. Up and Down adjust
 the level; on phones, use the device's volume buttons for the listening volume.
 Volume and mute are remembered between visits and applied before playback starts. Unmute or raise

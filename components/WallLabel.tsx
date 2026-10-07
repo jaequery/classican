@@ -5,8 +5,8 @@ import { ageAtWriting, type Composer, type Track } from "@/lib/site";
 
 /**
  * A gallery wall label beside the painting: who wrote the piece, when, where
- * and for what. "More" opens how it was received, a short biography and who
- * made the recording.
+ * and for what. "Piece & recording details" opens how it was received, a short
+ * biography and who made the recording.
  */
 export function WallLabel({ track, composer }: { track: Track; composer: Composer }) {
   const [open, setOpen] = useState(false);
@@ -47,7 +47,7 @@ export function WallLabel({ track, composer }: { track: Track; composer: Compose
         </div>
       </div>
       <button type="button" className="wall-toggle" aria-expanded={open} aria-controls={moreId} onClick={() => setOpen((o) => !o)}>
-        {open ? "Less" : "More"}
+        {open ? "Hide details" : "Piece & recording details"}
       </button>
     </aside>
   );
