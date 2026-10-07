@@ -127,6 +127,15 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
   }, [setWant]);
 
   const toggle = useCallback(() => (want.current ? pause() : play()), [pause, play]);
+  const seek = (seconds: number) => {
+    const audio = audioRef.current;
+    if (!audio || !Number.isFinite(audio.duration) || audio.duration <= 0) return;
+    const position = Math.max(0, Math.min(seconds, audio.duration));
+    audio.currentTime = position;
+    clock.current = position;
+    setElapsed(Math.floor(position));
+  };
+
   const next = useCallback(() => {
     history.current.push(indexRef.current);
     setHasPrevious(true);
@@ -356,13 +365,26 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
               {track.composer}
               {loading ? " · Loading" : !playing ? " · Paused" : ""}
             </span>
-            {duration !== null && (
+            {duration !== null && duration > 0 && (
               <span className="playback-time">
-                <span className="visually-hidden">Elapsed </span>
-                {formatTime(elapsed)}
-                <span aria-hidden="true"> / </span>
-                <span className="visually-hidden"> of </span>
-                {formatTime(duration)}
+                <input
+                  className="playback-progress"
+                  type="range"
+                  min={0}
+                  max={duration}
+                  step={1}
+                  value={Math.min(elapsed, duration)}
+                  onChange={(e) => seek(Number(e.target.value))}
+                  aria-label="Playback position"
+                  aria-valuetext={`${formatTime(elapsed)} of ${formatTime(duration)}`}
+                />
+                <span>
+                  <span className="visually-hidden">Elapsed </span>
+                  {formatTime(elapsed)}
+                  <span aria-hidden="true"> / </span>
+                  <span className="visually-hidden"> of </span>
+                  {formatTime(duration)}
+                </span>
               </span>
             )}
           </>
@@ -437,7 +459,7 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
           <dt><kbd>M</kbd></dt>
           <dd>Mute / unmute</dd>
         </dl>
-        <p>While typing, keys work as usual. Space activates a focused control.</p>
+        <p>While typing, keys work as usual. Space activates a focused control. Arrow keys seek when the progress slider is focused.</p>
       </details>
 
       <p className="visually-hidden" role="status">

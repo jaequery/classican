@@ -269,9 +269,21 @@ body {
 }
 
 .playback-time {
+  display: flex;
+  align-items: center;
+  gap: 12px;
   color: var(--muted);
   font-size: 14px;
   font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.playback-progress {
+  flex: 1;
+  min-width: 0;
+  height: 24px;
+  margin: 0;
+  accent-color: var(--accent);
+  cursor: pointer;
 }
 
 .controls {
