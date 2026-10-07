@@ -360,6 +360,38 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
+.player-shortcuts {
+  margin-right: 8px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.5;
+}
+.player-shortcuts summary {
+  min-height: 44px;
+  padding: 10px 0;
+  cursor: pointer;
+}
+.player-shortcuts summary:hover {
+  color: var(--ink);
+}
+.player-shortcuts dl {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  align-items: baseline;
+  gap: 6px 16px;
+  margin: 0 0 10px;
+}
+.player-shortcuts dd {
+  margin: 0;
+}
+.player-shortcuts kbd {
+  color: var(--ink);
+  font: 600 14px var(--font);
+}
+.player-shortcuts p {
+  margin: 0 0 10px;
+}
+
 /* On small screens the player hugs the bottom edge and keeps to one row of controls:
    phones set loudness with their own buttons, so only mute stays. */
 @media (max-width: 720px), (max-height: 500px) {
