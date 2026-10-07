@@ -465,6 +465,8 @@ body {
 /* Comments: a panel on the left, clear of the wall label and the player. */
 .talk {
   position: fixed;
+  display: flex;
+  flex-direction: column;
   left: 24px;
   top: calc(24px + var(--update-bar));
   z-index: 1;
@@ -474,7 +476,7 @@ body {
   background: var(--surface);
   border-radius: 4px;
   box-shadow: 0 10px 32px rgb(0 0 0 / 0.45);
-  overflow-y: auto;
+  overflow: hidden;
 }
 .talk[hidden] {
   display: none;
@@ -497,10 +499,19 @@ body {
 }
 .talk-head {
   display: flex;
+  flex-shrink: 0;
   align-items: flex-start;
   justify-content: space-between;
   gap: 8px;
   margin-right: -12px;
+}
+/* Keep the title and close button in view while the thread scrolls. */
+.talk-body {
+  min-height: 0;
+  overflow-y: auto;
+  /* Leave room for focus outlines without shifting the content. */
+  margin: 0 -4px;
+  padding: 0 4px;
 }
 .talk-head h2 {
   padding-top: 6px;

@@ -51,7 +51,8 @@ usual; Space activates a focused control.
 ## Accounts, likes and comments
 
 Beside next in the player are a heart and a comments button, each with its count for the piece now
-playing. The comments button opens a panel listing what listeners have said about that piece. Anyone
+playing. The comments button opens a panel listing what listeners have said about that piece. The
+piece title and close button stay visible while you scroll through a long thread. Anyone
 using a keyboard starts on the panel's close button and can Tab through its actions. Closing the panel
 with that button or Escape returns focus to the control that opened it. Anyone
 can read likes and comments; pressing the heart, or "Sign in" in the panel, opens a dialog to sign in
