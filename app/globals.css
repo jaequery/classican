@@ -183,7 +183,7 @@ body {
 }
 
 /* On narrow screens the label spans the top, leaving the bottom to the player.
-   It stays small so the painting shows between them; "More" scrolls inside it. */
+   It stays small so the painting shows between them; expanded details scroll inside it. */
 @media (max-width: 720px) {
   .wall {
     left: 12px;
