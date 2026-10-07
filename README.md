@@ -35,6 +35,8 @@ A piece that fails to load is skipped; if every piece fails, the player says so 
 Space plays and pauses from anywhere on the page, and M mutes; media keys (including
 previous) and the OS "now playing" panel work too, and the browser tab names the piece that is on. "More" on the wall label credits the performer
 and links to the recording's Commons page.
+The volume button shows the player's current percentage, or “Muted” while muted. Up and Down adjust
+the level; on phones, use the device's volume buttons for the listening volume.
 
 ## Accounts, likes and comments
 
