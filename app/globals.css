@@ -295,8 +295,12 @@ body {
   height: 20px;
   fill: currentColor;
 }
-.control:hover {
+.control:hover:not(:disabled) {
   opacity: 0.72;
+}
+.control:disabled {
+  opacity: 0.35;
+  cursor: default;
 }
 
 /* Like and comments: an icon with its count beside it. */
@@ -374,6 +378,16 @@ body {
 @media (max-width: 720px) {
   .controls {
     flex-wrap: nowrap;
+  }
+  /* Counts sit below their icons so navigation keeps its full tap targets. */
+  .control.count {
+    flex-direction: column;
+    justify-content: center;
+    gap: 2px;
+    width: 44px;
+    padding: 0;
+    font-size: 12px;
+    line-height: 1;
   }
   .volume {
     flex: 0 0 auto;

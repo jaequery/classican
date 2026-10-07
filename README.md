@@ -1,7 +1,7 @@
 # classican
 
 One screen of public-domain classical music for studying and deep work. The only interface is a
-small player at bottom centre: play/pause, next and volume. Behind it is an original pixel
+small player at bottom centre: previous, play/pause, next and volume. Behind it is an original pixel
 painting of the piece that is playing: Greek dancers for Satie's Gymnopédie, Verlaine's moonlit park
 for Clair de lune, Bach's two-keyboard harpsichord, and so on. While music plays, a short fact about
 the piece's history comes every 40 seconds or so: the painting dims gently around the thing the fact
@@ -26,7 +26,9 @@ npm run build && npm start
 ```
 
 Pieces play in shuffle: the page opens on a random piece and tries to play it straight away, and
-next (or the end of a piece) picks another at random; Left goes back to the piece before. Most
+next (or the end of a piece) picks another at random. Previous, or Left, goes back to the piece
+before; it is unavailable until there is a previous piece. Next then returns to the piece you left.
+Going back keeps music playing or paused as it was. Most
 browsers block autoplay on a first visit, so then the visitor's first click or key starts the music.
 A piece that fails to load is skipped; if every piece fails, the player says so and shows
 “Press play to try again.” beneath the message. Pressing play retries the recording.
