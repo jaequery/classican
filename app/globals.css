@@ -377,6 +377,11 @@ body {
   font: inherit;
   opacity: 0.7;
 }
+/* The last control sits at the right edge on touch phones. Keep its hint inside. */
+.volume .control-hint {
+  left: auto;
+  right: 0;
+}
 .controls:not([data-hint-dismissed]) .control:focus-visible .control-hint {
   visibility: visible;
 }
