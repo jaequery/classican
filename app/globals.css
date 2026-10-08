@@ -735,6 +735,25 @@ textarea::placeholder {
 .auth::backdrop {
   background: rgb(0 0 0 / 0.6);
 }
+/* Keep the heading and actions in view while short windows scroll the fields. */
+.auth[open],
+.auth form {
+  display: flex;
+  flex-direction: column;
+}
+.auth form {
+  min-height: 0;
+}
+.auth form > :not(.auth-fields) {
+  flex-shrink: 0;
+}
+.auth-fields {
+  min-height: 0;
+  overflow-y: auto;
+  /* Leave room for field focus outlines at the scroll area's edges. */
+  margin: 0 -4px -4px;
+  padding: 0 4px 4px;
+}
 .auth h2 {
   font-family: var(--font-title);
   font-size: 26px;

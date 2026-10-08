@@ -58,63 +58,67 @@ export function AuthDialog({ mode, onModeChange, onSignedIn }: Props) {
       <form onSubmit={submit}>
         <h2 id={titleId}>{signup ? "Create an account" : "Sign in"}</h2>
         <p className="auth-why">{signup ? "Like pieces and leave comments on them." : "Welcome back."}</p>
-        {signup && (
+        <div className="auth-fields">
+          {signup && (
+            <label>
+              Name <span>shown beside your comments</span>
+              <input name="name" autoComplete="nickname" required maxLength={40} aria-describedby={error ? errorId : undefined} />
+            </label>
+          )}
           <label>
-            Name <span>shown beside your comments</span>
-            <input name="name" autoComplete="nickname" required maxLength={40} aria-describedby={error ? errorId : undefined} />
+            Email
+            <input name="email" type="email" autoComplete="email" required aria-describedby={error ? errorId : undefined} />
           </label>
-        )}
-        <label>
-          Email
-          <input name="email" type="email" autoComplete="email" required aria-describedby={error ? errorId : undefined} />
-        </label>
-        <label htmlFor={passwordId}>
-          Password {signup && <span>at least 8 characters</span>}
-        </label>
-        <div className="auth-password">
-          <input
-            id={passwordId}
-            name="password"
-            type={passwordVisible ? "text" : "password"}
-            autoComplete={signup ? "new-password" : "current-password"}
-            required
-            minLength={signup ? 8 : undefined}
-            maxLength={200}
-            onKeyDown={(e) => setCapsLock(e.getModifierState("CapsLock"))}
-            onKeyUp={(e) => setCapsLock(e.getModifierState("CapsLock"))}
-            onBlur={() => setCapsLock(false)}
-            aria-describedby={[capsLock && capsLockId, error && errorId].filter(Boolean).join(" ") || undefined}
-          />
-          <button
-            type="button"
-            className="button auth-password-toggle"
-            aria-label={passwordVisible ? "Hide password" : "Show password"}
-            aria-controls={passwordId}
-            onClick={() => setPasswordVisible((visible) => !visible)}
-          >
-            {passwordVisible ? "Hide" : "Show"}
-          </button>
+          <label htmlFor={passwordId}>
+            Password {signup && <span>at least 8 characters</span>}
+          </label>
+          <div className="auth-password">
+            <input
+              id={passwordId}
+              name="password"
+              type={passwordVisible ? "text" : "password"}
+              autoComplete={signup ? "new-password" : "current-password"}
+              required
+              minLength={signup ? 8 : undefined}
+              maxLength={200}
+              onKeyDown={(e) => setCapsLock(e.getModifierState("CapsLock"))}
+              onKeyUp={(e) => setCapsLock(e.getModifierState("CapsLock"))}
+              onBlur={() => setCapsLock(false)}
+              aria-describedby={[capsLock && capsLockId, error && errorId].filter(Boolean).join(" ") || undefined}
+            />
+            <button
+              type="button"
+              className="button auth-password-toggle"
+              aria-label={passwordVisible ? "Hide password" : "Show password"}
+              aria-controls={passwordId}
+              onClick={() => setPasswordVisible((visible) => !visible)}
+            >
+              {passwordVisible ? "Hide" : "Show"}
+            </button>
+          </div>
+          <p id={capsLockId} className="auth-caps-lock" role="status">
+            {capsLock ? "Caps Lock is on." : ""}
+          </p>
+          <p id={errorId} className="auth-error" role="alert">
+            {error}
+          </p>
         </div>
-        <p id={capsLockId} className="auth-caps-lock" role="status">
-          {capsLock ? "Caps Lock is on." : ""}
-        </p>
-        <p id={errorId} className="auth-error" role="alert">
-          {error}
-        </p>
-        <div className="auth-actions">
-          <button type="submit" className="button primary" disabled={busy}>
-            {busy ? (signup ? "Creating account…" : "Signing in…") : signup ? "Create account" : "Sign in"}
-          </button>
-          <button type="button" className="button" onClick={() => onModeChange(null)}>
-            Cancel
-          </button>
+        <div className="auth-footer">
+          <div className="auth-actions">
+            <button type="submit" className="button primary" disabled={busy}>
+              {busy ? (signup ? "Creating account…" : "Signing in…") : signup ? "Create account" : "Sign in"}
+            </button>
+            <button type="button" className="button" onClick={() => onModeChange(null)}>
+              Cancel
+            </button>
+          </div>
+          <p className="auth-switch">
+            {signup ? "Already have an account?" : "New here?"}{" "}
+            <button type="button" className="link" onClick={() => onModeChange(signup ? "signin" : "signup")}>
+              {signup ? "Sign in" : "Create an account"}
+            </button>
+          </p>
         </div>
-        <p className="auth-switch">
-          {signup ? "Already have an account?" : "New here?"}{" "}
-          <button type="button" className="link" onClick={() => onModeChange(signup ? "signin" : "signup")}>
-            {signup ? "Sign in" : "Create an account"}
-          </button>
-        </p>
       </form>
     </dialog>
   );
