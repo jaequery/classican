@@ -37,6 +37,7 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
   const playerRef = useRef<HTMLElement>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
   const [playing, setPlaying] = useState(false);
+  const [hasPlayed, setHasPlayed] = useState(false);
   const [loading, setLoading] = useState(false);
   const [volume, setVolume] = useState(80);
   const [muted, setMuted] = useState(false);
@@ -218,6 +219,7 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
     if (!audio) return;
     const onWaiting = () => want.current && setLoading(true);
     const onPlaying = () => {
+      setHasPlayed(true);
       blocked.current = false;
       failures.current = 0;
       switching.current = false;
@@ -379,7 +381,7 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
             <span className="title">{track.title}</span>
             <span className="composer">
               {track.composer}
-              {loading ? " · Loading" : !playing ? " · Paused" : ""}
+              {loading ? " · Loading" : !playing ? (hasPlayed ? " · Paused" : " · Press play to listen") : ""}
               {silent ? " · Muted" : ""}
             </span>
             {duration !== null && duration > 0 && (
