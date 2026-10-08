@@ -37,6 +37,7 @@ export function Comments({ id, open, onClose, title, me, data, status, onRetry, 
   const headingId = useId();
   const fieldId = useId();
   const countId = useId();
+  const shortcutId = useId();
   const length = text.trim().length;
   const blank = length === 0;
   const excess = length - COMMENT_MAX;
@@ -116,17 +117,26 @@ export function Comments({ id, open, onClose, title, me, data, status, onRetry, 
               id={fieldId}
               value={text}
               onChange={(e) => setText(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key !== "Enter" || !(e.ctrlKey || e.metaKey) || e.repeat || e.nativeEvent.isComposing) return;
+                e.preventDefault();
+                e.currentTarget.form?.requestSubmit();
+              }}
               placeholder="What do you hear in it?"
               rows={3}
               aria-invalid={over || undefined}
-              aria-describedby={countId}
+              aria-describedby={`${countId} ${shortcutId}`}
+              aria-keyshortcuts="Control+Enter Meta+Enter"
             />
             <div className="talk-form-row">
-              <span id={countId} className={over ? "talk-count over" : "talk-count"} aria-live="polite" aria-atomic="true">
-                {over
-                  ? `Remove ${excess} ${excess === 1 ? "character" : "characters"} to post.`
-                  : `${length} / ${COMMENT_MAX} characters`}
-              </span>
+              <div>
+                <span id={countId} className={over ? "talk-count over" : "talk-count"} aria-live="polite" aria-atomic="true">
+                  {over
+                    ? `Remove ${excess} ${excess === 1 ? "character" : "characters"} to post.`
+                    : `${length} / ${COMMENT_MAX} characters`}
+                </span>
+                <span id={shortcutId} className="talk-shortcut">Ctrl/⌘ + Enter to post</span>
+              </div>
               <button type="submit" className="button primary" disabled={blank || over || posting}>
                 {posting ? "Posting…" : "Post"}
               </button>
