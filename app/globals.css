@@ -914,7 +914,7 @@ textarea::placeholder {
 }
 
 /* The update bar: a thin strip across the very top, like the running head of a printed
-   programme. The announcement wraps when needed so its full message stays readable. */
+   programme. The message wraps when needed so the whole update stays readable. */
 .update {
   position: fixed;
   left: 0;
@@ -996,7 +996,6 @@ textarea::placeholder {
   .update-text {
     flex: 1 1 100%;
     order: 1;
-    white-space: normal;
   }
   .update-date::before {
     display: none;

@@ -11,7 +11,7 @@ peasant wedding or the nymphs dancing by moonlight, the painting turns to that s
 marked "The story" says what the music is depicting.
 Listeners can make an account to like pieces and leave comments on them; everyone else can read them.
 A thin bar along the top says what changed on the site lately, marked "New" and dated; × dismisses
-it until the next update. The message wraps in narrow windows so the whole update stays readable.
+it until the next update. Its message wraps in narrower windows so the whole update stays readable.
 No search, no other pages.
 
 ## Run
