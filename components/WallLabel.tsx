@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useId, useRef, useState } from "react";
 import { ageAtWriting, type Composer, type Track } from "@/lib/site";
 
 /**
@@ -10,10 +10,22 @@ import { ageAtWriting, type Composer, type Track } from "@/lib/site";
  */
 export function WallLabel({ track, composer }: { track: Track; composer: Composer }) {
   const [open, setOpen] = useState(false);
+  const toggleRef = useRef<HTMLButtonElement>(null);
   const moreId = useId();
   const { details } = track;
   return (
-    <aside className="wall" aria-label="About this piece">
+    <aside
+      className="wall"
+      aria-label="About this piece"
+      onKeyDownCapture={(e) => {
+        if (e.key !== "Escape" || !open) return;
+        e.preventDefault();
+        // Dismiss these details without also closing an open comments panel.
+        e.stopPropagation();
+        toggleRef.current?.focus();
+        setOpen(false);
+      }}
+    >
       <div className="wall-body">
         <p className="wall-who">
           {track.composer}
@@ -48,7 +60,7 @@ export function WallLabel({ track, composer }: { track: Track; composer: Compose
           </div>
         </div>
       </div>
-      <button type="button" className="wall-toggle" aria-expanded={open} aria-controls={moreId} onClick={() => setOpen((o) => !o)}>
+      <button ref={toggleRef} type="button" className="wall-toggle" aria-expanded={open} aria-controls={moreId} onClick={() => setOpen((o) => !o)}>
         {open ? "Hide details" : "Piece & recording details"}
       </button>
     </aside>
