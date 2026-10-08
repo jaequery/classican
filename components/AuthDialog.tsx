@@ -19,9 +19,11 @@ export function AuthDialog({ mode, onModeChange, onSignedIn }: Props) {
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const [capsLock, setCapsLock] = useState(false);
   const titleId = useId();
   const errorId = useId();
   const passwordId = useId();
+  const capsLockId = useId();
   const signup = mode === "signup";
 
   useEffect(() => {
@@ -31,6 +33,7 @@ export function AuthDialog({ mode, onModeChange, onSignedIn }: Props) {
     if (!mode && dialog.open) dialog.close();
     setError("");
     setPasswordVisible(false);
+    setCapsLock(false);
   }, [mode]);
 
   async function submit(e: React.FormEvent<HTMLFormElement>) {
@@ -77,7 +80,10 @@ export function AuthDialog({ mode, onModeChange, onSignedIn }: Props) {
             required
             minLength={signup ? 8 : undefined}
             maxLength={200}
-            aria-describedby={error ? errorId : undefined}
+            onKeyDown={(e) => setCapsLock(e.getModifierState("CapsLock"))}
+            onKeyUp={(e) => setCapsLock(e.getModifierState("CapsLock"))}
+            onBlur={() => setCapsLock(false)}
+            aria-describedby={[capsLock && capsLockId, error && errorId].filter(Boolean).join(" ") || undefined}
           />
           <button
             type="button"
@@ -89,6 +95,9 @@ export function AuthDialog({ mode, onModeChange, onSignedIn }: Props) {
             {passwordVisible ? "Hide" : "Show"}
           </button>
         </div>
+        <p id={capsLockId} className="auth-caps-lock" role="status">
+          {capsLock ? "Caps Lock is on." : ""}
+        </p>
         <p id={errorId} className="auth-error" role="alert">
           {error}
         </p>

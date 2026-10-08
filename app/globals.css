@@ -760,6 +760,11 @@ textarea::placeholder {
   min-width: 72px;
   padding: 0 12px;
 }
+.auth-caps-lock:not(:empty) {
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 15px;
+}
 .auth-error:not(:empty) {
   margin-top: 14px;
   overflow-wrap: anywhere;

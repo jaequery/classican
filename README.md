@@ -79,6 +79,8 @@ If a draft is too long, it tells you how many characters to remove before you ca
 
 Use Show beside the password field to check what you typed, and Hide to mask it again.
 Passwords start hidden when opening the dialog or switching between sign-in and account creation.
+While typing a password, a quiet hint appears if the keyboard reports that Caps Lock is on.
+It clears when Caps Lock is off or you leave the field.
 
 Everything listeners make is kept in Postgres on Neon, connected through Vercel's Neon integration,
 which sets `DATABASE_URL` (`POSTGRES_URL` also works). The tables (`users`, `sessions`, `likes`,
