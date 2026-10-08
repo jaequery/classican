@@ -477,7 +477,7 @@ body {
   }
 }
 @media (max-width: 720px) {
-  /* Counts sit below the icon or label so navigation keeps its full tap targets. */
+  /* Like's label and count share a line below the heart to keep its tap target compact. */
   .control.count {
     flex-direction: column;
     justify-content: center;
@@ -487,6 +487,7 @@ body {
     font-size: 12px;
     line-height: 1;
   }
+  .control.like-toggle,
   .control.comments-toggle {
     width: auto;
     padding: 0 6px;
@@ -661,6 +662,18 @@ textarea::placeholder {
   white-space: pre-line;
   overflow-wrap: anywhere;
 }
+.talk-delete {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 16px;
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 15px;
+}
+.talk-delete .link.small {
+  margin-top: 0;
+}
 
 /* Buttons with words. Primary is Bone on Obsidian, like play. */
 .button {
@@ -722,6 +735,25 @@ textarea::placeholder {
 }
 .auth::backdrop {
   background: rgb(0 0 0 / 0.6);
+}
+/* Keep the heading and actions in view while short windows scroll the fields. */
+.auth[open],
+.auth form {
+  display: flex;
+  flex-direction: column;
+}
+.auth form {
+  min-height: 0;
+}
+.auth form > :not(.auth-fields) {
+  flex-shrink: 0;
+}
+.auth-fields {
+  min-height: 0;
+  overflow-y: auto;
+  /* Leave room for field focus outlines at the scroll area's edges. */
+  margin: 0 -4px -4px;
+  padding: 0 4px 4px;
 }
 .auth h2 {
   font-family: var(--font-title);

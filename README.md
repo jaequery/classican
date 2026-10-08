@@ -54,12 +54,13 @@ use the device's volume buttons for the listening volume; the player keeps its c
 Volume and mute are remembered between visits and applied before playback starts. Unmute or raise
 the player's volume to hear music again. If browser storage is blocked, settings last for this visit.
 Open “Keyboard shortcuts” beneath the player controls for a quick guide to all the keys.
-It starts collapsed, and opening or closing it does not start the music. While typing, keys work as
-usual; Space activates a focused control.
+It starts collapsed, and opening or closing it does not start the music. With focus in the guide,
+Escape closes it and returns focus to its heading. While typing, keys work as usual; Space activates
+a focused control.
 
 ## Accounts, likes and comments
 
-Beside next in the player are a heart and a button labeled “Comments,” each with its count for the piece now
+Beside next in the player are a heart labeled “Like” and a button labeled “Comments,” each with its count for the piece now
 playing. Comments opens a panel listing what listeners have said about that piece. The
 piece title and close button stay visible while you scroll through a long thread. On phones and
 narrower desktops, comments stop above the player, even when a long piece title wraps or the
@@ -69,7 +70,9 @@ with that button or Escape returns focus to the control that opened it. Anyone
 can read likes and comments; pressing the heart, or "Sign in" in the panel, opens a dialog to sign in
 or create an account with a name, email and password. Signed in, a listener can like and unlike any
 piece, comment on it (up to 1,000 characters) and delete their own comments. Comments show the
-writer's name, never their email.
+writer's name, never their email. Deleting your own comment first asks “Delete this comment?”
+beside it: choose Keep to cancel or Delete to remove it. Closing comments or changing pieces
+cancels an unconfirmed choice.
 
 If saving a like fails, its notice stays just above the player and clear of the controls,
 even when the piece title wraps or the keyboard shortcuts guide is open.
@@ -81,6 +84,8 @@ Use Show beside the password field to check what you typed, and Hide to mask it 
 Passwords start hidden when opening the dialog or switching between sign-in and account creation.
 While typing a password, a quiet hint appears if the keyboard reports that Caps Lock is on.
 It clears when Caps Lock is off or you leave the field.
+In short windows, the form fields scroll while the dialog heading, submit, Cancel and account-mode
+switch stay visible.
 
 Everything listeners make is kept in Postgres on Neon, connected through Vercel's Neon integration,
 which sets `DATABASE_URL` (`POSTGRES_URL` also works). The tables (`users`, `sessions`, `likes`,
