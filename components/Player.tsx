@@ -465,9 +465,10 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
 
       <details
         className="player-shortcuts"
-        onKeyDown={(e) => {
+        onKeyDownCapture={(e) => {
           if (e.key !== "Escape" || !e.currentTarget.open) return;
           e.preventDefault();
+          // Consume Escape before document listeners can also close Comments.
           e.stopPropagation();
           e.currentTarget.open = false;
           e.currentTarget.querySelector("summary")?.focus();
