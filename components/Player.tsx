@@ -463,7 +463,16 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
         </div>
       </div>
 
-      <details className="player-shortcuts">
+      <details
+        className="player-shortcuts"
+        onKeyDown={(e) => {
+          if (e.key !== "Escape" || !e.currentTarget.open) return;
+          e.preventDefault();
+          e.stopPropagation();
+          e.currentTarget.open = false;
+          e.currentTarget.querySelector("summary")?.focus();
+        }}
+      >
         <summary>Keyboard shortcuts</summary>
         <dl>
           <dt><kbd>Space</kbd></dt>
@@ -475,7 +484,7 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
           <dt><kbd>M</kbd></dt>
           <dd>Mute / unmute</dd>
         </dl>
-        <p>While typing, keys work as usual. Space activates a focused control. Arrow keys seek when the progress slider is focused.</p>
+        <p>While typing, keys work as usual. Space activates a focused control. Arrow keys seek when the progress slider is focused. Escape closes this guide when it has focus.</p>
       </details>
 
       <p className="visually-hidden" role="status">

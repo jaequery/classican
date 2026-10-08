@@ -54,8 +54,9 @@ use the device's volume buttons for the listening volume; the player keeps its c
 Volume and mute are remembered between visits and applied before playback starts. Unmute or raise
 the player's volume to hear music again. If browser storage is blocked, settings last for this visit.
 Open “Keyboard shortcuts” beneath the player controls for a quick guide to all the keys.
-It starts collapsed, and opening or closing it does not start the music. While typing, keys work as
-usual; Space activates a focused control.
+It starts collapsed, and opening or closing it does not start the music. With focus in the guide,
+Escape closes it and returns focus to its heading. While typing, keys work as usual; Space activates
+a focused control.
 
 ## Accounts, likes and comments
 
