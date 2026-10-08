@@ -430,8 +430,7 @@ body {
   margin: 0 0 10px;
 }
 
-/* On small screens the player hugs the bottom edge. Phones set loudness with
-   their own buttons, so only mute stays; controls wrap when space is tight. */
+/* On small screens the player hugs the bottom edge; controls wrap when space is tight. */
 @media (max-width: 720px), (max-height: 500px) {
   :root {
     --player-bottom: calc(12px + env(safe-area-inset-bottom));
@@ -473,6 +472,9 @@ body {
     padding: 0 6px;
     font-size: 14px;
   }
+}
+/* Touch phones use device volume buttons. Narrow desktop windows keep the slider. */
+@media (max-width: 720px) and (hover: none) and (pointer: coarse) {
   .volume {
     flex: 0 0 auto;
   }

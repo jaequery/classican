@@ -44,8 +44,9 @@ performer credit and recording's Commons page. “Hide details” closes it agai
 while you scroll through the details on a smaller screen.
 On smaller desktops, the details panel stops above the player, including when the keyboard shortcuts
 guide is open, so its text and Hide details button stay reachable.
-The volume button shows the player's current percentage, or “Muted” while muted. Up and Down adjust
-the level; on phones, use the device's volume buttons for the listening volume.
+The volume button shows the player's current percentage, or “Muted” while muted. Drag the volume
+slider, even in a narrow desktop window, or use Up and Down to adjust the level. On touch phones,
+use the device's volume buttons for the listening volume; the player keeps its compact mute control.
 Volume and mute are remembered between visits and applied before playback starts. Unmute or raise
 the player's volume to hear music again. If browser storage is blocked, settings last for this visit.
 Open “Keyboard shortcuts” beneath the player controls for a quick guide to all the keys.
