@@ -1065,6 +1065,51 @@ textarea::placeholder {
   white-space: nowrap;
 }
 
+/* The radio host: what is being said, like a caption, just above the player. */
+.on-air {
+  position: fixed;
+  left: 50%;
+  bottom: calc(var(--player-bottom) + var(--player-height, 204px) + 12px);
+  transform: translateX(-50%);
+  width: min(560px, calc(100% - 32px));
+  padding: 10px 16px 12px;
+  background: var(--surface);
+  border-left: 3px solid var(--ink);
+  border-radius: 4px;
+  color: var(--ink);
+  font-size: 17px;
+  line-height: 1.4;
+  animation: on-air-in 0.4s ease-out;
+}
+.on-air.off {
+  border-left-color: var(--muted);
+  color: var(--muted);
+}
+.on-air-label {
+  display: block;
+  margin-bottom: 2px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.on-air:not(.off) .on-air-label::before {
+  content: "";
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-right: 8px;
+  border-radius: 50%;
+  background: var(--ink);
+  vertical-align: 1px;
+}
+@keyframes on-air-in {
+  from {
+    opacity: 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .control,
   .update-close,
@@ -1075,5 +1120,8 @@ textarea::placeholder {
   .wall-more,
   .wall-toggle {
     transition: none;
+  }
+  .on-air {
+    animation: none;
   }
 }
