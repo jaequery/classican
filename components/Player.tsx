@@ -2,11 +2,18 @@
 
 import { useCallback, useEffect, useRef, useState, type ReactNode, type RefObject } from "react";
 import { createDeck, type Deck } from "@/lib/shuffle";
-import type { Track } from "@/lib/site";
+import { pieceId, type Track } from "@/lib/site";
+import { speakingTime, useHost } from "./useHost";
 
 const VOLUME_KEY = "classican:volume";
 const MUTED_KEY = "classican:muted";
 const VOLUME_STEP = 5;
+/** The music's level while the host speaks: the intro over the opening, the outro over the last bars. */
+const DUCK = { intro: 0.3, outro: 0.45 };
+/** Seconds before the end to fetch the outro, so it is ready when its moment comes. */
+const OUTRO_PREFETCH = 90;
+/** The outro ends this many seconds before the last note. */
+const OUTRO_MARGIN = 2;
 
 function formatTime(seconds: number) {
   const hours = Math.floor(seconds / 3600);
@@ -47,6 +54,9 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
   const [elapsed, setElapsed] = useState(0);
   const [duration, setDuration] = useState<number | null>(null);
   const [hintDismissed, setHintDismissed] = useState(false);
+  const [duck, setDuck] = useState(1);
+  // What the host is saying, or why the host is off air.
+  const [onAir, setOnAir] = useState<{ text: string; off?: boolean } | null>(null);
 
   const want = useRef(false); // the visitor's intent to hear music
   const switching = useRef(false); // a track change is under way; ignore the pause it causes
@@ -55,6 +65,14 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
   const history = useRef<number[]>([]); // pieces played before this one, for "previous"
   const deck = useRef<Deck>(null); // pieces still to come this time through the list
   const blocked = useRef(false); // the browser refused to autoplay; the first gesture starts the music
+  const host = useHost();
+  const lines = useRef(new Map<string, Promise<string | null>>()); // the host's words, by request
+  const offAirShown = useRef(new Set<string>()); // each reason the host is off air is shown once a visit
+  const speech = useRef(0); // the host's current segment, so a finished old one leaves the music alone
+  const sound = useRef({ volume: 80, silent: false }); // for speech started from event handlers
+  const introSaid = useRef(false); // the loaded piece has had its intro (or was introduced by an outro)
+  const outro = useRef<{ next: number; text: string | null; started: boolean } | null>(null);
+  const announced = useRef<number | null>(null); // the piece the last outro introduced
 
   const track = tracks[index];
 
@@ -84,11 +102,72 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
     [onPlayingChange],
   );
 
+  /** The host's words for a piece (and the one after it, for an outro), fetched once. Null if the host has none. */
+  const line = useCallback(
+    (kind: "intro" | "outro", i: number, next?: number) => {
+      const params = new URLSearchParams({ kind, piece: pieceId(tracks[i]) });
+      if (next !== undefined) params.set("next", pieceId(tracks[next]));
+      const key = params.toString();
+      let words = lines.current.get(key);
+      if (!words) {
+        words = fetch(`/api/commentary?${key}`)
+          .then(async (res) => {
+            const body = (await res.json().catch(() => null)) as { text?: string; error?: string } | null;
+            if (res.ok && body?.text) return body.text;
+            throw new Error(body?.error ?? `The host is unavailable (${res.status}).`);
+          })
+          .catch((err: unknown) => {
+            lines.current.delete(key); // try again next time this piece comes round
+            const reason = err instanceof Error && err.message !== "Failed to fetch" ? err.message : "The host could not be reached.";
+            if (!offAirShown.current.has(reason)) {
+              offAirShown.current.add(reason);
+              console.warn(`classican host: ${reason}`);
+              setOnAir({ text: reason, off: true });
+              window.setTimeout(() => setOnAir((now) => (now?.text === reason ? null : now)), 10_000);
+            }
+            return null;
+          });
+        lines.current.set(key, words);
+      }
+      return words;
+    },
+    [tracks],
+  );
+
+  const quiet = useCallback(() => {
+    speech.current++;
+    host.stop();
+    setDuck(1);
+    setOnAir((now) => (now?.off ? now : null));
+  }, [host]);
+
+  const say = useCallback(
+    (text: string, level: number) => {
+      if (sound.current.silent) return;
+      const id = ++speech.current;
+      setDuck(level);
+      setOnAir({ text });
+      host.speak(text, sound.current.volume / 100).then(() => {
+        if (id !== speech.current) return;
+        setDuck(1);
+        setOnAir((now) => (now?.off ? now : null));
+      });
+    },
+    [host],
+  );
+
   const load = useCallback(
     (i: number) => {
       const audio = audioRef.current;
       if (!audio) return;
       const t = tracks[i];
+      // An outro carrying on into the piece it announced keeps talking; anything else stops the host.
+      const introduced = announced.current === i;
+      announced.current = null;
+      if (!introduced) quiet();
+      introSaid.current = introduced;
+      outro.current = null;
+      if (!introduced) line("intro", i);
       indexRef.current = i;
       clock.current = 0;
       setElapsed(0);
@@ -102,7 +181,7 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
         navigator.mediaSession.metadata = new MediaMetadata({ title: t.title, artist: t.composer, album: "classican" });
       }
     },
-    [clock, onTrackChange, tracks],
+    [clock, line, onTrackChange, quiet, tracks],
   );
 
   const start = useCallback(() => {
@@ -133,16 +212,18 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
   const play = useCallback(() => {
     const audio = audioRef.current;
     if (!audio || want.current) return;
+    host.unlock();
     setWant(true);
     if (!audio.src || audio.error) load(indexRef.current);
     start();
-  }, [load, setWant, start]);
+  }, [host, load, setWant, start]);
 
   const pause = useCallback(() => {
     if (!want.current) return;
     setWant(false);
+    quiet();
     audioRef.current?.pause();
-  }, [setWant]);
+  }, [quiet, setWant]);
 
   const toggle = useCallback(() => (want.current ? pause() : play()), [pause, play]);
   const seek = (seconds: number) => {
@@ -171,9 +252,11 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
-    audio.volume = volume / 100;
+    audio.volume = (volume / 100) * duck;
     audio.muted = muted;
-  }, [volume, muted]);
+    sound.current = { volume, silent: muted || volume === 0 };
+    if (muted || volume === 0) quiet();
+  }, [volume, muted, duck, quiet]);
 
   // Open on a random piece and try to play it at once. Browsers often refuse
   // until the visitor has interacted with the page; then the first click or
@@ -227,8 +310,18 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
       failures.current = 0;
       switching.current = false;
       setLoading(false);
-      const t = tracks[indexRef.current];
+      const i = indexRef.current;
+      const t = tracks[i];
       setStatus(`Now playing ${t.title} by ${t.composer}.`);
+      // The host introduces the piece as it begins, unless the last outro already did.
+      if (!introSaid.current) {
+        introSaid.current = true;
+        line("intro", i).then((text) => {
+          if (text && i === indexRef.current && want.current && !outro.current?.started && audio.currentTime < 30) {
+            say(text, DUCK.intro);
+          }
+        });
+      }
     };
     const onError = () => {
       failures.current++;
@@ -253,6 +346,24 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
     const onTime = () => {
       clock.current = audio.currentTime;
       setElapsed(Math.floor(audio.currentTime));
+      // Near the end, the host back-announces the piece and introduces the one the deck will deal next.
+      const left = audio.duration - audio.currentTime;
+      if (!Number.isFinite(left) || audio.paused || left > OUTRO_PREFETCH) return;
+      const i = indexRef.current;
+      if (!outro.current) {
+        const next = deck.current!.peek(i);
+        const pending = { next, text: null as string | null, started: false };
+        outro.current = pending;
+        line("outro", i, next).then((text) => (pending.text = text));
+        return;
+      }
+      const o = outro.current;
+      if (o.started || !o.text || left > speakingTime(o.text) + OUTRO_MARGIN || left < 3) return;
+      o.started = true;
+      // The deck could have changed (previous puts a piece back), so only announce what it will really deal.
+      if (deck.current!.peek(i) !== o.next) return;
+      announced.current = o.next;
+      say(o.text, DUCK.outro);
     };
     const onDuration = () => {
       setDuration(Number.isFinite(audio.duration) && audio.duration > 0 ? Math.floor(audio.duration) : null);
@@ -280,7 +391,7 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
       audio.removeEventListener("pause", onPause);
       audio.removeEventListener("play", onPlay);
     };
-  }, [clock, go, next, setWant, tracks]);
+  }, [clock, go, line, next, say, setWant, tracks]);
 
   // Hardware media keys and the OS "now playing" panel.
   useEffect(() => {
@@ -376,141 +487,150 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
   const silent = muted || volume === 0;
 
   return (
-    <section ref={playerRef} className="player" aria-label="Music player">
-      <p className="now">
-        {unavailable ? (
-          <>
-            <span className="title">Music is unavailable right now.</span>
-            <span className="composer">Press play to try again.</span>
-          </>
-        ) : (
-          <>
-            <span className="title">{track.title}</span>
-            <span className="composer">
-              {track.composer}
-              {loading ? " · Loading" : !playing ? (hasPlayed ? " · Paused" : " · Press play to listen") : ""}
-              {silent ? " · Muted" : ""}
-            </span>
-            {duration !== null && duration > 0 && (
-              <span className="playback-time">
-                <input
-                  className="playback-progress"
-                  type="range"
-                  min={0}
-                  max={duration}
-                  step={1}
-                  value={Math.min(elapsed, duration)}
-                  onChange={(e) => seek(Number(e.target.value))}
-                  aria-label="Playback position"
-                  aria-valuetext={`${formatTime(elapsed)} of ${formatTime(duration)}`}
-                />
-                <span>
-                  <span className="visually-hidden">Elapsed </span>
-                  {formatTime(elapsed)}
-                  <span aria-hidden="true"> / </span>
-                  <span className="visually-hidden"> of </span>
-                  {formatTime(duration)}
-                </span>
-              </span>
-            )}
-          </>
-        )}
-      </p>
-
-      <div
-        className="controls"
-        data-hint-dismissed={hintDismissed || undefined}
-        onPointerOver={() => setHintDismissed(false)}
-        onFocusCapture={() => setHintDismissed(false)}
-      >
-        <button type="button" className="control" onClick={prev} aria-label="Previous piece" disabled={!hasPrevious}>
-          <svg viewBox="0 0 20 20" aria-hidden="true">
-            <path d="M4 4h2v12H4zM16 4v12l-8.5-6z" />
-          </svg>
-          <span className="control-hint" aria-hidden="true">Previous piece <kbd>←</kbd></span>
-        </button>
-        <button type="button" className="control play" onClick={toggle} aria-label={playing ? "Pause" : "Play"}>
-          {playing ? (
-            <svg viewBox="0 0 20 20" aria-hidden="true">
-              <path d="M5 4h3.5v12H5zM11.5 4H15v12h-3.5z" />
-            </svg>
+    <>
+      {onAir && (
+        // Plain text, not a live region: screen readers would otherwise read the words over the host.
+        <p className={onAir.off ? "on-air off" : "on-air"}>
+          <span className="on-air-label">{onAir.off ? "Host off air" : "On air"}</span>
+          {onAir.text}
+        </p>
+      )}
+      <section ref={playerRef} className="player" aria-label="Music player">
+        <p className="now">
+          {unavailable ? (
+            <>
+              <span className="title">Music is unavailable right now.</span>
+              <span className="composer">Press play to try again.</span>
+            </>
           ) : (
-            <svg viewBox="0 0 20 20" aria-hidden="true">
-              <path d="M6 3.5v13L16.5 10z" />
-            </svg>
-          )}
-          <span className="control-hint" aria-hidden="true">{playing ? "Pause" : "Play"} <kbd>Space</kbd></span>
-        </button>
-        <button type="button" className="control" onClick={next} aria-label="Next piece">
-          <svg viewBox="0 0 20 20" aria-hidden="true">
-            <path d="M14 4h2v12h-2zM4 4v12l8.5-6z" />
-          </svg>
-          <span className="control-hint" aria-hidden="true">Next piece <kbd>→</kbd></span>
-        </button>
-        {actions}
-
-        <div className="volume">
-          <button
-            type="button"
-            className="control"
-            onClick={toggleMute}
-            aria-label={silent ? "Unmute" : "Mute"}
-          >
-            <svg viewBox="0 0 20 20" aria-hidden="true">
-              <path d="M3 7.5h3.5L11 4v12l-4.5-3.5H3z" />
-              {silent ? (
-                <path d="M13.3 7.3l1.1-1.1 1.8 1.8 1.8-1.8 1.1 1.1-1.8 1.8 1.8 1.8-1.1 1.1-1.8-1.8-1.8 1.8-1.1-1.1 1.8-1.8z" />
-              ) : (
-                <path d="M13.2 6.6a4.8 4.8 0 0 1 0 6.8l-1.1-1.1a3.2 3.2 0 0 0 0-4.6zM15.3 4.5a7.8 7.8 0 0 1 0 11l-1.1-1.1a6.2 6.2 0 0 0 0-8.8z" />
+            <>
+              <span className="title">{track.title}</span>
+              <span className="composer">
+                {track.composer}
+                {loading ? " · Loading" : !playing ? (hasPlayed ? " · Paused" : " · Press play to listen") : ""}
+                {silent ? " · Muted" : ""}
+              </span>
+              {duration !== null && duration > 0 && (
+                <span className="playback-time">
+                  <input
+                    className="playback-progress"
+                    type="range"
+                    min={0}
+                    max={duration}
+                    step={1}
+                    value={Math.min(elapsed, duration)}
+                    onChange={(e) => seek(Number(e.target.value))}
+                    aria-label="Playback position"
+                    aria-valuetext={`${formatTime(elapsed)} of ${formatTime(duration)}`}
+                  />
+                  <span>
+                    <span className="visually-hidden">Elapsed </span>
+                    {formatTime(elapsed)}
+                    <span aria-hidden="true"> / </span>
+                    <span className="visually-hidden"> of </span>
+                    {formatTime(duration)}
+                  </span>
+                </span>
               )}
+            </>
+          )}
+        </p>
+
+        <div
+          className="controls"
+          data-hint-dismissed={hintDismissed || undefined}
+          onPointerOver={() => setHintDismissed(false)}
+          onFocusCapture={() => setHintDismissed(false)}
+        >
+          <button type="button" className="control" onClick={prev} aria-label="Previous piece" disabled={!hasPrevious}>
+            <svg viewBox="0 0 20 20" aria-hidden="true">
+              <path d="M4 4h2v12H4zM16 4v12l-8.5-6z" />
             </svg>
-            <span className="volume-level" aria-hidden="true">
-              {muted ? "Muted" : `${volume}%`}
-            </span>
-            <span className="control-hint" aria-hidden="true">{silent ? "Unmute" : "Mute"} <kbd>M</kbd></span>
+            <span className="control-hint" aria-hidden="true">Previous piece <kbd>←</kbd></span>
           </button>
-          <input
-            type="range"
-            min={0}
-            max={100}
-            step={1}
-            value={muted ? 0 : volume}
-            onChange={(e) => changeVolume(Number(e.target.value))}
-            aria-label="Volume"
-            aria-valuetext={`${muted ? 0 : volume}%`}
-          />
+          <button type="button" className="control play" onClick={toggle} aria-label={playing ? "Pause" : "Play"}>
+            {playing ? (
+              <svg viewBox="0 0 20 20" aria-hidden="true">
+                <path d="M5 4h3.5v12H5zM11.5 4H15v12h-3.5z" />
+              </svg>
+            ) : (
+              <svg viewBox="0 0 20 20" aria-hidden="true">
+                <path d="M6 3.5v13L16.5 10z" />
+              </svg>
+            )}
+            <span className="control-hint" aria-hidden="true">{playing ? "Pause" : "Play"} <kbd>Space</kbd></span>
+          </button>
+          <button type="button" className="control" onClick={next} aria-label="Next piece">
+            <svg viewBox="0 0 20 20" aria-hidden="true">
+              <path d="M14 4h2v12h-2zM4 4v12l8.5-6z" />
+            </svg>
+            <span className="control-hint" aria-hidden="true">Next piece <kbd>→</kbd></span>
+          </button>
+          {actions}
+
+          <div className="volume">
+            <button
+              type="button"
+              className="control"
+              onClick={toggleMute}
+              aria-label={silent ? "Unmute" : "Mute"}
+            >
+              <svg viewBox="0 0 20 20" aria-hidden="true">
+                <path d="M3 7.5h3.5L11 4v12l-4.5-3.5H3z" />
+                {silent ? (
+                  <path d="M13.3 7.3l1.1-1.1 1.8 1.8 1.8-1.8 1.1 1.1-1.8 1.8 1.8 1.8-1.1 1.1-1.8-1.8-1.8 1.8-1.1-1.1 1.8-1.8z" />
+                ) : (
+                  <path d="M13.2 6.6a4.8 4.8 0 0 1 0 6.8l-1.1-1.1a3.2 3.2 0 0 0 0-4.6zM15.3 4.5a7.8 7.8 0 0 1 0 11l-1.1-1.1a6.2 6.2 0 0 0 0-8.8z" />
+                )}
+              </svg>
+              <span className="volume-level" aria-hidden="true">
+                {muted ? "Muted" : `${volume}%`}
+              </span>
+              <span className="control-hint" aria-hidden="true">{silent ? "Unmute" : "Mute"} <kbd>M</kbd></span>
+            </button>
+            <input
+              type="range"
+              min={0}
+              max={100}
+              step={1}
+              value={muted ? 0 : volume}
+              onChange={(e) => changeVolume(Number(e.target.value))}
+              aria-label="Volume"
+              aria-valuetext={`${muted ? 0 : volume}%`}
+            />
+          </div>
         </div>
-      </div>
 
-      <details
-        className="player-shortcuts"
-        onKeyDownCapture={(e) => {
-          if (e.key !== "Escape" || !e.currentTarget.open) return;
-          e.preventDefault();
-          // Consume Escape before document listeners can also close Comments.
-          e.stopPropagation();
-          e.currentTarget.open = false;
-          e.currentTarget.querySelector("summary")?.focus();
-        }}
-      >
-        <summary>Keyboard shortcuts</summary>
-        <dl>
-          <dt><kbd>Space</kbd></dt>
-          <dd>Play / pause</dd>
-          <dt><kbd>←</kbd> / <kbd>→</kbd></dt>
-          <dd>Previous / next piece</dd>
-          <dt><kbd>↓</kbd> / <kbd>↑</kbd></dt>
-          <dd>Volume down / up</dd>
-          <dt><kbd>M</kbd></dt>
-          <dd>Mute / unmute</dd>
-        </dl>
-        <p>While typing, keys work as usual. Space activates a focused control. Arrow keys seek when the progress slider is focused. Escape closes this guide when it has focus.</p>
-      </details>
+        <details
+          className="player-shortcuts"
+          onKeyDownCapture={(e) => {
+            if (e.key !== "Escape" || !e.currentTarget.open) return;
+            e.preventDefault();
+            // Consume Escape before document listeners can also close Comments.
+            e.stopPropagation();
+            e.currentTarget.open = false;
+            e.currentTarget.querySelector("summary")?.focus();
+          }}
+        >
+          <summary>Keyboard shortcuts</summary>
+          <dl>
+            <dt><kbd>Space</kbd></dt>
+            <dd>Play / pause</dd>
+            <dt><kbd>←</kbd> / <kbd>→</kbd></dt>
+            <dd>Previous / next piece</dd>
+            <dt><kbd>↓</kbd> / <kbd>↑</kbd></dt>
+            <dd>Volume down / up</dd>
+            <dt><kbd>M</kbd></dt>
+            <dd>Mute / unmute</dd>
+          </dl>
+          <p>While typing, keys work as usual. Space activates a focused control. Arrow keys seek when the progress slider is focused. Escape closes this guide when it has focus.</p>
+        </details>
 
-      <p className="visually-hidden" role="status">
-        {status}
-      </p>
-      <audio ref={audioRef} preload="none" />
-    </section>
+        <p className="visually-hidden" role="status">
+          {status}
+        </p>
+        <audio ref={audioRef} preload="none" />
+      </section>
+    </>
   );
 }

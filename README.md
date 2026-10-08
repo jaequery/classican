@@ -67,6 +67,24 @@ a focused control.
 Hover or keyboard-focus the previous, play/pause, next or mute button to see its action and
 shortcut beside it. Escape dismisses the hint while leaving focus on the control.
 
+## The radio host
+
+Like a classical radio station, a host speaks between the music. As a piece begins, the host
+introduces it in a sentence or two; just before it ends, the host back-announces it in a few words
+and introduces the piece that plays next (so that piece starts without a second introduction).
+The music dips while the host talks and comes back up after. What the host says shows in an
+“On air” caption above the player. Pausing, skipping or muting stops the host.
+
+The words are written by Haiku 5.5 through the Vercel AI Gateway, from the facts and details in
+`lib/site.ts`, so the host doesn't invent history. Set `AI_GATEWAY_API_KEY` (on Vercel the deployment's
+OIDC token also works); `COMMENTARY_MODEL` changes the model, default `anthropic/claude-haiku-5.5`. If the
+gateway doesn't offer that model, the caption says “Host off air” and names the model; no other model
+is tried. Without a key the music plays as before and the caption says the key is missing.
+Answers come from `GET /api/commentary` and are cached at the CDN for a day.
+
+The host speaks with an Apple voice (macOS, iOS) where the browser has one, preferring a premium or
+enhanced English voice; elsewhere, or if the Apple voice fails, the system's default voice reads it.
+
 ## Accounts, likes and comments
 
 Beside next in the player are a heart labeled “Like” and a button labeled “Comments,” each with its count for the piece now
@@ -132,6 +150,8 @@ npm test           # account, like and comment rules (lib/community.ts), on an i
 | What's new in the top bar, and its date | `lib/site.ts` (`update`; leave it out to hide the bar) |
 | Paintings | `lib/paintings.ts` |
 | Palette of the frame | `app/globals.css` (`:root`) |
+| What the radio host is told, and the model | `lib/commentary.ts` (`COMMENTARY_MODEL` overrides the model) |
+| The host's voice and the music's dip | `components/useHost.ts`, `DUCK` in `components/Player.tsx` |
 | Who may like, comment or delete | `lib/community.ts` |
 | Comment length, shared types | `lib/social.ts` |
 | Password and session rules | `lib/auth.ts` |
