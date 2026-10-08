@@ -750,7 +750,7 @@ textarea::placeholder {
   font-size: 17px;
 }
 
-/* A short word about something that didn't work, just above the player. */
+/* Keep feedback above the player as titles wrap or the keyboard guide opens. */
 .notice {
   position: fixed;
   left: 50%;

@@ -66,8 +66,8 @@ or create an account with a name, email and password. Signed in, a listener can 
 piece, comment on it (up to 1,000 characters) and delete their own comments. Comments show the
 writer's name, never their email.
 
-If saving a like fails, the message stays just above the player, including when the piece title
-wraps or the keyboard shortcuts guide is open.
+If saving a like fails, its notice stays just above the player and clear of the controls,
+even when the piece title wraps or the keyboard shortcuts guide is open.
 
 The comment form shows its character count and limit as you write, ignoring spaces at either end.
 If a draft is too long, it tells you how many characters to remove before you can post, keeping your text intact.
