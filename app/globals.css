@@ -219,6 +219,10 @@ body {
     /* Keep compact details and their disclosure clear of an expanded player. */
     max-height: min(40%, calc(100% - 200px), calc(100% - var(--wall-top) - 12px - var(--player-height, 204px) - var(--player-bottom)));
   }
+  /* Opening the details gives reading priority to the space above the player. */
+  .wall:has(.wall-toggle[aria-expanded="true"]) {
+    max-height: calc(100% - var(--wall-top) - 12px - var(--player-height, 204px) - var(--player-bottom));
+  }
   .wall-who {
     font-size: 16px;
   }
