@@ -442,6 +442,14 @@ body {
   margin: 0 0 10px;
 }
 
+/* In short windows, scroll the open guide inside the player and leave room
+   for the piece details, their disclosure, and the gap between the panels. */
+@media (max-height: 500px) {
+  .player:has(.player-shortcuts[open]) {
+    max-height: calc(100% - max(env(safe-area-inset-top), var(--update-bar)) - 24px - 120px - 12px - var(--player-bottom));
+  }
+}
+
 /* On small screens the player hugs the bottom edge; controls wrap when space is tight. */
 @media (max-width: 720px), (max-height: 500px) {
   :root {
