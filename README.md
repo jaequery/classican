@@ -62,6 +62,8 @@ Open “Keyboard shortcuts” beneath the player controls for a quick guide to a
 It starts collapsed, and opening or closing it does not start the music. With focus in the guide,
 Escape closes it and returns focus to its heading. While typing, keys work as usual; Space activates
 a focused control.
+Hover or keyboard-focus the previous, play/pause, next or mute button to see its action and
+shortcut beside it. Escape dismisses the hint while leaving focus on the control.
 
 ## Accounts, likes and comments
 

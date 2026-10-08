@@ -353,6 +353,43 @@ body {
   cursor: default;
 }
 
+/* Contextual labels keep the idle player compact. They stay within its left edge. */
+.control:has(.control-hint) {
+  position: relative;
+}
+.control-hint {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: max-content;
+  padding: 6px 8px;
+  border-radius: 6px;
+  background: var(--ink);
+  color: var(--canvas);
+  font: 600 14px/1.4 var(--font);
+  white-space: nowrap;
+  visibility: hidden;
+}
+.control-hint kbd {
+  font: inherit;
+  opacity: 0.7;
+}
+.controls:not([data-hint-dismissed]) .control:focus-visible .control-hint {
+  visibility: visible;
+}
+@media (hover: hover) and (pointer: fine) {
+  .controls:not([data-hint-dismissed]) .control:hover:not(:disabled) .control-hint {
+    visibility: visible;
+  }
+  .control:has(.control-hint):hover:not(:disabled) {
+    opacity: 1;
+  }
+}
+
 /* Like and comments: an icon or label with its count beside it. */
 .control.count {
   display: flex;
