@@ -85,6 +85,8 @@ even when the piece title wraps or the keyboard shortcuts guide is open.
 
 The comment form shows its character count and limit as you write, ignoring spaces at either end.
 If a draft is too long, it tells you how many characters to remove before you can post, keeping your text intact.
+Press Ctrl+Enter or ⌘+Enter in the comment field to post; Enter on its own adds a new line.
+The shortcut follows the same checks as the Post button and waits while a comment is being sent.
 
 Use Show beside the password field to check what you typed, and Hide to mask it again.
 Passwords start hidden when opening the dialog or switching between sign-in and account creation.
