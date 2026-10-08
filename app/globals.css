@@ -596,6 +596,10 @@ textarea::placeholder {
   font-size: 17px;
   overflow-wrap: anywhere;
 }
+/* Leave room for status messages and the retry link's focus outline. */
+.talk-note {
+  margin-bottom: 12px;
+}
 .talk-error,
 .auth-error {
   color: var(--ink);
