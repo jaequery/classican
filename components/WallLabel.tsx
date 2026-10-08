@@ -1,7 +1,7 @@
 "use client";
 
-import { useId, useRef, useState } from "react";
-import { ageAtWriting, type Composer, type Track } from "@/lib/site";
+import { useEffect, useId, useRef, useState } from "react";
+import { ageAtWriting, pieceId, type Composer, type Track } from "@/lib/site";
 
 /**
  * A gallery wall label beside the painting: who wrote the piece, when, where
@@ -10,9 +10,17 @@ import { ageAtWriting, type Composer, type Track } from "@/lib/site";
  */
 export function WallLabel({ track, composer }: { track: Track; composer: Composer }) {
   const [open, setOpen] = useState(false);
+  const bodyRef = useRef<HTMLDivElement>(null);
   const toggleRef = useRef<HTMLButtonElement>(null);
   const moreId = useId();
   const { details } = track;
+  const trackId = pieceId(track);
+
+  // Begin each new piece at its heading without closing the listener's details.
+  useEffect(() => {
+    if (bodyRef.current) bodyRef.current.scrollTop = 0;
+  }, [trackId]);
+
   return (
     <aside
       className="wall"
@@ -26,7 +34,7 @@ export function WallLabel({ track, composer }: { track: Track; composer: Compose
         setOpen(false);
       }}
     >
-      <div className="wall-body">
+      <div ref={bodyRef} className="wall-body">
         <p className="wall-who">
           {track.composer}
           <span>
