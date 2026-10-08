@@ -33,6 +33,7 @@ export function Comments({ id, open, onClose, title, me, data, status, onRetry, 
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
   const closeButton = useRef<HTMLButtonElement>(null);
   const bodyRef = useRef<HTMLDivElement>(null);
+  const resetScroll = useRef(true);
   const headingId = useId();
   const fieldId = useId();
   const countId = useId();
@@ -45,8 +46,15 @@ export function Comments({ id, open, onClose, title, me, data, status, onRetry, 
   useEffect(() => {
     setText("");
     setError("");
-    if (bodyRef.current) bodyRef.current.scrollTop = 0;
+    resetScroll.current = true;
   }, [title]);
+
+  // Hidden panels cannot scroll; defer a new piece's reset until it is visible.
+  useEffect(() => {
+    if (!open || !resetScroll.current || !bodyRef.current) return;
+    bodyRef.current.scrollTop = 0;
+    resetScroll.current = false;
+  }, [open, title]);
 
   useEffect(() => {
     setConfirmDelete(null);
