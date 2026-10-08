@@ -46,6 +46,7 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
   const [status, setStatus] = useState("");
   const [elapsed, setElapsed] = useState(0);
   const [duration, setDuration] = useState<number | null>(null);
+  const [hintDismissed, setHintDismissed] = useState(false);
 
   const want = useRef(false); // the visitor's intent to hear music
   const switching = useRef(false); // a track change is under way; ignore the pause it causes
@@ -202,6 +203,8 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
     play();
     const onGesture = (e: Event) => {
       if (e.target instanceof Element && e.target.closest(".player-shortcuts")) return;
+      // Dismissing a control hint should not start the music.
+      if (e instanceof KeyboardEvent && e.key === "Escape") return;
       if (blocked.current && !want.current) play();
     };
     window.addEventListener("click", onGesture);
@@ -331,6 +334,10 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.defaultPrevented || e.ctrlKey || e.metaKey || e.altKey) return;
+      if (e.key === "Escape") {
+        setHintDismissed(true);
+        return;
+      }
       const target = e.target as HTMLElement | null;
       if (target?.closest?.("input, select, textarea, [contenteditable]:not([contenteditable='false'])")) return;
       switch (e.key) {
@@ -410,11 +417,17 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
         )}
       </p>
 
-      <div className="controls">
+      <div
+        className="controls"
+        data-hint-dismissed={hintDismissed || undefined}
+        onPointerOver={() => setHintDismissed(false)}
+        onFocusCapture={() => setHintDismissed(false)}
+      >
         <button type="button" className="control" onClick={prev} aria-label="Previous piece" disabled={!hasPrevious}>
           <svg viewBox="0 0 20 20" aria-hidden="true">
             <path d="M4 4h2v12H4zM16 4v12l-8.5-6z" />
           </svg>
+          <span className="control-hint" aria-hidden="true">Previous piece <kbd>←</kbd></span>
         </button>
         <button type="button" className="control play" onClick={toggle} aria-label={playing ? "Pause" : "Play"}>
           {playing ? (
@@ -426,11 +439,13 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
               <path d="M6 3.5v13L16.5 10z" />
             </svg>
           )}
+          <span className="control-hint" aria-hidden="true">{playing ? "Pause" : "Play"} <kbd>Space</kbd></span>
         </button>
         <button type="button" className="control" onClick={next} aria-label="Next piece">
           <svg viewBox="0 0 20 20" aria-hidden="true">
             <path d="M14 4h2v12h-2zM4 4v12l8.5-6z" />
           </svg>
+          <span className="control-hint" aria-hidden="true">Next piece <kbd>→</kbd></span>
         </button>
         {actions}
 
@@ -452,6 +467,7 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
             <span className="volume-level" aria-hidden="true">
               {muted ? "Muted" : `${volume}%`}
             </span>
+            <span className="control-hint" aria-hidden="true">{silent ? "Unmute" : "Mute"} <kbd>M</kbd></span>
           </button>
           <input
             type="range"
