@@ -31,6 +31,7 @@ before; it is unavailable until there is a previous piece. Next then returns to 
 Going back keeps music playing or paused as it was. Most
 browsers block autoplay on a first visit, so then the visitor's first click or key starts the music.
 The composer line says “Paused” when music is paused, including when the browser blocks autoplay.
+It also says “Muted” when mute is on or the player volume is zero, including on phones.
 A piece that fails to load is skipped; if every piece fails, the player says so and shows
 “Press play to try again.” beneath the message. Pressing play retries the recording.
 Once the recording has loaded, elapsed and total time appear beneath the composer. The readout
