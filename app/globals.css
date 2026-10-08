@@ -194,6 +194,14 @@ body {
   opacity: 0.72;
 }
 
+/* Where desktop details could reach the player, keep the disclosure above it.
+   Compact layouts retain their smaller height cap below. */
+@media (max-width: 1368px) {
+  .wall {
+    max-height: calc(100% - 36px - var(--update-bar) - var(--player-height, 204px) - var(--player-bottom));
+  }
+}
+
 /* On narrow screens the label spans the top, leaving the bottom to the player.
    It stays small so the painting shows between them; expanded details scroll inside it. */
 @media (max-width: 720px) {
