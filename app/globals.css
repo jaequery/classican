@@ -194,6 +194,14 @@ body {
   opacity: 0.72;
 }
 
+/* Where desktop details could reach the player, keep the disclosure above it.
+   Compact layouts retain their smaller height cap below. */
+@media (max-width: 1368px) {
+  .wall {
+    max-height: calc(100% - 36px - var(--update-bar) - var(--player-height, 204px) - var(--player-bottom));
+  }
+}
+
 /* On narrow screens the label spans the top, leaving the bottom to the player.
    It stays small so the painting shows between them; expanded details scroll inside it. */
 @media (max-width: 720px) {
@@ -333,7 +341,7 @@ body {
   cursor: default;
 }
 
-/* Like and comments: an icon with its count beside it. */
+/* Like and comments: an icon or label with its count beside it. */
 .control.count {
   display: flex;
   gap: 6px;
@@ -422,8 +430,8 @@ body {
   margin: 0 0 10px;
 }
 
-/* On small screens the player hugs the bottom edge and keeps to one row of controls:
-   phones set loudness with their own buttons, so only mute stays. */
+/* On small screens the player hugs the bottom edge. Phones set loudness with
+   their own buttons, so only mute stays; controls wrap when space is tight. */
 @media (max-width: 720px), (max-height: 500px) {
   :root {
     --player-bottom: calc(12px + env(safe-area-inset-bottom));
@@ -450,10 +458,7 @@ body {
   }
 }
 @media (max-width: 720px) {
-  .controls {
-    flex-wrap: nowrap;
-  }
-  /* Counts sit below their icons so navigation keeps its full tap targets. */
+  /* Counts sit below the icon or label so navigation keeps its full tap targets. */
   .control.count {
     flex-direction: column;
     justify-content: center;
@@ -462,6 +467,11 @@ body {
     padding: 0;
     font-size: 12px;
     line-height: 1;
+  }
+  .control.comments-toggle {
+    width: auto;
+    padding: 0 6px;
+    font-size: 14px;
   }
   .volume {
     flex: 0 0 auto;

@@ -42,6 +42,8 @@ previous) and the OS "now playing" panel work too, and the browser tab names the
 “Piece & recording details” on the wall label opens the piece's background, composer biography,
 performer credit and recording's Commons page. “Hide details” closes it again and stays visible
 while you scroll through the details on a smaller screen.
+On smaller desktops, the details panel stops above the player, including when the keyboard shortcuts
+guide is open, so its text and Hide details button stay reachable.
 The volume button shows the player's current percentage, or “Muted” while muted. Up and Down adjust
 the level; on phones, use the device's volume buttons for the listening volume.
 Volume and mute are remembered between visits and applied before playback starts. Unmute or raise
@@ -52,8 +54,8 @@ usual; Space activates a focused control.
 
 ## Accounts, likes and comments
 
-Beside next in the player are a heart and a comments button, each with its count for the piece now
-playing. The comments button opens a panel listing what listeners have said about that piece. The
+Beside next in the player are a heart and a button labeled “Comments,” each with its count for the piece now
+playing. Comments opens a panel listing what listeners have said about that piece. The
 piece title and close button stay visible while you scroll through a long thread. On phones and
 narrower desktops, comments stop above the player, even when a long piece title wraps or the
 keyboard shortcuts guide is open. Anyone
@@ -64,8 +66,8 @@ or create an account with a name, email and password. Signed in, a listener can 
 piece, comment on it (up to 1,000 characters) and delete their own comments. Comments show the
 writer's name, never their email.
 
-If a like cannot be saved, its notice sits above the player, staying clear of the controls
-even when a title wraps or the keyboard shortcuts guide is open.
+If saving a like fails, its notice stays just above the player and clear of the controls,
+even when the piece title wraps or the keyboard shortcuts guide is open.
 
 The comment form shows its character count and limit as you write, ignoring spaces at either end.
 If a draft is too long, it tells you how many characters to remove before you can post, keeping your text intact.

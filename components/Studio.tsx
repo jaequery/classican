@@ -60,15 +60,12 @@ export function Studio({ site }: { site: Site }) {
       </button>
       <button
         type="button"
-        className="control count"
+        className="control count comments-toggle"
         aria-expanded={talking}
         aria-controls={commentsId}
         onClick={() => setTalking((t) => !t)}
       >
-        <svg viewBox="0 0 20 20" aria-hidden="true">
-          <path d="M3 3.5h14a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H8l-4 3v-3H3a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1z" />
-        </svg>
-        <span className="visually-hidden">Comments</span>
+        <span>Comments</span>
         <span className="tally">{data ? formatCount(data.comments.length) : ""}</span>
       </button>
     </>
