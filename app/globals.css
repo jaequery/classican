@@ -307,6 +307,12 @@ body {
   accent-color: var(--accent);
   cursor: pointer;
 }
+/* Give seeking the same touch height as the playback controls. */
+@media (pointer: coarse) {
+  .playback-progress {
+    height: 44px;
+  }
+}
 
 .controls {
   display: flex;
