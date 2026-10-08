@@ -66,7 +66,8 @@ a focused control.
 
 Beside next in the player are a heart labeled “Like” and a button labeled “Comments,” each with its count for the piece now
 playing. Comments opens a panel listing what listeners have said about that piece. The
-piece title and close button stay visible while you scroll through a long thread. On phones and
+piece title and close button stay visible while you scroll through a long thread. Changing pieces
+returns the comments to the top; closing and reopening the same piece keeps your reading position. On phones and
 narrower desktops, comments stop above the player, even when a long piece title wraps or the
 keyboard shortcuts guide is open. Anyone
 using a keyboard starts on the panel's close button and can Tab through its actions. Closing the panel

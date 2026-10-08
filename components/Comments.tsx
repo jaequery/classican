@@ -32,6 +32,7 @@ export function Comments({ id, open, onClose, title, me, data, status, onRetry, 
   const [deleting, setDeleting] = useState<string | null>(null);
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
   const closeButton = useRef<HTMLButtonElement>(null);
+  const bodyRef = useRef<HTMLDivElement>(null);
   const headingId = useId();
   const fieldId = useId();
   const countId = useId();
@@ -40,10 +41,11 @@ export function Comments({ id, open, onClose, title, me, data, status, onRetry, 
   const excess = length - COMMENT_MAX;
   const over = excess > 0;
 
-  // A draft and its error belong to the piece they were written for.
+  // A new piece starts at the beginning of its own conversation.
   useEffect(() => {
     setText("");
     setError("");
+    if (bodyRef.current) bodyRef.current.scrollTop = 0;
   }, [title]);
 
   useEffect(() => {
@@ -96,7 +98,7 @@ export function Comments({ id, open, onClose, title, me, data, status, onRetry, 
         </button>
       </header>
 
-      <div className="talk-body">
+      <div ref={bodyRef} className="talk-body">
         {me ? (
           <form className="talk-form" onSubmit={post}>
             <label htmlFor={fieldId} className="visually-hidden">
