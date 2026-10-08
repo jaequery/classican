@@ -43,8 +43,11 @@ previous) and the OS "now playing" panel work too, and the browser tab names the
 “Piece & recording details” on the wall label opens the piece's background, composer biography,
 performer credit and recording's Commons page. “Hide details” closes it again and stays visible
 while you scroll through the details on a smaller screen.
+On phones and short windows, opening details uses the available reading space above the player;
+closing them returns to the compact label so more of the painting is visible.
 On phones and smaller or shorter desktop windows, the details panel stops above the player,
 including when the keyboard shortcuts guide is open, so its text and Hide details button stay reachable.
+In short windows, the open keyboard guide scrolls inside the player to leave room for the details.
 The volume button shows the player's current percentage, or “Muted” while muted. Drag the volume
 slider, even in a narrow desktop window, or use Up and Down to adjust the level. On touch phones,
 use the device's volume buttons for the listening volume; the player keeps its compact mute control.

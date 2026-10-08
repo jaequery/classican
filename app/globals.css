@@ -219,6 +219,10 @@ body {
     /* Keep compact details and their disclosure clear of an expanded player. */
     max-height: min(40%, calc(100% - 200px), calc(100% - var(--wall-top) - 12px - var(--player-height, 204px) - var(--player-bottom)));
   }
+  /* Opening the details gives reading priority to the space above the player. */
+  .wall:has(.wall-toggle[aria-expanded="true"]) {
+    max-height: calc(100% - var(--wall-top) - 12px - var(--player-height, 204px) - var(--player-bottom));
+  }
   .wall-who {
     font-size: 16px;
   }
@@ -436,6 +440,14 @@ body {
 }
 .player-shortcuts p {
   margin: 0 0 10px;
+}
+
+/* In short windows, scroll the open guide inside the player and leave room
+   for the piece details, their disclosure, and the gap between the panels. */
+@media (max-height: 500px) {
+  .player:has(.player-shortcuts[open]) {
+    max-height: calc(100% - max(env(safe-area-inset-top), var(--update-bar)) - 24px - 120px - 12px - var(--player-bottom));
+  }
 }
 
 /* On small screens the player hugs the bottom edge; controls wrap when space is tight. */
