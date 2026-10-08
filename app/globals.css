@@ -477,7 +477,7 @@ body {
   }
 }
 @media (max-width: 720px) {
-  /* Counts sit below the icon or label so navigation keeps its full tap targets. */
+  /* Like's label and count share a line below the heart to keep its tap target compact. */
   .control.count {
     flex-direction: column;
     justify-content: center;
@@ -487,6 +487,7 @@ body {
     font-size: 12px;
     line-height: 1;
   }
+  .control.like-toggle,
   .control.comments-toggle {
     width: auto;
     padding: 0 6px;

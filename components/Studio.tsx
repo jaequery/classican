@@ -48,15 +48,14 @@ export function Studio({ site }: { site: Site }) {
     <>
       <button
         type="button"
-        className={data?.liked ? "control count liked" : "control count"}
+        className={data?.liked ? "control count like-toggle liked" : "control count like-toggle"}
         aria-pressed={Boolean(data?.liked)}
         onClick={() => (me ? social.toggleLike() : setAuth("signin"))}
       >
         <svg viewBox="0 0 20 20" aria-hidden="true">
           <path d="M10 17.2 8.9 16.2C4.8 12.5 2 10 2 6.9 2 4.4 4 2.5 6.4 2.5c1.4 0 2.7.6 3.6 1.7.9-1.1 2.2-1.7 3.6-1.7C16 2.5 18 4.4 18 6.9c0 3.1-2.8 5.6-6.9 9.3z" />
         </svg>
-        <span className="visually-hidden">Like</span>
-        <span className="tally">{data ? formatCount(data.likes) : ""}</span>
+        <span>Like{data ? ` ${formatCount(data.likes)}` : ""}</span>
       </button>
       <button
         type="button"
