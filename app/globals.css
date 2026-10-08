@@ -89,11 +89,12 @@ body {
 
 /* The wall label: a gallery caption beside the painting, top right. */
 .wall {
+  --wall-top: calc(24px + var(--update-bar));
   position: fixed;
   display: flex;
   flex-direction: column;
   right: 24px;
-  top: calc(24px + var(--update-bar));
+  top: var(--wall-top);
   width: min(380px, calc(100% - 48px));
   max-height: calc(100% - 48px - var(--update-bar));
   overflow: hidden;
@@ -198,7 +199,7 @@ body {
    Compact layouts retain their smaller height cap below. */
 @media (max-width: 1368px) {
   .wall {
-    max-height: calc(100% - 36px - var(--update-bar) - var(--player-height, 204px) - var(--player-bottom));
+    max-height: calc(100% - var(--wall-top) - 12px - var(--player-height, 204px) - var(--player-bottom));
   }
 }
 
@@ -206,16 +207,17 @@ body {
    It stays small so the painting shows between them; expanded details scroll inside it. */
 @media (max-width: 720px) {
   .wall {
+    --wall-top: calc(12px + max(env(safe-area-inset-top), var(--update-bar)));
     left: 12px;
     right: 12px;
-    top: calc(12px + max(env(safe-area-inset-top), var(--update-bar)));
     width: auto;
     padding: 10px 14px 2px;
   }
 }
 @media (max-width: 720px), (max-height: 500px) {
   .wall {
-    max-height: min(40%, calc(100% - 200px));
+    /* Keep compact details and their disclosure clear of an expanded player. */
+    max-height: min(40%, calc(100% - 200px), calc(100% - var(--wall-top) - 12px - var(--player-height, 204px) - var(--player-bottom)));
   }
   .wall-who {
     font-size: 16px;
