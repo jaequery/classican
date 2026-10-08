@@ -52,8 +52,8 @@ usual; Space activates a focused control.
 
 ## Accounts, likes and comments
 
-Beside next in the player are a heart and a comments button, each with its count for the piece now
-playing. The comments button opens a panel listing what listeners have said about that piece. The
+Beside next in the player are a heart and a button labeled “Comments,” each with its count for the piece now
+playing. Comments opens a panel listing what listeners have said about that piece. The
 piece title and close button stay visible while you scroll through a long thread. On phones and
 narrower desktops, comments stop above the player, even when a long piece title wraps or the
 keyboard shortcuts guide is open. Anyone
