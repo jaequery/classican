@@ -69,7 +69,9 @@ with that button or Escape returns focus to the control that opened it. Anyone
 can read likes and comments; pressing the heart, or "Sign in" in the panel, opens a dialog to sign in
 or create an account with a name, email and password. Signed in, a listener can like and unlike any
 piece, comment on it (up to 1,000 characters) and delete their own comments. Comments show the
-writer's name, never their email.
+writer's name, never their email. Deleting your own comment first asks “Delete this comment?”
+beside it: choose Keep to cancel or Delete to remove it. Closing comments or changing pieces
+cancels an unconfirmed choice.
 
 If saving a like fails, its notice stays just above the player and clear of the controls,
 even when the piece title wraps or the keyboard shortcuts guide is open.

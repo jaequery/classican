@@ -661,6 +661,18 @@ textarea::placeholder {
   white-space: pre-line;
   overflow-wrap: anywhere;
 }
+.talk-delete {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 16px;
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 15px;
+}
+.talk-delete .link.small {
+  margin-top: 0;
+}
 
 /* Buttons with words. Primary is Bone on Obsidian, like play. */
 .button {

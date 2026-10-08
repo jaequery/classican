@@ -30,6 +30,7 @@ export function Comments({ id, open, onClose, title, me, data, status, onRetry, 
   const [posting, setPosting] = useState(false);
   const [error, setError] = useState("");
   const [deleting, setDeleting] = useState<string | null>(null);
+  const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
   const closeButton = useRef<HTMLButtonElement>(null);
   const headingId = useId();
   const fieldId = useId();
@@ -44,6 +45,10 @@ export function Comments({ id, open, onClose, title, me, data, status, onRetry, 
     setText("");
     setError("");
   }, [title]);
+
+  useEffect(() => {
+    setConfirmDelete(null);
+  }, [open, title, me]);
 
   useEffect(() => {
     if (!open) return;
@@ -69,6 +74,8 @@ export function Comments({ id, open, onClose, title, me, data, status, onRetry, 
   }
 
   async function remove(commentId: string) {
+    if (deleting) return;
+    setConfirmDelete(null);
     setDeleting(commentId);
     setError("");
     const problem = await removeComment(commentId);
@@ -160,9 +167,22 @@ export function Comments({ id, open, onClose, title, me, data, status, onRetry, 
                 </p>
                 <p className="talk-text">{c.text}</p>
                 {c.mine && (
-                  <button type="button" className="link small" onClick={() => remove(c.id)} disabled={deleting === c.id}>
-                    {deleting === c.id ? "Deleting…" : "Delete"}
-                  </button>
+                  <div className="talk-delete">
+                    {confirmDelete === c.id && <span role="status">Delete this comment?</span>}
+                    <button
+                      type="button"
+                      className="link small"
+                      onClick={() => setConfirmDelete(confirmDelete === c.id ? null : c.id)}
+                      disabled={deleting !== null}
+                    >
+                      {deleting === c.id ? "Deleting…" : confirmDelete === c.id ? "Keep" : "Delete"}
+                    </button>
+                    {confirmDelete === c.id && (
+                      <button type="button" className="link small" onClick={() => remove(c.id)} disabled={deleting !== null}>
+                        Delete
+                      </button>
+                    )}
+                  </div>
                 )}
               </li>
             ))}
