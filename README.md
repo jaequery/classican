@@ -44,6 +44,7 @@ previous) and the OS "now playing" panel work too, and the browser tab names the
 “Piece & recording details” on the wall label opens the piece's background, composer biography,
 performer credit and recording's Commons page. “Hide details” closes it again and stays visible
 while you scroll through the details on a smaller screen.
+With focus inside the details panel, Escape closes it and returns focus to “Piece & recording details”.
 On phones and short windows, opening details uses the available reading space above the player;
 closing them returns to the compact label so more of the painting is visible.
 On phones and smaller or shorter desktop windows, the details panel stops above the player,
