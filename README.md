@@ -66,6 +66,7 @@ Escape closes it and returns focus to its heading. While typing, keys work as us
 a focused control.
 Hover or keyboard-focus the previous, play/pause, next or mute button to see its action and
 shortcut beside it. Escape dismisses the hint while leaving focus on the control.
+The mute and unmute hints stay inside the player in narrow windows.
 
 ## Accounts, likes and comments
 
