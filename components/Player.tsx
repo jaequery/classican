@@ -72,6 +72,9 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
   const lines = useRef(new Map<string, Promise<string | null>>()); // the host's words, by request
   const offAirShown = useRef(new Set<string>()); // each reason the host is off air is shown once a visit
   const speech = useRef(0); // the host's current segment, so a finished old one leaves the music alone
+  const talking = useRef(false); // the host is speaking now
+  // Some browsers (Safari, iOS) pause the music to let speech through; it resumes when the host is done.
+  const heldForHost = useRef(false);
   const sound = useRef({ volume: 80, silent: false }); // for speech started from event handlers
   const introSaid = useRef(false); // the loaded piece has had its intro (or was introduced by an outro)
   const outro = useRef<{ next: number; text: string | null; started: boolean } | null>(null);
@@ -139,12 +142,21 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
     [tracks],
   );
 
+  /** Resume music the host's speech pushed aside, if the listener still wants it. */
+  const release = useCallback(() => {
+    if (!heldForHost.current) return;
+    heldForHost.current = false;
+    if (want.current) audioRef.current?.play().catch(() => {});
+  }, []);
+
   const quiet = useCallback(() => {
     speech.current++;
+    talking.current = false;
     host.stop();
+    release();
     setDuck(1);
     setOnAir((now) => (now?.off ? now : null));
-  }, [host]);
+  }, [host, release]);
 
   const toggleHost = () => {
     const enabled = !hostEnabledRef.current;
@@ -167,15 +179,18 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
     (text: string, level: number) => {
       if (!hostEnabledRef.current || sound.current.silent) return;
       const id = ++speech.current;
+      talking.current = true;
       setDuck(level);
       setOnAir({ text });
       host.speak(text, sound.current.volume / 100).then(() => {
         if (id !== speech.current) return;
+        talking.current = false;
         setDuck(1);
         setOnAir((now) => (now?.off ? now : null));
+        release();
       });
     },
-    [host],
+    [host, release],
   );
 
   const load = useCallback(
@@ -365,6 +380,11 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
     // (media keys, the OS player, headphones unplugged).
     const onPause = () => {
       if (switching.current || audio.ended || audio.error || !want.current) return;
+      // The browser made room for the host's voice; the listener still wants the music.
+      if (talking.current) {
+        heldForHost.current = true;
+        return;
+      }
       setWant(false);
     };
     const onPlay = () => !want.current && setWant(true);
