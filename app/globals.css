@@ -478,6 +478,8 @@ body {
   line-height: 1.5;
 }
 .player-shortcuts summary {
+  width: fit-content;
+  max-width: calc(100% - 124px);
   min-height: 44px;
   padding: 10px 0;
   cursor: pointer;
