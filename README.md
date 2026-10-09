@@ -80,9 +80,9 @@ Turning it off stops the current announcement and restores the music's volume. T
 between visits; if browser storage is blocked, it lasts for this visit. Turning the host back on enables
 future introductions and outros without replaying an interrupted announcement or starting paused music.
 
-The words are written by Haiku 5.5 through the Vercel AI Gateway, from the facts and details in
+The words are written by OpenAI's GPT-6 Luna through the Vercel AI Gateway, from the facts and details in
 `lib/site.ts`, so the host doesn't invent history. Set `AI_GATEWAY_API_KEY` (on Vercel the deployment's
-OIDC token also works); `COMMENTARY_MODEL` changes the model, default `anthropic/claude-haiku-5.5`. If the
+OIDC token also works); `COMMENTARY_MODEL` changes the model, default `openai/gpt-6-luna`. If the
 gateway doesn't offer that model, the caption says “Host off air” and names the model; no other model
 is tried. Without a key the music plays as before and the caption says the key is missing.
 Answers come from `GET /api/commentary` and are cached at the CDN for a day.
