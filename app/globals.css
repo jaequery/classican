@@ -742,6 +742,8 @@ textarea::placeholder {
 }
 .talk-delete .link.small {
   margin-top: 0;
+  min-width: 44px;
+  min-height: 44px;
 }
 
 /* Buttons with words. Primary is Bone on Obsidian, like play. */

@@ -106,7 +106,8 @@ or create an account with a name, email and password. Signed in, a listener can 
 piece, comment on it (up to 1,000 characters) and delete their own comments. Comments show the
 writer's name, never their email. Deleting your own comment first asks “Delete this comment?”
 beside it: choose Keep to cancel or Delete to remove it. Closing comments or changing pieces
-cancels an unconfirmed choice.
+cancels an unconfirmed choice. Keep and Delete have at least 44×44-pixel tap targets,
+including on phones.
 
 If saving a like fails, its notice stays just above the player and clear of the controls,
 even when the piece title wraps or the keyboard shortcuts guide is open.
