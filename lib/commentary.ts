@@ -4,8 +4,8 @@ import { pieceId, site, type Track } from "./site";
 // lib/site.ts already says about each piece, so the host never has to guess.
 
 const GATEWAY_URL = "https://ai-gateway.vercel.sh/v1/chat/completions";
-/** The gateway's id for Haiku 5.5. Set COMMENTARY_MODEL to use another. */
-export const DEFAULT_MODEL = "anthropic/claude-haiku-5.5";
+/** The gateway's id for OpenAI GPT-6 Luna. Set COMMENTARY_MODEL to use another. */
+export const DEFAULT_MODEL = "openai/gpt-6-luna";
 
 export type Kind = "intro" | "outro";
 export type Commentary = { ok: true; text: string } | { ok: false; status: number; error: string };
@@ -51,6 +51,8 @@ export async function writeCommentary(kind: Kind, piece: Track, next?: Track): P
         model,
         max_tokens: 160,
         temperature: 0.8,
+        // Reasoning would spend max_tokens before any words are written; the host needs none.
+        reasoning: { enabled: false },
         messages: [
           { role: "system", content: HOST },
           { role: "user", content: prompt(kind, piece, next) },
