@@ -123,6 +123,7 @@ While typing a password, a quiet hint appears if the keyboard reports that Caps 
 It clears when Caps Lock is off or you leave the field.
 In short windows, the form fields scroll while the dialog heading, submit, Cancel and account-mode
 switch stay visible.
+The Sign in and Create an account switches have at least 44×44-pixel tap targets, including on phones.
 
 Everything listeners make is kept in Postgres on Neon, connected through Vercel's Neon integration,
 which sets `DATABASE_URL` (`POSTGRES_URL` also works). The tables (`users`, `sessions`, `likes`,
