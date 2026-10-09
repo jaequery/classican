@@ -75,6 +75,10 @@ introduces it in a sentence or two; just before it ends, the host back-announces
 and introduces the piece that plays next (so that piece starts without a second introduction).
 The music dips while the host talks and comes back up after. What the host says shows in an
 “On air” caption above the player. Pausing, skipping or muting stops the host.
+Use “Radio host” beside Keyboard shortcuts to turn narration off without pausing or muting the music.
+Turning it off stops the current announcement and restores the music's volume. The choice is remembered
+between visits; if browser storage is blocked, it lasts for this visit. Turning the host back on enables
+future introductions and outros without replaying an interrupted announcement or starting paused music.
 
 The words are written by Haiku 5.5 through the Vercel AI Gateway, from the facts and details in
 `lib/site.ts`, so the host doesn't invent history. Set `AI_GATEWAY_API_KEY` (on Vercel the deployment's

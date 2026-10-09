@@ -7,6 +7,7 @@ import { speakingTime, useHost } from "./useHost";
 
 const VOLUME_KEY = "classican:volume";
 const MUTED_KEY = "classican:muted";
+const HOST_KEY = "classican:host:v1";
 const VOLUME_STEP = 5;
 /** The music's level while the host speaks: the intro over the opening, the outro over the last bars. */
 const DUCK = { intro: 0.3, outro: 0.45 };
@@ -55,6 +56,8 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
   const [duration, setDuration] = useState<number | null>(null);
   const [hintDismissed, setHintDismissed] = useState(false);
   const [duck, setDuck] = useState(1);
+  const [hostEnabled, setHostEnabled] = useState(true);
+  const hostEnabledRef = useRef(true); // event handlers and pending requests need the latest choice
   // What the host is saying, or why the host is off air.
   const [onAir, setOnAir] = useState<{ text: string; off?: boolean } | null>(null);
 
@@ -105,6 +108,8 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
   /** The host's words for a piece (and the one after it, for an outro), fetched once. Null if the host has none. */
   const line = useCallback(
     (kind: "intro" | "outro", i: number, next?: number) => {
+      if (!hostEnabledRef.current) return Promise.resolve(null);
+      const segment = speech.current;
       const params = new URLSearchParams({ kind, piece: pieceId(tracks[i]) });
       if (next !== undefined) params.set("next", pieceId(tracks[next]));
       const key = params.toString();
@@ -119,7 +124,7 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
           .catch((err: unknown) => {
             lines.current.delete(key); // try again next time this piece comes round
             const reason = err instanceof Error && err.message !== "Failed to fetch" ? err.message : "The host could not be reached.";
-            if (!offAirShown.current.has(reason)) {
+            if (hostEnabledRef.current && segment === speech.current && !offAirShown.current.has(reason)) {
               offAirShown.current.add(reason);
               console.warn(`classican host: ${reason}`);
               setOnAir({ text: reason, off: true });
@@ -141,9 +146,26 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
     setOnAir((now) => (now?.off ? now : null));
   }, [host]);
 
+  const toggleHost = () => {
+    const enabled = !hostEnabledRef.current;
+    hostEnabledRef.current = enabled;
+    setHostEnabled(enabled);
+    // Invalidate pending introductions and outros as well as any speech in progress.
+    quiet();
+    setOnAir(null);
+    outro.current = null;
+    announced.current = null;
+    if (enabled) host.unlock();
+    try {
+      localStorage.setItem(HOST_KEY, String(enabled));
+    } catch {
+      // Not saved; it still applies for this visit.
+    }
+  };
+
   const say = useCallback(
     (text: string, level: number) => {
-      if (sound.current.silent) return;
+      if (!hostEnabledRef.current || sound.current.silent) return;
       const id = ++speech.current;
       setDuck(level);
       setOnAir({ text });
@@ -212,7 +234,7 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
   const play = useCallback(() => {
     const audio = audioRef.current;
     if (!audio || want.current) return;
-    host.unlock();
+    if (hostEnabledRef.current) host.unlock();
     setWant(true);
     if (!audio.src || audio.error) load(indexRef.current);
     start();
@@ -269,6 +291,8 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
     // Apply saved sound settings before attempting playback, without waiting
     // for the state updates to render. A muted visit must start muted too.
     try {
+      hostEnabledRef.current = localStorage.getItem(HOST_KEY) !== "false";
+      setHostEnabled(hostEnabledRef.current);
       const saved = localStorage.getItem(VOLUME_KEY);
       if (saved !== null && Number(saved) >= 0 && Number(saved) <= 100) {
         setVolume(Number(saved));
@@ -285,7 +309,7 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
     load(first);
     play();
     const onGesture = (e: Event) => {
-      if (e.target instanceof Element && e.target.closest(".player-shortcuts")) return;
+      if (e.target instanceof Element && e.target.closest(".player-shortcuts, .host-toggle")) return;
       // Dismissing a control hint should not start the music.
       if (e instanceof KeyboardEvent && e.key === "Escape") return;
       if (blocked.current && !want.current) play();
@@ -314,10 +338,11 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
       const t = tracks[i];
       setStatus(`Now playing ${t.title} by ${t.composer}.`);
       // The host introduces the piece as it begins, unless the last outro already did.
-      if (!introSaid.current) {
+      if (hostEnabledRef.current && !introSaid.current) {
         introSaid.current = true;
+        const segment = speech.current;
         line("intro", i).then((text) => {
-          if (text && i === indexRef.current && want.current && !outro.current?.started && audio.currentTime < 30) {
+          if (text && segment === speech.current && i === indexRef.current && want.current && !outro.current?.started && audio.currentTime < 30) {
             say(text, DUCK.intro);
           }
         });
@@ -348,7 +373,7 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
       setElapsed(Math.floor(audio.currentTime));
       // Near the end, the host back-announces the piece and introduces the one the deck will deal next.
       const left = audio.duration - audio.currentTime;
-      if (!Number.isFinite(left) || audio.paused || left > OUTRO_PREFETCH) return;
+      if (!hostEnabledRef.current || !Number.isFinite(left) || audio.paused || left > OUTRO_PREFETCH) return;
       const i = indexRef.current;
       if (!outro.current) {
         const next = deck.current!.peek(i);
@@ -600,6 +625,16 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
             />
           </div>
         </div>
+
+        <button
+          type="button"
+          className="host-toggle"
+          aria-label="Radio host"
+          aria-pressed={hostEnabled}
+          onClick={toggleHost}
+        >
+          Radio host <span aria-hidden="true">{hostEnabled ? "On" : "Off"}</span>
+        </button>
 
         <details
           className="player-shortcuts"

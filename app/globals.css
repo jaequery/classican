@@ -451,6 +451,26 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
+.host-toggle {
+  float: right;
+  min-height: 44px;
+  margin: 0 8px 0 12px;
+  padding: 10px 0;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font: inherit;
+  font-size: 14px;
+  line-height: 1.5;
+  cursor: pointer;
+}
+.host-toggle:hover,
+.host-toggle[aria-pressed="true"] span {
+  color: var(--ink);
+}
+.host-toggle span {
+  margin-left: 4px;
+}
 .player-shortcuts {
   margin-right: 8px;
   color: var(--muted);
@@ -458,6 +478,8 @@ body {
   line-height: 1.5;
 }
 .player-shortcuts summary {
+  width: fit-content;
+  max-width: calc(100% - 124px);
   min-height: 44px;
   padding: 10px 0;
   cursor: pointer;
@@ -466,6 +488,7 @@ body {
   color: var(--ink);
 }
 .player-shortcuts dl {
+  clear: both;
   display: grid;
   grid-template-columns: max-content 1fr;
   align-items: baseline;
