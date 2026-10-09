@@ -883,6 +883,10 @@ textarea::placeholder {
   color: var(--muted);
   font-size: 17px;
 }
+.auth-switch .link {
+  min-width: 44px;
+  min-height: 44px;
+}
 
 /* Keep feedback above the player as titles wrap or the keyboard guide opens. */
 .notice {
