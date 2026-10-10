@@ -21,8 +21,10 @@ export function Studio({ site }: { site: Site }) {
   const [index, setIndex] = useState(0);
   const [me, setMe] = useState<Me | null | undefined>(undefined);
   const [auth, setAuth] = useState<AuthMode | null>(null);
-  const [talking, setTalking] = useState(false);
+  // One side panel at a time: the piece's details or its comments.
+  const [panel, setPanel] = useState<"details" | "comments" | null>(null);
   const commentsId = useId();
+  const detailsId = useId();
   const clock = useRef(0);
   const track = site.tracks[index];
 
@@ -39,7 +41,9 @@ export function Studio({ site }: { site: Site }) {
   const signOut = useCallback(() => {
     fetch("/api/auth/logout", { method: "POST" }).finally(() => setMe(null));
   }, []);
-  const closeComments = useCallback(() => setTalking(false), []);
+  const closeComments = useCallback(() => setPanel((p) => (p === "comments" ? null : p)), []);
+  const closeDetails = useCallback(() => setPanel((p) => (p === "details" ? null : p)), []);
+  const toggle = (which: "details" | "comments") => setPanel((p) => (p === which ? null : which));
 
   const social = usePieceSocial(pieceId(track), Boolean(me), signedOut);
   const { data } = social;
@@ -55,20 +59,42 @@ export function Studio({ site }: { site: Site }) {
         <svg viewBox="0 0 20 20" aria-hidden="true">
           <path d="M10 17.2 8.9 16.2C4.8 12.5 2 10 2 6.9 2 4.4 4 2.5 6.4 2.5c1.4 0 2.7.6 3.6 1.7.9-1.1 2.2-1.7 3.6-1.7C16 2.5 18 4.4 18 6.9c0 3.1-2.8 5.6-6.9 9.3z" />
         </svg>
-        <span>{data?.liked ? "Liked" : "Like"}{data ? ` ${formatCount(data.likes)}` : ""}</span>
+        <span className="visually-hidden">{data?.liked ? "Liked" : "Like"}</span>
+        <span className="tally">{data ? formatCount(data.likes) : ""}</span>
       </button>
       <button
         type="button"
         className="control count comments-toggle"
-        aria-expanded={talking}
+        aria-expanded={panel === "comments"}
         aria-controls={commentsId}
-        onClick={() => setTalking((t) => !t)}
+        onClick={() => toggle("comments")}
       >
-        <span>Comments</span>
+        <svg viewBox="0 0 20 20" aria-hidden="true">
+          <path d="M3.5 4.5h13v8.5H8.5L5 16v-3H3.5z" />
+        </svg>
+        <span className="visually-hidden">Comments</span>
         <span className="tally">{data ? formatCount(data.comments.length) : ""}</span>
       </button>
     </>
   );
+
+  const details = (
+    <button
+      type="button"
+      className="control details-toggle"
+      aria-label="Piece & recording details"
+      aria-expanded={panel === "details"}
+      aria-controls={detailsId}
+      onClick={() => toggle("details")}
+    >
+      <svg viewBox="0 0 20 20" aria-hidden="true">
+        <circle cx="10" cy="10" r="7.25" />
+        <path d="M10 9v5M10 6.2v.1" />
+      </svg>
+    </button>
+  );
+
+  const composer = site.composers[track.composer];
 
   return (
     <>
@@ -81,10 +107,10 @@ export function Studio({ site }: { site: Site }) {
         factSeconds={site.factSeconds}
       />
       {site.update && <UpdateBar update={site.update} />}
-      <WallLabel track={track} composer={site.composers[track.composer]} />
+      <WallLabel id={detailsId} open={panel === "details"} onClose={closeDetails} track={track} composer={composer} />
       <Comments
         id={commentsId}
-        open={talking}
+        open={panel === "comments"}
         onClose={closeComments}
         title={track.title}
         me={me}
@@ -96,7 +122,16 @@ export function Studio({ site }: { site: Site }) {
         addComment={social.addComment}
         removeComment={social.removeComment}
       />
-      <Player tracks={site.tracks} index={index} onPlayingChange={setPlaying} onTrackChange={setIndex} actions={actions} clock={clock} />
+      <Player
+        tracks={site.tracks}
+        index={index}
+        onPlayingChange={setPlaying}
+        onTrackChange={setIndex}
+        actions={actions}
+        dates={`${composer.born}–${composer.died}`}
+        details={details}
+        clock={clock}
+      />
       <AuthDialog mode={auth} onModeChange={setAuth} onSignedIn={setMe} />
       <p className={social.message ? "notice" : "visually-hidden"} role="status">
         {social.message}

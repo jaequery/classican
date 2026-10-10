@@ -8,8 +8,8 @@
   --accent-ink: var(--canvas);
   --font: var(--font-text), Georgia, "Times New Roman", serif;
   --font-title: var(--font-display), Georgia, "Times New Roman", serif;
-  --update-bar: 0px; /* The update bar's height while it shows; UpdateBar sets it. */
-  --player-bottom: 24px;
+  --hair: rgb(250 250 250 / 0.16); /* Hairlines: the seek line, panel edges and dividers */
+  --drawer: 0px; /* The side panel's width while it is open beside the player. */
   color-scheme: dark;
 }
 
@@ -87,29 +87,67 @@ body {
   text-transform: uppercase;
 }
 
-/* The wall label: a gallery caption beside the painting, top right. */
-.wall {
-  --wall-top: calc(24px + var(--update-bar));
+/* Side panels: the wall label and the comments share one quiet drawer down the right edge,
+   one at a time. The caption strip makes room beside it. On narrow screens it is a bottom sheet. */
+.drawer {
   position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 3;
   display: flex;
   flex-direction: column;
-  right: 24px;
-  top: var(--wall-top);
-  width: min(380px, calc(100% - 48px));
-  max-height: calc(100% - 48px - var(--update-bar));
-  overflow: hidden;
-  padding: 18px 20px 6px;
-  background: var(--surface);
-  border-radius: 4px;
-  box-shadow: 0 10px 32px rgb(0 0 0 / 0.45);
+  width: min(400px, 100%);
+  padding: 8px 28px 0;
+  background: var(--canvas);
+  border-left: 1px solid var(--hair);
 }
-/* Keep the disclosure in view while the piece details scroll. */
-.wall-body {
+.drawer[hidden] {
+  display: none;
+}
+@media (min-width: 721px) {
+  :root:has(.drawer:not([hidden])) {
+    --drawer: min(400px, 100vw);
+  }
+}
+@media (max-width: 720px) {
+  .drawer {
+    top: auto;
+    left: 0;
+    width: auto;
+    height: min(80%, calc(100% - 12px - env(safe-area-inset-top)));
+    padding: 6px 20px env(safe-area-inset-bottom);
+    border-left: 0;
+    border-top: 1px solid var(--hair);
+    border-radius: 16px 16px 0 0;
+  }
+}
+.drawer-head {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-right: -12px;
+}
+.drawer-head h2 {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+/* Keep the heading and close button in view while the panel scrolls. */
+.drawer-body {
   min-height: 0;
+  flex: 1;
   overflow-y: auto;
+  /* Leave room for focus outlines without shifting the content. */
   margin: 0 -4px;
-  padding: 0 4px;
+  padding: 4px 4px 24px;
 }
+
+/* The wall label inside its panel. */
 .wall-who {
   font-size: 19px;
   font-weight: 600;
@@ -122,40 +160,27 @@ body {
   font-weight: 500;
 }
 .wall-what {
-  margin-top: 10px;
+  margin-top: 14px;
   font-family: var(--font-title);
-  font-size: 22px;
+  font-size: 26px;
   font-weight: 600;
-  line-height: 1.25;
+  line-height: 1.2;
   text-wrap: balance;
 }
-.wall-what span {
-  color: var(--muted);
-  font-family: var(--font);
-  font-size: 19px;
-  font-weight: 500;
-}
 .wall-meta {
-  margin-top: 6px;
+  margin-top: 4px;
   color: var(--muted);
-  font-size: 18px;
+  font-size: 17px;
   line-height: 1.4;
 }
 .wall-more {
-  display: grid;
-  grid-template-rows: 0fr;
-  transition: grid-template-rows 380ms ease;
-}
-.wall-more.open {
-  grid-template-rows: 1fr;
-}
-.wall-more > div {
-  overflow: hidden;
+  margin-top: 22px;
+  border-top: 1px solid var(--hair);
 }
 .wall-more p {
-  margin-top: 12px;
-  font-size: 18px;
-  line-height: 1.45;
+  margin-top: 14px;
+  font-size: 17px;
+  line-height: 1.5;
   text-wrap: pretty;
 }
 .wall-more a {
@@ -167,162 +192,204 @@ body {
 }
 .wall-key {
   display: block;
+  margin-bottom: 2px;
   color: var(--muted);
-  font-size: 15px;
+  font-size: 13px;
   font-weight: 600;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
 }
-.wall-toggle {
-  flex-shrink: 0;
-  align-self: flex-start;
-  height: 44px;
-  margin: 2px 0 0 -12px;
-  padding: 0 12px;
-  border: 0;
-  border-radius: 12px;
-  background: none;
-  color: var(--muted);
-  font: 600 17px var(--font);
-  letter-spacing: 0.02em;
-  cursor: pointer;
-  transition: opacity 120ms;
-}
-.wall-toggle[aria-expanded="true"] {
-  color: var(--ink);
-}
-.wall-toggle:hover {
-  opacity: 0.72;
-}
 
-/* Where desktop details could reach the player, keep the disclosure above it.
-   Compact layouts retain their smaller height cap below. */
-@media (max-width: 1368px) {
-  .wall {
-    max-height: calc(100% - var(--wall-top) - 12px - var(--player-height, 204px) - var(--player-bottom));
-  }
-}
-
-/* On narrow screens the label spans the top, leaving the bottom to the player.
-   It stays small so the painting shows between them; expanded details scroll inside it. */
-@media (max-width: 720px) {
-  .wall {
-    --wall-top: calc(12px + max(env(safe-area-inset-top), var(--update-bar)));
-    left: 12px;
-    right: 12px;
-    width: auto;
-    padding: 10px 14px 2px;
-  }
-}
-@media (max-width: 720px), (max-height: 500px) {
-  .wall {
-    /* Keep compact details and their disclosure clear of an expanded player. */
-    max-height: min(40%, calc(100% - 200px), calc(100% - var(--wall-top) - 12px - var(--player-height, 204px) - var(--player-bottom)));
-  }
-  /* Opening the details gives reading priority to the space above the player. */
-  .wall:has(.wall-toggle[aria-expanded="true"]) {
-    max-height: calc(100% - var(--wall-top) - 12px - var(--player-height, 204px) - var(--player-bottom));
-  }
-  .wall-who {
-    font-size: 16px;
-  }
-  .wall-who span {
-    display: inline;
-    font-size: 15px;
-  }
-  .wall-who span::before {
-    content: " · ";
-  }
-  .wall-what {
-    margin-top: 4px;
-    font-size: 18px;
-  }
-  .wall-what span {
-    font-size: 16px;
-  }
-  .wall-meta {
-    margin-top: 2px;
-    font-size: 15px;
-  }
-  .wall-more p {
-    font-size: 16px;
-  }
-  .wall-key {
-    font-size: 13px;
-  }
-  .wall-toggle {
-    font-size: 15px;
-  }
-}
-
-/* The player: a Graphite pill at bottom centre. */
+/* The player: one borderless strip of type along the bottom edge, set on a dark scrim that
+   rises out of the painting like film subtitles. Play is the only filled shape. */
 .player {
   position: fixed;
-  left: 50%;
-  bottom: var(--player-bottom);
-  transform: translateX(-50%);
-  width: min(560px, calc(100% - 32px));
-  max-height: calc(100% - 48px);
-  overflow-y: auto;
-  padding: 18px 16px 10px 24px;
-  background: var(--surface);
-  border-radius: 16px;
+  left: 0;
+  right: var(--drawer);
+  bottom: 0;
+  padding: 0 40px calc(26px + env(safe-area-inset-bottom));
+}
+.player::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+  height: calc(100% + 150px);
+  background: linear-gradient(to top, rgb(12 12 12 / 0.92) 0%, rgb(12 12 12 / 0.8) 40%, rgb(12 12 12 / 0.4) 72%, rgb(12 12 12 / 0));
+  pointer-events: none;
 }
 
+/* Seeking: a hairline along the strip's top edge, edge to edge, with the times at its ends. */
+.playback-time {
+  position: relative;
+  height: 28px;
+  margin: 0 -40px 10px;
+  color: var(--muted);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+.playback-time::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+  background: var(--hair);
+}
+.playback-elapsed,
+.playback-total {
+  position: absolute;
+  bottom: calc(50% + 6px);
+  line-height: 1;
+  white-space: nowrap;
+}
+.playback-elapsed {
+  left: 40px;
+}
+.playback-total {
+  right: 40px;
+}
+.playback-progress {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  background: transparent;
+  cursor: pointer;
+  appearance: none;
+}
+/* Give seeking the same touch height as the playback controls. */
+@media (pointer: coarse) {
+  .playback-progress {
+    top: -8px;
+    bottom: -8px;
+    height: auto;
+  }
+}
+
+/* Both sliders: a thin line, filled up to a small dot. */
+.playback-progress::-webkit-slider-runnable-track,
+.volume input::-webkit-slider-runnable-track {
+  height: 1px;
+  background: linear-gradient(to right, var(--ink) var(--progress, 0%), var(--hair) var(--progress, 0%));
+}
+.volume input::-webkit-slider-runnable-track {
+  height: 2px;
+  border-radius: 1px;
+}
+.playback-progress::-webkit-slider-thumb,
+.volume input::-webkit-slider-thumb {
+  width: 11px;
+  height: 11px;
+  margin-top: -5px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--ink);
+  appearance: none;
+}
+.volume input::-webkit-slider-thumb {
+  width: 12px;
+  height: 12px;
+}
+.playback-progress::-moz-range-track,
+.volume input::-moz-range-track {
+  height: 1px;
+  background: var(--hair);
+}
+.playback-progress::-moz-range-progress,
+.volume input::-moz-range-progress {
+  height: 1px;
+  background: var(--ink);
+}
+.playback-progress::-moz-range-thumb,
+.volume input::-moz-range-thumb {
+  width: 11px;
+  height: 11px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--ink);
+}
+.playback-progress:focus-visible,
+.volume input:focus-visible {
+  outline: none;
+}
+.playback-progress:focus-visible::-webkit-slider-thumb,
+.volume input:focus-visible::-webkit-slider-thumb {
+  box-shadow: 0 0 0 3px var(--canvas), 0 0 0 5px var(--ink);
+}
+.playback-progress:focus-visible::-moz-range-thumb,
+.volume input:focus-visible::-moz-range-thumb {
+  box-shadow: 0 0 0 3px var(--canvas), 0 0 0 5px var(--ink);
+}
+
+/* Title on the left, transport in the centre with the status beneath, the piece's actions on the right. */
+.controls {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  grid-template-areas:
+    "now transport actions"
+    "now status actions";
+  align-items: center;
+  column-gap: 32px;
+}
 .now {
+  grid-area: now;
   display: flex;
-  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 8px;
+  min-width: 0;
+}
+.now p {
+  display: flex;
   flex-direction: column;
-  row-gap: 4px;
-  padding-right: 8px;
-  line-height: 1.15;
+  row-gap: 2px;
+  min-width: 0;
 }
 /* The piece in display serif, like a concert programme; its composer beneath. */
 .title {
   color: var(--ink);
   font-family: var(--font-title);
-  font-size: clamp(24px, 1.6vw + 16px, 32px);
+  font-size: clamp(22px, 0.8vw + 14px, 26px);
   font-weight: 600;
+  line-height: 1.15;
   letter-spacing: 0.005em;
   text-wrap: balance;
 }
 .composer {
   color: var(--muted);
-  font-size: clamp(18px, 0.6vw + 15px, 21px);
-  font-weight: 600;
-  letter-spacing: 0.02em;
+  font-size: 15px;
+  line-height: 1.3;
 }
-
-.playback-time {
+.transport {
+  grid-area: transport;
   display: flex;
   align-items: center;
-  gap: 12px;
+  justify-content: center;
+  gap: 14px;
+}
+.player-status {
+  grid-area: status;
+  min-height: 18px;
+  margin-top: 4px;
   color: var(--muted);
-  font-size: 14px;
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
+  font-size: 13px;
+  line-height: 18px;
+  text-align: center;
 }
-.playback-progress {
-  flex: 1;
-  min-width: 0;
-  height: 24px;
-  margin: 0;
-  accent-color: var(--accent);
-  cursor: pointer;
-}
-/* Give seeking the same touch height as the playback controls. */
-@media (pointer: coarse) {
-  .playback-progress {
-    height: 44px;
-  }
-}
-
-.controls {
+.actions {
+  grid-area: actions;
+  justify-self: end;
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
-  gap: 4px;
-  margin: 10px 0 0 -12px;
+  gap: 2px;
+}
+/* The details button sits after volume on wide screens and beside the title on small ones. */
+.now-details {
+  display: none;
 }
 
 .control {
@@ -333,11 +400,11 @@ body {
   flex: none;
   padding: 0;
   border: 0;
-  border-radius: 12px;
+  border-radius: 22px;
   background: none;
   color: var(--ink);
   cursor: pointer;
-  transition: opacity 120ms;
+  transition: background-color 120ms;
 }
 .control svg {
   width: 20px;
@@ -345,11 +412,23 @@ body {
   fill: currentColor;
 }
 .control:hover:not(:disabled) {
-  opacity: 0.72;
+  background: rgb(250 250 250 / 0.09);
 }
 .control:disabled {
-  opacity: 0.35;
+  opacity: 0.32;
   cursor: default;
+}
+/* Outline icons: like, comments and details. */
+.control.count svg,
+.details-toggle svg {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.control.liked svg {
+  fill: currentColor;
 }
 
 /* Contextual labels keep the idle player compact. They stay within its left edge. */
@@ -377,8 +456,8 @@ body {
   font: inherit;
   opacity: 0.7;
 }
-/* The last control sits at the right edge on touch phones. Keep its hint inside. */
-.volume .control-hint {
+/* Controls near the right edge keep their hints inside it. */
+.actions .control-hint {
   left: auto;
   right: 0;
 }
@@ -389,28 +468,17 @@ body {
   .controls:not([data-hint-dismissed]) .control:hover:not(:disabled) .control-hint {
     visibility: visible;
   }
-  .control:has(.control-hint):hover:not(:disabled) {
-    opacity: 1;
-  }
 }
 
-/* Like and comments: an icon or label with its count beside it. */
+/* Like and comments: an icon with its count beside it. */
 .control.count {
   display: flex;
-  gap: 6px;
+  gap: 7px;
   width: auto;
   min-width: 44px;
-  padding: 0 10px;
-  font: 600 17px var(--font);
-}
-.control.count svg {
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.6;
-  stroke-linejoin: round;
-}
-.control.liked svg {
-  fill: currentColor;
+  padding: 0 12px 0 10px;
+  font: 600 15px var(--font);
+  font-variant-numeric: tabular-nums;
 }
 .tally:empty {
   display: none;
@@ -418,77 +486,122 @@ body {
 
 /* Play is the one action with weight: a Bone disc with an Obsidian glyph. */
 .control.play {
+  width: 56px;
+  height: 56px;
   border-radius: 50%;
   background: var(--accent);
   color: var(--accent-ink);
+}
+.control.play:hover {
+  background: #fff;
 }
 
 .volume {
   display: flex;
   align-items: center;
-  gap: 4px;
-  flex: 1 1 140px;
-  min-width: 0;
-  margin-left: auto;
+  gap: 6px;
+  margin: 0 4px;
 }
 .volume input {
-  flex: 1;
-  min-width: 64px;
+  width: 92px;
+  min-width: 48px;
   height: 44px;
-  margin: 0 8px 0 0;
-  accent-color: var(--accent);
+  margin: 0;
   background: transparent;
   cursor: pointer;
-}
-.volume .control {
-  grid-template-rows: 20px 12px;
-  align-content: center;
-  row-gap: 2px;
+  appearance: none;
 }
 .volume-level {
+  min-width: 4ch;
   color: var(--muted);
-  font: 600 12px/1 var(--font);
+  font: 500 12px/1 var(--font);
   font-variant-numeric: tabular-nums;
 }
 
+/* The more menu: the radio host switch and the keyboard guide, above the strip's right end. */
+.player-more {
+  position: relative;
+}
+.more-menu {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 12px);
+  z-index: 2;
+  width: min(320px, calc(100vw - 32px));
+  max-height: calc(100vh - var(--player-height, 160px) - 24px);
+  overflow-y: auto;
+  padding: 6px 0 10px;
+  background: var(--canvas);
+  border: 1px solid var(--hair);
+  border-radius: 10px;
+  box-shadow: 0 12px 32px rgb(0 0 0 / 0.45);
+}
+.more-menu[hidden] {
+  display: none;
+}
 .host-toggle {
-  float: right;
-  min-height: 44px;
-  margin: 0 8px 0 12px;
-  padding: 10px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 52px;
+  padding: 0 18px;
   border: 0;
   background: none;
-  color: var(--muted);
-  font: inherit;
-  font-size: 14px;
-  line-height: 1.5;
+  color: var(--ink);
+  font: 500 16px var(--font);
   cursor: pointer;
 }
-.host-toggle:hover,
-.host-toggle[aria-pressed="true"] span {
-  color: var(--ink);
+.host-toggle:hover {
+  background: rgb(250 250 250 / 0.06);
 }
-.host-toggle span {
-  margin-left: 4px;
+.switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--muted);
+  font-size: 14px;
+}
+.switch-track {
+  position: relative;
+  width: 34px;
+  height: 20px;
+  border-radius: 10px;
+  background: rgb(250 250 250 / 0.22);
+}
+.switch-track::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--ink);
+}
+.host-toggle[aria-pressed="true"] .switch-track {
+  background: var(--muted);
+}
+.host-toggle[aria-pressed="true"] .switch-track::after {
+  transform: translateX(14px);
+  background: var(--canvas);
 }
 .player-shortcuts {
-  margin-right: 8px;
+  margin-top: 4px;
+  padding: 10px 18px 0;
+  border-top: 1px solid var(--hair);
   color: var(--muted);
   font-size: 14px;
   line-height: 1.5;
 }
-.player-shortcuts summary {
-  width: fit-content;
-  max-width: calc(100% - 124px);
-  min-height: 44px;
-  padding: 10px 0;
-  cursor: pointer;
-}
-.player-shortcuts summary:hover {
-  color: var(--ink);
+.player-shortcuts h2 {
+  margin-bottom: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
 .player-shortcuts dl {
-  clear: both;
   display: grid;
   grid-template-columns: max-content 1fr;
   align-items: baseline;
@@ -502,67 +615,87 @@ body {
   color: var(--ink);
   font: 600 14px var(--font);
 }
-.player-shortcuts p {
-  margin: 0 0 10px;
-}
 
-/* In short windows, scroll the open guide inside the player and leave room
-   for the piece details, their disclosure, and the gap between the panels. */
-@media (max-height: 500px) {
-  .player:has(.player-shortcuts[open]) {
-    max-height: calc(100% - max(env(safe-area-inset-top), var(--update-bar)) - 24px - 120px - 12px - var(--player-bottom));
-  }
-}
-
-/* On small screens the player hugs the bottom edge; controls wrap when space is tight. */
-@media (max-width: 720px), (max-height: 500px) {
-  :root {
-    --player-bottom: calc(12px + env(safe-area-inset-bottom));
-  }
+/* On small screens the strip stacks: the title row, the status, then the controls. */
+@media (max-width: 720px) {
   .player {
-    width: min(560px, calc(100% - 24px));
-    padding: 10px 8px 4px 16px;
+    padding: 0 16px calc(22px + env(safe-area-inset-bottom));
+  }
+  .playback-time {
+    margin: 0 -16px 8px;
+  }
+  .playback-elapsed {
+    left: 16px;
+  }
+  .playback-total {
+    right: 16px;
+  }
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
   }
   .now {
-    row-gap: 2px;
+    flex: 1 1 100%;
+  }
+  .now p {
+    flex: 1;
   }
   .title {
     font-size: 20px;
   }
   .composer {
-    font-size: 16px;
-  }
-  .controls {
-    gap: 2px;
-    margin-top: 4px;
-  }
-  .control.count {
-    padding: 0 8px;
-  }
-}
-@media (max-width: 720px) {
-  /* Like's label and count share a line below the heart to keep its tap target compact. */
-  .control.count {
-    flex-direction: column;
-    justify-content: center;
-    gap: 2px;
-    width: 44px;
-    padding: 0;
-    font-size: 12px;
-    line-height: 1;
-  }
-  .control.like-toggle,
-  .control.comments-toggle {
-    width: auto;
-    padding: 0 6px;
     font-size: 14px;
+  }
+  .now-details {
+    display: block;
+    margin: -8px -10px 0 0;
+  }
+  .actions-details {
+    display: none;
+  }
+  .player-status {
+    order: 1;
+    flex: 1 1 100%;
+    min-height: 0;
+    margin: 2px 0 6px;
+    font-size: 13px;
+    text-align: left;
+  }
+  .player-status:empty {
+    margin: 0 0 4px;
+  }
+  .transport {
+    order: 2;
+    gap: 2px;
+    margin-left: -10px;
+  }
+  .control.play {
+    width: 52px;
+    height: 52px;
+  }
+  .actions {
+    order: 3;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0;
+    margin-right: -10px;
+  }
+  .control.count {
+    gap: 5px;
+    padding: 0 8px 0 7px;
+    font-size: 14px;
+  }
+  .volume {
+    margin: 0;
+  }
+  .volume-level {
+    display: none;
   }
 }
 /* Touch phones use device volume buttons. Narrow desktop windows keep the slider. */
 @media (max-width: 720px) and (hover: none) and (pointer: coarse) {
-  .volume {
-    flex: 0 0 auto;
-  }
   .volume input {
     display: none;
   }
@@ -573,63 +706,16 @@ body {
   outline-offset: 2px;
 }
 
-/* Comments: a panel on the left, clear of the wall label and the player. */
-.talk {
-  position: fixed;
-  display: flex;
-  flex-direction: column;
-  left: 24px;
-  top: calc(24px + var(--update-bar));
-  z-index: 1;
-  width: min(380px, calc(100% - 48px));
-  max-height: calc(100% - 48px - var(--update-bar));
-  padding: 14px 20px 0;
-  background: var(--surface);
-  border-radius: 4px;
-  box-shadow: 0 10px 32px rgb(0 0 0 / 0.45);
-  overflow: hidden;
-}
-.talk[hidden] {
-  display: none;
-}
-/* Where the panel could reach the player, it stops above it. */
-@media (max-width: 1368px) {
-  .talk {
-    max-height: calc(100% - 36px - var(--update-bar) - var(--player-height, 204px) - var(--player-bottom));
-  }
-}
-@media (max-width: 720px) {
-  .talk {
-    left: 12px;
-    right: 12px;
-    top: calc(12px + max(env(safe-area-inset-top), var(--update-bar)));
-    width: auto;
-    max-height: calc(100% - 24px - max(env(safe-area-inset-top), var(--update-bar)) - var(--player-height, 144px) - var(--player-bottom));
-    padding: 12px 16px 0;
-  }
-}
-.talk-head {
-  display: flex;
-  flex-shrink: 0;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 8px;
-  margin-right: -12px;
-}
-/* Keep the title and close button in view while the thread scrolls. */
-.talk-body {
-  min-height: 0;
-  overflow-y: auto;
-  /* Leave room for focus outlines without shifting the content. */
-  margin: 0 -4px;
-  padding: 0 4px;
-}
+/* Comments, in the side panel. */
 .talk-head h2 {
   padding-top: 6px;
+  color: var(--ink);
   font-family: var(--font-title);
   font-size: 22px;
   font-weight: 600;
+  letter-spacing: normal;
   line-height: 1.25;
+  text-transform: none;
 }
 .talk-head h2 span {
   display: block;
@@ -888,13 +974,13 @@ textarea::placeholder {
   min-height: 44px;
 }
 
-/* Keep feedback above the player as titles wrap or the keyboard guide opens. */
+/* Keep feedback above the player as titles wrap. */
 .notice {
   position: fixed;
-  left: 50%;
-  bottom: calc(var(--player-bottom) + var(--player-height, 204px) + 12px);
+  left: calc((100% - var(--drawer)) / 2);
+  bottom: calc(var(--player-height, 160px) + 12px);
   transform: translateX(-50%);
-  max-width: calc(100% - 32px);
+  max-width: calc(100% - var(--drawer) - 32px);
   padding: 8px 14px;
   background: var(--surface);
   border-left: 3px solid var(--muted);
@@ -988,8 +1074,8 @@ textarea::placeholder {
   }
 }
 
-/* The update bar: a thin strip across the very top, like the running head of a printed
-   programme. The message wraps when needed so the whole update stays readable. */
+/* The update bar: one line of plain type across the very top, on a gradient that fades into
+   the painting. The message wraps when needed so the whole update stays readable. */
 .update {
   position: fixed;
   left: 0;
@@ -999,23 +1085,21 @@ textarea::placeholder {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
-  min-height: 48px;
-  padding: 8px 52px;
-  background: var(--canvas);
-  border-bottom: 1px solid #2f2f2f;
-  font-size: 15px;
+  gap: 10px;
+  min-height: 44px;
+  padding: 6px 52px 14px;
+  background: linear-gradient(to bottom, rgb(10 10 10 / 0.75), rgb(10 10 10 / 0));
+  color: var(--muted);
+  font-size: 14px;
   line-height: 1.3;
+  text-shadow: 0 1px 2px rgb(0 0 0 / 0.7);
 }
 .update-new {
   flex: none;
-  padding: 1px 8px 2px;
-  border-radius: 999px;
-  background: var(--ink);
-  color: var(--canvas);
+  color: var(--ink);
   font-size: 11px;
   font-weight: 600;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
 }
 .update-text {
@@ -1024,36 +1108,34 @@ textarea::placeholder {
 }
 .update-date {
   flex: none;
-  color: var(--muted);
 }
-.update-date::before {
+.update-new::after,
+.update-text::after {
   content: "·";
-  margin-right: 12px;
-  color: #6b6b6b;
+  margin-left: 10px;
 }
 .update-close {
   position: absolute;
   right: 4px;
-  top: 50%;
+  top: 0;
   display: grid;
   place-items: center;
   width: 44px;
   height: 44px;
   padding: 0;
   border: 0;
-  border-radius: 8px;
+  border-radius: 22px;
   background: none;
   color: var(--muted);
   cursor: pointer;
-  transform: translateY(-50%);
-  transition: opacity 120ms;
+  transition: background-color 120ms;
 }
 .update-close:hover {
-  opacity: 0.72;
+  background: rgb(250 250 250 / 0.09);
 }
 .update-close svg {
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   fill: none;
   stroke: currentColor;
   stroke-width: 1.8;
@@ -1065,15 +1147,18 @@ textarea::placeholder {
     flex-wrap: wrap;
     justify-content: flex-start;
     gap: 2px 8px;
-    padding: calc(8px + env(safe-area-inset-top)) 52px 8px 14px;
+    padding: calc(8px + env(safe-area-inset-top)) 52px 16px 16px;
     font-size: 13px;
   }
   .update-text {
     flex: 1 1 100%;
     order: 1;
   }
-  .update-date::before {
+  .update-text::after {
     display: none;
+  }
+  .update-close {
+    top: env(safe-area-inset-top);
   }
 }
 
@@ -1099,34 +1184,33 @@ textarea::placeholder {
   white-space: nowrap;
 }
 
-/* The radio host: what is being said, like a caption, just above the player. */
+/* The radio host: what is being said, as a subtitle centred just above the strip, with no box. */
 .on-air {
   position: fixed;
-  left: 50%;
-  bottom: calc(var(--player-bottom) + var(--player-height, 204px) + 12px);
+  left: calc((100% - var(--drawer)) / 2);
+  bottom: calc(var(--player-height, 160px) + 20px);
   transform: translateX(-50%);
-  width: min(560px, calc(100% - 32px));
-  padding: 10px 16px 12px;
-  background: var(--surface);
-  border-left: 3px solid var(--ink);
-  border-radius: 4px;
+  width: min(880px, calc(100% - var(--drawer) - 32px));
   color: var(--ink);
-  font-size: 17px;
-  line-height: 1.4;
+  font-size: 21px;
+  line-height: 1.45;
+  text-align: center;
+  text-wrap: balance;
+  text-shadow: 0 1px 2px rgb(0 0 0 / 0.95), 0 0 16px rgb(0 0 0 / 0.7);
   animation: on-air-in 0.4s ease-out;
 }
 .on-air.off {
-  border-left-color: var(--muted);
   color: var(--muted);
+  font-size: 17px;
 }
 .on-air-label {
-  display: block;
-  margin-bottom: 2px;
+  margin-right: 10px;
   color: var(--muted);
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
+  vertical-align: 2px;
 }
 .on-air:not(.off) .on-air-label::before {
   content: "";
@@ -1137,6 +1221,14 @@ textarea::placeholder {
   border-radius: 50%;
   background: var(--ink);
   vertical-align: 1px;
+}
+@media (max-width: 720px) {
+  .on-air {
+    font-size: 16px;
+  }
+  .on-air.off {
+    font-size: 14px;
+  }
 }
 @keyframes on-air-in {
   from {
@@ -1150,9 +1242,7 @@ textarea::placeholder {
   .button,
   .fact,
   .credit,
-  .credit-tip,
-  .wall-more,
-  .wall-toggle {
+  .credit-tip {
     transition: none;
   }
   .on-air {

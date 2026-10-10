@@ -95,8 +95,8 @@ export function Comments({ id, open, onClose, title, me, data, status, onRetry, 
   }
 
   return (
-    <aside id={id} className="talk" aria-labelledby={headingId} hidden={!open}>
-      <header className="talk-head">
+    <aside id={id} className="drawer talk" aria-labelledby={headingId} hidden={!open}>
+      <header className="drawer-head talk-head">
         <h2 id={headingId}>
           Comments <span>on {title}</span>
         </h2>
@@ -107,7 +107,7 @@ export function Comments({ id, open, onClose, title, me, data, status, onRetry, 
         </button>
       </header>
 
-      <div ref={bodyRef} className="talk-body">
+      <div ref={bodyRef} className="drawer-body talk-body">
         {me ? (
           <form className="talk-form" onSubmit={post}>
             <label htmlFor={fieldId} className="visually-hidden">

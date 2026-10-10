@@ -1,7 +1,9 @@
 # classican
 
-One screen of public-domain classical music for studying and deep work. The only interface is a
-small player at bottom centre: previous, play/pause, next and volume. Behind it is an original pixel
+One screen of public-domain classical music for studying and deep work. The only interface is one
+borderless strip along the bottom edge, on a dark gradient that rises out of the painting like film
+subtitles: the piece's title and composer on the left, previous, play/pause and next in the centre,
+and like, comments, volume, details and a "⋯" menu on the right. Behind it is an original pixel
 painting of the piece that is playing: Greek dancers for Satie's Gymnopédie, Verlaine's moonlit park
 for Clair de lune, Bach's two-keyboard harpsichord, and so on. While music plays, a short fact about
 the piece's history comes every 40 seconds or so: the painting dims gently around the thing the fact
@@ -10,9 +12,9 @@ A piece that tells a story follows it as it plays: when the Moldau reaches the f
 peasant wedding or the nymphs dancing by moonlight, the painting turns to that scene and a card
 marked "The story" says what the music is depicting.
 Listeners can make an account to like pieces and leave comments on them; everyone else can read them.
-A thin bar along the top says what changed on the site lately, marked "New" and dated; × dismisses
-it until the next update. The dismiss button has the same 44×44-pixel target as the player controls,
-with space beside it for the message to wrap and stay readable in narrower windows.
+One line of plain text along the top says what changed on the site lately, marked "New" and dated; ×
+dismisses it until the next update. The dismiss button has the same 44×44-pixel target as the player
+controls, with space beside it for the message to wrap and stay readable in narrower windows.
 No search, no other pages.
 
 ## Run
@@ -31,51 +33,47 @@ next (or the end of a piece) picks another at random. Previous, or Left, goes ba
 before; it is unavailable until there is a previous piece. Next then returns to the piece you left.
 Going back keeps music playing or paused as it was. Most
 browsers block autoplay on a first visit, so then the visitor's first click or key starts the music.
-Before music has played, the composer line says “Press play to listen” when the player is silent,
+Before music has played, the status line beneath play says “Press play to listen” when the player is silent,
 including when the browser blocks autoplay. After playback has begun, pausing shows “Paused”.
 It also says “Muted” when mute is on or the player volume is zero, including on phones.
-A piece that fails to load is skipped; if every piece fails, the player says so and shows
-“Press play to try again.” beneath the message. Pressing play retries the recording.
-Once the recording has loaded, elapsed and total time appear beneath the composer. The readout
-follows playback, holds its place while paused, and clears when changing pieces until the new duration is known.
-Drag the progress slider beside the time to move within the piece, or focus it and use the arrow keys.
+A piece that fails to load is skipped; if every piece fails, the status line says “Music is unavailable
+right now. Press play to try again.” Pressing play retries the recording.
+Once the recording has loaded, the hairline along the strip's top edge becomes a progress slider, with
+elapsed time at its left end and total time at its right. The readout follows playback, holds its place
+while paused, and clears when changing pieces until the new duration is known.
+Drag the progress slider to move within the piece, or focus it and use the arrow keys.
 On touch devices, the slider has a taller touch area to make seeking easier.
 Seeking keeps music playing or paused as it was, and story paintings follow the new position in either direction.
 Space plays and pauses from anywhere on the page, and M mutes; media keys (including
 previous) and the OS "now playing" panel work too, and the browser tab names the piece that is on.
-“Piece & recording details” on the wall label opens the piece's background, composer biography,
-performer credit and recording's Commons page. “Hide details” closes it again and stays visible
-while you scroll through the details on a smaller screen. Both use a 44-pixel-tall tap target,
-including on phones and in short windows.
-When the piece changes, the label returns to the top so its composer and title are visible;
-details stay expanded if you had opened them.
-With focus inside the details panel, Escape closes it and returns focus to “Piece & recording details”.
-On phones and short windows, opening details uses the available reading space above the player;
-closing them returns to the compact label so more of the painting is visible.
-On phones and smaller or shorter desktop windows, the details panel stops above the player,
-including when the keyboard shortcuts guide is open, so its text and Hide details button stay reachable.
-In short windows, the open keyboard guide scrolls inside the player to leave room for the details.
-The volume button shows the player's current percentage, or “Muted” while muted. Drag the volume
+The ⓘ button (“Piece & recording details”) opens the wall label in a panel down the right edge: the
+composer, their nationality and dates, the title, year, instruments and place, then how the piece was
+received, a composer biography, the performer credit and the recording's Commons page. The strip
+moves over to stay fully visible beside it. On screens 720 pixels wide or narrower the ⓘ sits beside
+the title and the panel rises as a sheet from the bottom. Its heading and close button stay in view
+while the details scroll. When the piece changes, the panel returns to the top and stays open if you
+had opened it. Escape or the close button closes it and returns focus to ⓘ. Details and comments
+share the panel, so opening one closes the other.
+The volume readout beside the slider shows the player's current percentage, or “Muted” while muted. Drag the volume
 slider, even in a narrow desktop window, or use Up and Down to adjust the level. On touch phones,
 use the device's volume buttons for the listening volume; the player keeps its compact mute control.
 Volume and mute are remembered between visits and applied before playback starts. Unmute or raise
 the player's volume to hear music again. If browser storage is blocked, settings last for this visit.
-Open “Keyboard shortcuts” beneath the player controls for a quick guide to all the keys.
-It starts collapsed, and opening or closing it does not start the music. With focus in the guide,
-Escape closes it and returns focus to its heading. While typing, keys work as usual; Space activates
-a focused control.
+The “⋯” menu at the right end of the strip holds the Radio host switch and a quick guide to all the
+keys. Opening or using it does not start the music. Escape, or a click anywhere else, closes it;
+Escape returns focus to “⋯”. While typing, keys work as usual; Space activates a focused control.
 Hover or keyboard-focus the previous, play/pause, next or mute button to see its action and
 shortcut beside it. Escape dismisses the hint while leaving focus on the control.
-The mute and unmute hints stay inside the player in narrow windows.
+The hints for controls at the right end of the strip open leftwards so they stay on screen.
 
 ## The radio host
 
 Like a classical radio station, a host speaks between the music. As a piece begins, the host
 introduces it in a sentence or two; just before it ends, the host back-announces it in a few words
 and introduces the piece that plays next (so that piece starts without a second introduction).
-The music dips while the host talks and comes back up after. What the host says shows in an
-“On air” caption above the player. Pausing, skipping or muting stops the host.
-Use “Radio host” beside Keyboard shortcuts to turn narration off without pausing or muting the music.
+The music dips while the host talks and comes back up after. What the host says shows as an
+“On air” subtitle centred just above the strip. Pausing, skipping or muting stops the host.
+Use the “Radio host” switch in the “⋯” menu to turn narration off without pausing or muting the music.
 Turning it off stops the current announcement and restores the music's volume. The choice is remembered
 between visits; if browser storage is blocked, it lasts for this visit. Turning the host back on enables
 future introductions and outros without replaying an interrupted announcement or starting paused music.
@@ -92,13 +90,11 @@ enhanced English voice; elsewhere, or if the Apple voice fails, the system's def
 
 ## Accounts, likes and comments
 
-Beside next in the player are a heart labeled “Like” and a button labeled “Comments,” each with its count for the piece now
-playing. The heart reads “Liked” when you have liked the piece; press it again to remove your like.
-Comments opens a panel listing what listeners have said about that piece. The
+On the right of the strip are a heart (“Like”) and a speech bubble (“Comments”), each with its count for the piece now
+playing. The heart fills in and is announced as “Liked” when you have liked the piece; press it again to remove your like.
+Comments opens the side panel (a bottom sheet on narrow screens) listing what listeners have said about that piece. The
 piece title and close button stay visible while you scroll through a long thread. Changing pieces
-returns the comments to the top; closing and reopening the same piece keeps your reading position. On phones and
-narrower desktops, comments stop above the player, even when a long piece title wraps or the
-keyboard shortcuts guide is open. Anyone
+returns the comments to the top; closing and reopening the same piece keeps your reading position. Anyone
 using a keyboard starts on the panel's close button and can Tab through its actions. Closing the panel
 with that button or Escape returns focus to the control that opened it. Anyone
 can read likes and comments; pressing the heart, or "Sign in" in the panel, opens a dialog to sign in
@@ -109,8 +105,8 @@ beside it: choose Keep to cancel or Delete to remove it. Closing comments or cha
 cancels an unconfirmed choice. Keep and Delete have at least 44×44-pixel tap targets,
 including on phones.
 
-If saving a like fails, its notice stays just above the player and clear of the controls,
-even when the piece title wraps or the keyboard shortcuts guide is open.
+If saving a like fails, its notice stays just above the strip and clear of the controls,
+even when the piece title wraps.
 
 The comment form shows its character count and limit as you write, ignoring spaces at either end.
 If a draft is too long, it tells you how many characters to remove before you can post, keeping your text intact.
