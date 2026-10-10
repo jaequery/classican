@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState, type ReactNode, type RefObject } from "react";
+import { useCallback, useEffect, useId, useRef, useState, type CSSProperties, type ReactNode, type RefObject } from "react";
 import { createDeck, type Deck } from "@/lib/shuffle";
 import { pieceId, type Track } from "@/lib/site";
 import { speakingTime, useHost } from "./useHost";
@@ -29,8 +29,12 @@ type Props = {
   index: number;
   onPlayingChange: (playing: boolean) => void;
   onTrackChange: (index: number) => void;
-  /** More buttons for the piece, after next. */
+  /** More buttons for the piece, before volume. */
   actions?: ReactNode;
+  /** The composer's life dates, shown after their name. */
+  dates?: string;
+  /** The button that opens the piece's details: beside the title on small screens, after volume otherwise. */
+  details?: ReactNode;
   /** Kept at the seconds played into the loaded piece, so the painting can follow its story. */
   clock: RefObject<number>;
 };
@@ -41,8 +45,11 @@ type Props = {
  * once before any repeats; then the deck is reshuffled. A piece that fails
  * to load is skipped, and if every piece fails the player says so quietly.
  */
-export function Player({ tracks, index, onPlayingChange, onTrackChange, actions, clock }: Props) {
+export function Player({ tracks, index, onPlayingChange, onTrackChange, actions, dates, details, clock }: Props) {
   const playerRef = useRef<HTMLElement>(null);
+  const moreRef = useRef<HTMLDivElement>(null);
+  const moreId = useId();
+  const [moreOpen, setMoreOpen] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
   const [playing, setPlaying] = useState(false);
   const [hasPlayed, setHasPlayed] = useState(false);
@@ -82,7 +89,17 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
 
   const track = tracks[index];
 
-  // Comments leave room for the player as titles wrap or the keyboard guide opens.
+  // The more menu closes when the listener clicks or taps anywhere else.
+  useEffect(() => {
+    if (!moreOpen) return;
+    const onDown = (e: PointerEvent) => {
+      if (e.target instanceof Node && !moreRef.current?.contains(e.target)) setMoreOpen(false);
+    };
+    document.addEventListener("pointerdown", onDown);
+    return () => document.removeEventListener("pointerdown", onDown);
+  }, [moreOpen]);
+
+  // Captions and notices leave room for the player as titles wrap.
   useEffect(() => {
     const player = playerRef.current;
     if (!player) return;
@@ -297,7 +314,7 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
 
   // Open on a random piece and try to play it at once. Browsers often refuse
   // until the visitor has interacted with the page; then the first click or
-  // key starts it, except when opening the keyboard guide. Listening on window
+  // key starts it, except when using the more menu. Listening on window
   // runs after the play button and the Space hotkey, so a gesture that already
   // started the music is left alone.
   useEffect(() => {
@@ -324,7 +341,7 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
     load(first);
     play();
     const onGesture = (e: Event) => {
-      if (e.target instanceof Element && e.target.closest(".player-shortcuts, .host-toggle")) return;
+      if (e.target instanceof Element && e.target.closest(".player-more")) return;
       // Dismissing a control hint should not start the music.
       if (e instanceof KeyboardEvent && e.key === "Escape") return;
       if (blocked.current && !want.current) play();
@@ -530,6 +547,10 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
   }, [changeVolume, next, prev, toggle, toggleMute, volume]);
 
   const silent = muted || volume === 0;
+  const state = unavailable
+    ? ["Music is unavailable right now. Press play to try again."]
+    : [loading ? "Loading" : !playing ? (hasPlayed ? "Paused" : "Press play to listen") : "", silent ? "Muted" : ""];
+  const statusLine = state.filter(Boolean).join(" · ");
 
   return (
     <>
@@ -541,45 +562,32 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
         </p>
       )}
       <section ref={playerRef} className="player" aria-label="Music player">
-        <p className="now">
-          {unavailable ? (
+        <div className="playback-time" data-loaded={(duration !== null && duration > 0) || undefined}>
+          {duration !== null && duration > 0 && (
             <>
-              <span className="title">Music is unavailable right now.</span>
-              <span className="composer">Press play to try again.</span>
-            </>
-          ) : (
-            <>
-              <span className="title">{track.title}</span>
-              <span className="composer">
-                {track.composer}
-                {loading ? " · Loading" : !playing ? (hasPlayed ? " · Paused" : " · Press play to listen") : ""}
-                {silent ? " · Muted" : ""}
+              <input
+                className="playback-progress"
+                type="range"
+                min={0}
+                max={duration}
+                step={1}
+                value={Math.min(elapsed, duration)}
+                onChange={(e) => seek(Number(e.target.value))}
+                style={{ "--progress": `${(Math.min(elapsed, duration) / duration) * 100}%` } as CSSProperties}
+                aria-label="Playback position"
+                aria-valuetext={`${formatTime(elapsed)} of ${formatTime(duration)}`}
+              />
+              <span className="playback-elapsed">
+                <span className="visually-hidden">Elapsed </span>
+                {formatTime(elapsed)}
               </span>
-              {duration !== null && duration > 0 && (
-                <span className="playback-time">
-                  <input
-                    className="playback-progress"
-                    type="range"
-                    min={0}
-                    max={duration}
-                    step={1}
-                    value={Math.min(elapsed, duration)}
-                    onChange={(e) => seek(Number(e.target.value))}
-                    aria-label="Playback position"
-                    aria-valuetext={`${formatTime(elapsed)} of ${formatTime(duration)}`}
-                  />
-                  <span>
-                    <span className="visually-hidden">Elapsed </span>
-                    {formatTime(elapsed)}
-                    <span aria-hidden="true"> / </span>
-                    <span className="visually-hidden"> of </span>
-                    {formatTime(duration)}
-                  </span>
-                </span>
-              )}
+              <span className="playback-total">
+                <span className="visually-hidden">of </span>
+                {formatTime(duration)}
+              </span>
             </>
           )}
-        </p>
+        </div>
 
         <div
           className="controls"
@@ -587,99 +595,134 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
           onPointerOver={() => setHintDismissed(false)}
           onFocusCapture={() => setHintDismissed(false)}
         >
-          <button type="button" className="control" onClick={prev} aria-label="Previous piece" disabled={!hasPrevious}>
-            <svg viewBox="0 0 20 20" aria-hidden="true">
-              <path d="M4 4h2v12H4zM16 4v12l-8.5-6z" />
-            </svg>
-            <span className="control-hint" aria-hidden="true">Previous piece <kbd>←</kbd></span>
-          </button>
-          <button type="button" className="control play" onClick={toggle} aria-label={playing ? "Pause" : "Play"}>
-            {playing ? (
-              <svg viewBox="0 0 20 20" aria-hidden="true">
-                <path d="M5 4h3.5v12H5zM11.5 4H15v12h-3.5z" />
-              </svg>
-            ) : (
-              <svg viewBox="0 0 20 20" aria-hidden="true">
-                <path d="M6 3.5v13L16.5 10z" />
-              </svg>
-            )}
-            <span className="control-hint" aria-hidden="true">{playing ? "Pause" : "Play"} <kbd>Space</kbd></span>
-          </button>
-          <button type="button" className="control" onClick={next} aria-label="Next piece">
-            <svg viewBox="0 0 20 20" aria-hidden="true">
-              <path d="M14 4h2v12h-2zM4 4v12l8.5-6z" />
-            </svg>
-            <span className="control-hint" aria-hidden="true">Next piece <kbd>→</kbd></span>
-          </button>
-          {actions}
+          <div className="now">
+            <p>
+              <span className="title">{track.title}</span>
+              <span className="composer">
+                {track.composer}
+                {dates ? ` · ${dates}` : ""}
+              </span>
+            </p>
+            <span className="now-details">{details}</span>
+          </div>
 
-          <div className="volume">
-            <button
-              type="button"
-              className="control"
-              onClick={toggleMute}
-              aria-label={silent ? "Unmute" : "Mute"}
-            >
+          <div className="transport">
+            <button type="button" className="control" onClick={prev} aria-label="Previous piece" disabled={!hasPrevious}>
               <svg viewBox="0 0 20 20" aria-hidden="true">
-                <path d="M3 7.5h3.5L11 4v12l-4.5-3.5H3z" />
-                {silent ? (
-                  <path d="M13.3 7.3l1.1-1.1 1.8 1.8 1.8-1.8 1.1 1.1-1.8 1.8 1.8 1.8-1.1 1.1-1.8-1.8-1.8 1.8-1.1-1.1 1.8-1.8z" />
-                ) : (
-                  <path d="M13.2 6.6a4.8 4.8 0 0 1 0 6.8l-1.1-1.1a3.2 3.2 0 0 0 0-4.6zM15.3 4.5a7.8 7.8 0 0 1 0 11l-1.1-1.1a6.2 6.2 0 0 0 0-8.8z" />
-                )}
+                <path d="M4 4h2v12H4zM16 4v12l-8.5-6z" />
               </svg>
+              <span className="control-hint" aria-hidden="true">Previous piece <kbd>←</kbd></span>
+            </button>
+            <button type="button" className="control play" onClick={toggle} aria-label={playing ? "Pause" : "Play"}>
+              {playing ? (
+                <svg viewBox="0 0 20 20" aria-hidden="true">
+                  <path d="M5 4h3.5v12H5zM11.5 4H15v12h-3.5z" />
+                </svg>
+              ) : (
+                <svg viewBox="0 0 20 20" aria-hidden="true">
+                  <path d="M6 3.5v13L16.5 10z" />
+                </svg>
+              )}
+              <span className="control-hint" aria-hidden="true">{playing ? "Pause" : "Play"} <kbd>Space</kbd></span>
+            </button>
+            <button type="button" className="control" onClick={next} aria-label="Next piece">
+              <svg viewBox="0 0 20 20" aria-hidden="true">
+                <path d="M14 4h2v12h-2zM4 4v12l8.5-6z" />
+              </svg>
+              <span className="control-hint" aria-hidden="true">Next piece <kbd>→</kbd></span>
+            </button>
+          </div>
+
+          <p className="player-status">{statusLine}</p>
+
+          <div className="actions">
+            {actions}
+
+            <div className="volume">
+              <button
+                type="button"
+                className="control"
+                onClick={toggleMute}
+                aria-label={silent ? "Unmute" : "Mute"}
+              >
+                <svg viewBox="0 0 20 20" aria-hidden="true">
+                  <path d="M3 7.5h3.5L11 4v12l-4.5-3.5H3z" />
+                  {silent ? (
+                    <path d="M13.3 7.3l1.1-1.1 1.8 1.8 1.8-1.8 1.1 1.1-1.8 1.8 1.8 1.8-1.1 1.1-1.8-1.8-1.8 1.8-1.1-1.1 1.8-1.8z" />
+                  ) : (
+                    <path d="M13.2 6.6a4.8 4.8 0 0 1 0 6.8l-1.1-1.1a3.2 3.2 0 0 0 0-4.6zM15.3 4.5a7.8 7.8 0 0 1 0 11l-1.1-1.1a6.2 6.2 0 0 0 0-8.8z" />
+                  )}
+                </svg>
+                <span className="control-hint" aria-hidden="true">{silent ? "Unmute" : "Mute"} <kbd>M</kbd></span>
+              </button>
+              <input
+                type="range"
+                min={0}
+                max={100}
+                step={1}
+                value={muted ? 0 : volume}
+                onChange={(e) => changeVolume(Number(e.target.value))}
+                style={{ "--progress": `${muted ? 0 : volume}%` } as CSSProperties}
+                aria-label="Volume"
+                aria-valuetext={`${muted ? 0 : volume}%`}
+              />
               <span className="volume-level" aria-hidden="true">
                 {muted ? "Muted" : `${volume}%`}
               </span>
-              <span className="control-hint" aria-hidden="true">{silent ? "Unmute" : "Mute"} <kbd>M</kbd></span>
-            </button>
-            <input
-              type="range"
-              min={0}
-              max={100}
-              step={1}
-              value={muted ? 0 : volume}
-              onChange={(e) => changeVolume(Number(e.target.value))}
-              aria-label="Volume"
-              aria-valuetext={`${muted ? 0 : volume}%`}
-            />
+            </div>
+
+            <span className="actions-details">{details}</span>
+
+            <div
+              ref={moreRef}
+              className="player-more"
+              onKeyDownCapture={(e) => {
+                if (e.key !== "Escape" || !moreOpen) return;
+                e.preventDefault();
+                // Consume Escape before document listeners can also close a panel.
+                e.stopPropagation();
+                setMoreOpen(false);
+                moreRef.current?.querySelector<HTMLButtonElement>(".more-toggle")?.focus();
+              }}
+            >
+              <button
+                type="button"
+                className="control more-toggle"
+                aria-label="More: radio host and keyboard shortcuts"
+                aria-expanded={moreOpen}
+                aria-controls={moreId}
+                onClick={() => setMoreOpen((o) => !o)}
+              >
+                <svg viewBox="0 0 20 20" aria-hidden="true">
+                  <path d="M3.5 8.5h3v3h-3zM8.5 8.5h3v3h-3zM13.5 8.5h3v3h-3z" />
+                </svg>
+              </button>
+              <div id={moreId} className="more-menu" hidden={!moreOpen}>
+                <button type="button" className="host-toggle" aria-label="Radio host" aria-pressed={hostEnabled} onClick={toggleHost}>
+                  Radio host
+                  <span className="switch" aria-hidden="true">
+                    {hostEnabled ? "On" : "Off"}
+                    <span className="switch-track" />
+                  </span>
+                </button>
+                <div className="player-shortcuts">
+                  <h2>Keyboard shortcuts</h2>
+                  <dl>
+                    <dt><kbd>Space</kbd></dt>
+                    <dd>Play / pause</dd>
+                    <dt><kbd>←</kbd> / <kbd>→</kbd></dt>
+                    <dd>Previous / next piece</dd>
+                    <dt><kbd>↓</kbd> / <kbd>↑</kbd></dt>
+                    <dd>Volume down / up</dd>
+                    <dt><kbd>M</kbd></dt>
+                    <dd>Mute / unmute</dd>
+                  </dl>
+                  <p>While typing, keys work as usual. Space activates a focused control. Arrow keys seek when the progress slider is focused. Escape closes this menu when it has focus.</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-
-        <button
-          type="button"
-          className="host-toggle"
-          aria-label="Radio host"
-          aria-pressed={hostEnabled}
-          onClick={toggleHost}
-        >
-          Radio host <span aria-hidden="true">{hostEnabled ? "On" : "Off"}</span>
-        </button>
-
-        <details
-          className="player-shortcuts"
-          onKeyDownCapture={(e) => {
-            if (e.key !== "Escape" || !e.currentTarget.open) return;
-            e.preventDefault();
-            // Consume Escape before document listeners can also close Comments.
-            e.stopPropagation();
-            e.currentTarget.open = false;
-            e.currentTarget.querySelector("summary")?.focus();
-          }}
-        >
-          <summary>Keyboard shortcuts</summary>
-          <dl>
-            <dt><kbd>Space</kbd></dt>
-            <dd>Play / pause</dd>
-            <dt><kbd>←</kbd> / <kbd>→</kbd></dt>
-            <dd>Previous / next piece</dd>
-            <dt><kbd>↓</kbd> / <kbd>↑</kbd></dt>
-            <dd>Volume down / up</dd>
-            <dt><kbd>M</kbd></dt>
-            <dd>Mute / unmute</dd>
-          </dl>
-          <p>While typing, keys work as usual. Space activates a focused control. Arrow keys seek when the progress slider is focused. Escape closes this guide when it has focus.</p>
-        </details>
 
         <p className="visually-hidden" role="status">
           {status}
