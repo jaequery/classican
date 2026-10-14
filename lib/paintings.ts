@@ -106,7 +106,8 @@ export type PaintingId =
   | "william-tell"
   | "hungarian-rhapsody"
   | "te-deum"
-  | "sarka";
+  | "sarka"
+  | "fur-elise";
 
 export type Painting = {
   id: PaintingId;
@@ -5769,6 +5770,88 @@ function renderSarkaC(r: Raster, f: Frame) {
 }
 
 // ---------------------------------------------------------------------------
+// 76. Für Elise: a Viennese fortepiano in April, the album leaf on its desk, an unknown silhouette
+// ---------------------------------------------------------------------------
+
+const furEliseC = palette({
+  w0: "#5e4446",
+  w1: "#7e5a54",
+  w2: "#9c7462",
+  fl0: "#33241e",
+  fl1: "#4e3a2c",
+  wood: "#5a3420",
+  woodL: "#7e4c2c",
+  ivory: "#ece2c8",
+  ebony: "#1a1210",
+  paper: "#efe6cc",
+  paperS: "#b8a684",
+  ink: "#2a1e16",
+  gold: "#c89a3a",
+  goldD: "#8a6424",
+  cream: "#e4d6b8",
+  shade: "#141010",
+  sky: "#b4cad4",
+  skyL: "#d8e4e2",
+  frame: "#dccfb4",
+  branch: "#4a3426",
+  blossom: "#eeb2c0",
+  blossomL: "#fadce2",
+  flame: "#f8d070",
+  wax: "#f0e8d8",
+});
+const furEliseWallC = fracture(800, [[furEliseC.c.w0, furEliseC.c.w1], [furEliseC.c.w1, furEliseC.c.w2], [furEliseC.c.w1, furEliseC.c.w0]], 4, [-8, -8, 168, 72]);
+const furEliseFloorC = fracture(801, [[furEliseC.c.fl0, furEliseC.c.fl1], [furEliseC.c.fl1, furEliseC.c.fl0], [furEliseC.c.fl0, furEliseC.c.wood]], 3, [-8, 72, 168, 108]);
+const furEliseBlossoms: Pt[] = [[100, 14], [96, 19], [92, 17], [89, 24], [85, 27], [94, 26], [99, 22], [87, 31]];
+
+function renderFurEliseC(r: Raster, f: Frame) {
+  const { c } = furEliseC;
+  paintPlanes(r, furEliseWallC, f);
+  paintPlanes(r, furEliseFloorC, f);
+
+  // An April window, a branch of blossom across it, petals drifting into the room.
+  r.fill(rect(74, 6, 32, 50), c.frame);
+  r.fill(rect(76, 8, 28, 46), c.sky, c.skyL, 5);
+  r.line(104, 12, 84, 32, c.branch);
+  r.line(104, 13, 85, 33, c.branch);
+  r.line(95, 21, 92, 14, c.branch);
+  furEliseBlossoms.forEach(([bx, by], i) => {
+    r.fill(ellipse(bx, by, 2, 1.6, 0, Math.PI * 2, 8), c.blossom);
+    if (f.still || wave(f, 0.5, i) > -0.3) r.dot(bx, by, c.blossomL);
+  });
+  r.fill(rect(89, 8, 2, 46), c.frame);
+  r.fill(rect(76, 30, 28, 2), c.frame);
+  for (let k = 0; k < 4; k++) {
+    const fall = f.still ? k * 9 : (f.t * 2.5 + k * 9) % 40;
+    r.dot(Math.round(80 + k * 6 + Math.sin(f.t * 0.8 + k) * 3), Math.round(56 + fall * 0.9), c.blossom);
+  }
+
+  // A silhouette in a gilt oval: whoever Elise was, she keeps her face turned away.
+  r.fill(ellipse(130, 32, 13, 16, 0, Math.PI * 2, 24), c.gold, c.goldD, 4);
+  r.fill(ellipse(130, 32, 11, 14, 0, Math.PI * 2, 24), c.cream);
+  r.fill([[122, 46], [140, 46], [136, 41], [136, 31], [134, 23], [130, 20], [126, 21], [124, 24], [124, 27], [121, 30], [123, 31], [122, 33], [123, 34], [123, 36], [126, 37], [127, 42]], c.shade);
+  r.fill(ellipse(136, 24, 3.5, 3.5, 0, Math.PI * 2, 10), c.shade);
+  r.line(130, 4, 130, 16, c.goldD);
+
+  // The fortepiano, its candle, and the album leaf open on the music desk.
+  r.fill([[24, 54], [52, 54], [50, 32], [26, 32]], c.wood, c.woodL, 3);
+  const leaf: Pt[] = [[27, 52], [49, 52], [48, 34], [28, 34]];
+  r.fill(leaf.map((p) => drift(p, f, 0.3)), c.paper, c.paperS, 2);
+  for (let k = 0; k < 5; k++) r.line(30, 38 + k * 2, 46, 38 + k * 2, c.paperS);
+  // The opening's rocking between E and D-sharp, one note lit at a time.
+  const rock = f.still ? 0 : Math.floor(f.t * 2) % 2;
+  for (let n = 0; n < 6; n++) r.dot(31 + n * 2.5, 40 + ((n + rock) % 2), c.ink);
+  for (let k = 0; k < 3; k++) r.line(30, 46 + k * 2, 30 + 14 - k * 3, 46 + k * 2, c.paperS);
+  r.fill(rect(4, 54, 70, 13), c.wood, c.woodL, 2);
+  r.line(4, 54, 73, 54, c.woodL);
+  r.fill(rect(16, 57, 38, 5), c.ivory);
+  for (let x = 18; x < 53; x += 3) if (x % 21 !== 0) r.fill(rect(x, 57, 1, 3), c.ebony);
+  for (const x of [6, 38, 70]) r.fill([[x - 1, 67], [x + 2, 67], [x + 1, 90], [x, 90]], c.wood);
+  r.fill(rect(60, 47, 3, 7), c.wax);
+  const flick = Math.round(wave(f, 3.1) * 0.6);
+  r.fill([[60 + flick, 46], [61.5, 41 + flick], [63 - flick, 46]], c.flame);
+}
+
+// ---------------------------------------------------------------------------
 
 export const paintings: Painting[] = [
   {
@@ -6330,5 +6413,12 @@ export const paintings: Painting[] = [
     colors: sarkaC.colors,
     motifs: { sarka: [52, 68, 16], ctirad: [90, 62, 20], maidens: [144, 34, 16] },
     render: renderSarkaC,
+  },
+  {
+    id: "fur-elise",
+    alt: "A Viennese fortepiano in a rose-walled room on an April evening, a candle and a handwritten album leaf on its music desk, a branch of blossom at the window and a woman's black silhouette in a gilt oval frame.",
+    colors: furEliseC.colors,
+    motifs: { piano: [38, 62, 24], leaf: [38, 43, 12], elise: [130, 32, 16] },
+    render: renderFurEliseC,
   },
 ];

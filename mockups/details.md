@@ -820,6 +820,16 @@ Sources: [Te Deum (Charpentier) (Wikipedia)](https://en.wikipedia.org/wiki/Te_De
 
 Sources: [Má vlast (Wikipedia)](https://en.wikipedia.org/wiki/M%C3%A1_vlast)
 
+### 76. Für Elise (Bagatelle in A minor, WoO 59) · Ludwig van Beethoven
+
+- **Year:** 1810 (Nohl gives the lost manuscript's date as 27 April 1810), published 1867 · `composedYear: 1810`, `beforeBirthday: true`
+- **Age:** 39. Written before his 40th birthday in December 1810.
+- **Place:** Vienna, Austria, where Beethoven lived from 1792
+- **Instruments:** Solo piano
+- **Reception:** Not published in his lifetime; Ludwig Nohl discovered and published it in 1867, 40 years after Beethoven's death. It is now "one of Ludwig van Beethoven's most popular compositions".
+
+Sources: [Für Elise (Wikipedia)](https://en.wikipedia.org/wiki/F%C3%BCr_Elise), [Ludwig van Beethoven (Wikipedia)](https://en.wikipedia.org/wiki/Ludwig_van_Beethoven)
+
 ## Composers
 
 ### Erik Satie
