@@ -847,3 +847,16 @@ Painting: Šárka bound to an oak with a hunting horn, the knight Ctirad riding 
 5. Smetana finished it on 20 February 1875, after he had lost his hearing.
 
 Sources: [Má vlast (Wikipedia)](https://en.wikipedia.org/wiki/M%C3%A1_vlast)
+
+## Für Elise · Ludwig van Beethoven
+
+Painting: a Viennese fortepiano in April with the album leaf on its desk, a candle, blossom at the window and a woman's silhouette in a gilt oval.
+
+1. Für Elise means "For Elise". Its formal name is the Bagatelle in A minor, a short, light piece for solo piano. *(motif: the piano)*
+2. Beethoven never published it. Ludwig Nohl found it and printed it in 1867, 40 years after the composer's death. *(motif: the leaf)*
+3. Nohl said the manuscript, now lost, was inscribed "For Elise on 27 April, in memory, by L. v. Bthvn". *(motif: the leaf)*
+4. No one knows who Elise was. Scholars have suggested his pupil Therese Malfatti and the young soprano Elisabeth Röckel. *(motif: the silhouette)*
+5. Listen for the opening, a gentle rocking between two neighbouring notes, E and D-sharp: one of the best-known openings in classical music. *(motif: the piano)*
+6. In Taiwan it is one of two tunes garbage trucks play to let residents know they are coming.
+
+Sources: [Für Elise (Wikipedia)](https://en.wikipedia.org/wiki/F%C3%BCr_Elise)
