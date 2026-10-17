@@ -830,6 +830,56 @@ Sources: [Má vlast (Wikipedia)](https://en.wikipedia.org/wiki/M%C3%A1_vlast)
 
 Sources: [Für Elise (Wikipedia)](https://en.wikipedia.org/wiki/F%C3%BCr_Elise), [Ludwig van Beethoven (Wikipedia)](https://en.wikipedia.org/wiki/Ludwig_van_Beethoven)
 
+### 77. Fantaisie-Impromptu, Op. 66 · Frédéric Chopin
+
+- **Year:** 1834, published 1855 · `composedYear: 1834`, `approximate: true` (the month is not recorded)
+- **Age:** about 24 (born 1810)
+- **Place:** Paris, France, where Chopin lived from 1831
+- **Instruments:** Solo piano
+- **Reception:** Chopin did not release it; Julian Fontana issued it in 1855 with the waltzes Opp. 69 and 70, six years after Chopin's death.
+
+Sources: [Fantaisie-Impromptu (Wikipedia)](https://en.wikipedia.org/wiki/Fantaisie-Impromptu), [Frédéric Chopin (Wikipedia)](https://en.wikipedia.org/wiki/Fr%C3%A9d%C3%A9ric_Chopin)
+
+### 78. Prelude in D-flat major, Op. 28 No. 15 "Raindrop" · Frédéric Chopin
+
+- **Year:** 1838–39, published 1839 · `composedYear: 1838`
+- **Age:** 28 (born 1810)
+- **Place:** Valldemossa, Mallorca, Spain
+- **Instruments:** Solo piano
+- **Reception:** Published in 1839 among the 24 Preludes; the repeated note led listeners to call it "Raindrop".
+
+Sources: [Prelude, Op. 28, No. 15 (Chopin) (Wikipedia)](https://en.wikipedia.org/wiki/Prelude,_Op._28,_No._15_(Chopin))
+
+### 79. Liebestraum No. 3 · Franz Liszt
+
+- **Year:** 1850 (the year the song and piano versions appeared) · `composedYear: 1850`, `approximate: true`
+- **Age:** about 39 (born 1811)
+- **Place:** Weimar, Germany, where Liszt lived from 1848
+- **Instruments:** Solo piano
+- **Reception:** The best known of the three Liebesträume.
+
+Sources: [Liebesträume (Wikipedia)](https://en.wikipedia.org/wiki/Liebestr%C3%A4ume), [Franz Liszt (Wikipedia)](https://en.wikipedia.org/wiki/Franz_Liszt)
+
+### 80. Prelude in C-sharp minor, Op. 3 No. 2 · Sergei Rachmaninoff
+
+- **Year:** 1892 · `composedYear: 1892`
+- **Age:** 19 (born 1873)
+- **Place:** Moscow, Russia
+- **Instruments:** Solo piano
+- **Reception:** Premiered by the composer on 26 September 1892 at the Moscow Electrical Exhibition; a review said it "aroused enthusiasm". It became known simply as "The Prelude".
+
+Sources: [Prelude in C-sharp minor (Rachmaninoff) (Wikipedia)](https://en.wikipedia.org/wiki/Prelude_in_C-sharp_minor_(Rachmaninoff))
+
+### 81. Arabesque No. 1 · Claude Debussy
+
+- **Year:** 1888–91 · `composedYear: 1890` (middle of the range), `approximate: true`
+- **Age:** about 28 (born 1862)
+- **Place:** Paris, France
+- **Instruments:** Solo piano
+- **Reception:** Written while Debussy was in his twenties; now one of his best-known piano pieces, used in the 2001 film All About Lily Chou-Chou.
+
+Sources: [Deux arabesques (Wikipedia)](https://en.wikipedia.org/wiki/Deux_arabesques), [Claude Debussy (Wikipedia)](https://en.wikipedia.org/wiki/Claude_Debussy)
+
 ## Composers
 
 ### Erik Satie

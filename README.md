@@ -198,7 +198,8 @@ words appear without fading, and hover changes are immediate.
 ## Audio sources
 
 Every recording is streamed from Wikimedia Commons and marked **public domain** on its file page
-(Public domain, the Public Domain Mark, or a CC0 dedication).
+(Public domain, the Public Domain Mark, or a CC0 dedication), except where the table names a free Creative Commons licence (CC BY-SA), which
+requires crediting the performer, as the table does.
 The player uses Commons' MP3 transcode where the browser supports MP3, and the original Ogg otherwise.
 
 | Piece | Composer | Performer / source | Commons file |
@@ -269,6 +270,11 @@ The player uses Commons' MP3 transcode where the browser supports MP3, and the o
 | Te Deum: Prelude | Marc-Antoine Charpentier | Ian Dollins, organ (via Musopen) | [File:Charpentier, Te Deum (Prelude).ogg](https://commons.wikimedia.org/wiki/File:Charpentier,_Te_Deum_(Prelude).ogg) |
 | Má vlast: Šárka | Bedřich Smetana | Musopen | [File:Bedrich Smetana - ma vlast - iii. sarka.ogg](https://commons.wikimedia.org/wiki/File:Bedrich_Smetana_-_ma_vlast_-_iii._sarka.ogg) |
 | Für Elise | Ludwig van Beethoven | V. Gao (Wikimedia Commons) | [File:FurElise.ogg](https://commons.wikimedia.org/wiki/File:FurElise.ogg) |
+| Fantaisie-Impromptu, Op. 66 | Frédéric Chopin | Muriel Nguyen Xuan (CC BY-SA 4.0) | [File:Muriel-Nguyen-Xuan-Chopin-fantaisie-impromptu-opus66.ogg](https://commons.wikimedia.org/wiki/File:Muriel-Nguyen-Xuan-Chopin-fantaisie-impromptu-opus66.ogg) |
+| Prelude in D-flat major, Op. 28 No. 15 “Raindrop” | Frédéric Chopin | Giorgi Latsabidze (public domain) | [File:Chopin Prelude Op 28 N 15 Giorgi Latsabidze performs.ogg](https://commons.wikimedia.org/wiki/File:Chopin_Prelude_Op_28_N_15_Giorgi_Latsabidze_performs.ogg) |
+| Liebestraum No. 3 | Franz Liszt | Martha Goldstein (via Pandora Music, CC BY-SA 2.0) | [File:Franz Liszt - Liebestraum, Ab Major.ogg](https://commons.wikimedia.org/wiki/File:Franz_Liszt_-_Liebestraum,_Ab_Major.ogg) |
+| Prelude in C-sharp minor, Op. 3 No. 2 | Sergei Rachmaninoff | Sergei Rachmaninoff, piano (public domain) | [File:Sergei Rachmaninoff performs Rachmaninoff's Prelude in C sharp minor, Op. 3.ogg](https://commons.wikimedia.org/wiki/File:Sergei_Rachmaninoff_performs_Rachmaninoff's_Prelude_in_C_sharp_minor,_Op._3.ogg) |
+| Arabesque No. 1 | Claude Debussy | Patrizia Prati (CC BY-SA 4.0) | [File:Claude Debussy - Première Arabesque - Patrizia Prati.ogg](https://commons.wikimedia.org/wiki/File:Claude_Debussy_-_Première_Arabesque_-_Patrizia_Prati.ogg) |
 
 `mockups/` holds the design concepts explored for the site: `concept-*.html` for the first version,
 `facts-concept-*.html` for the facts and paintings (Concept 4, Spotlight, was built), and
