@@ -6994,6 +6994,9 @@ function renderJupiterC(r: Raster, f: Frame) {
     r.line(dx - 3, dy - 12 - lift, dx - 1, dy - 8 - lift, col);
     r.line(dx + 3, dy - 12 - lift, dx + 1, dy - 8 - lift, col);
   }
+}
+
+// ---------------------------------------------------------------------------
 // 87. Fantaisie-Impromptu: a storm of sixteenth notes over triplets, a manuscript, a rainbow
 // ---------------------------------------------------------------------------
 
@@ -8050,6 +8053,8 @@ export const paintings: Painting[] = [
     colors: jupC.colors,
     motifs: { jupiter: [112, 30, 26], dancers: [52, 84, 22], church: [136, 62, 14] },
     render: renderJupiterC,
+  },
+  {
     id: "fantaisie-impromptu",
     alt: "A grand piano in a violet Paris salon, streams of golden sixteenth notes running over rolling triplets, a manuscript leaf on the desk and a rainbow over a clearing storm in the window.",
     colors: fantaisieC.colors,

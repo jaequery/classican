@@ -2637,6 +2637,9 @@ export const site: Site = {
         { text: "The big, slow tune in the middle, marked andante maestoso, is taken at half the speed of the lively opening.", motif: "dancers" },
         { text: "In 1921 Holst reused that tune for a setting of Cecil Spring Rice’s poem “I Vow to Thee, My Country”. He was exhausted at the time, and noticed that the words fitted.", motif: "church" },
         { text: "Holst disliked hearing the suite end on Jupiter for a happy ending: “in the real work the end is not happy at all”." },
+      ],
+    },
+    {
       title: "Fantaisie-Impromptu, Op. 66",
       composer: "Frédéric Chopin",
       performer: "Muriel Nguyen Xuan (Wikimedia Commons, CC BY-SA 4.0)",
