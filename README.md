@@ -1,6 +1,6 @@
 # classican
 
-One screen of public-domain classical music for studying and deep work. The only interface is one
+One screen of classical music, almost all of it public domain, for studying and deep work. The only interface is one
 borderless strip along the bottom edge, on a dark gradient that rises out of the painting like film
 subtitles: the piece's title and composer on the left, previous, play/pause and next in the centre,
 and like, comments, volume, details and a "⋯" menu on the right. Behind it is an original pixel

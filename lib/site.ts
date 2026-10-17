@@ -2240,7 +2240,7 @@ export const site: Site = {
     {
       title: "Fantaisie-Impromptu, Op. 66",
       composer: "Frédéric Chopin",
-      performer: "Muriel Nguyen Xuan (Wikimedia Commons)",
+      performer: "Muriel Nguyen Xuan (Wikimedia Commons, CC BY-SA 4.0)",
       source: "https://commons.wikimedia.org/wiki/File:Muriel-Nguyen-Xuan-Chopin-fantaisie-impromptu-opus66.ogg",
       ogg: "https://upload.wikimedia.org/wikipedia/commons/4/44/Muriel-Nguyen-Xuan-Chopin-fantaisie-impromptu-opus66.ogg",
       mp3: "https://upload.wikimedia.org/wikipedia/commons/transcoded/4/44/Muriel-Nguyen-Xuan-Chopin-fantaisie-impromptu-opus66.ogg/Muriel-Nguyen-Xuan-Chopin-fantaisie-impromptu-opus66.ogg.mp3",
@@ -2259,7 +2259,7 @@ export const site: Site = {
         { text: "A manuscript copy in the album of the Baroness d’Este is dated 1835 and inscribed “Composed for the Baroness d’Este”.", motif: "score" },
         { text: "The right hand plays streams of sixteenth notes against the left hand’s rolling triplets, two rhythms that never quite line up.", motif: "notes" },
         { text: "The stormy C-sharp minor outer sections give way to a singing middle section in D-flat major, and the piece ends on a bright C-sharp major chord.", motif: "keys" },
-        { text: "That middle melody was borrowed for the vaudeville song “I’m Always Chasing Rainbows”.", motif: "rainbow" },
+        { text: "That middle melody was borrowed for the popular song “I’m Always Chasing Rainbows”.", motif: "rainbow" },
       ],
     },
     {
@@ -2289,7 +2289,7 @@ export const site: Site = {
     {
       title: "Liebestraum No. 3",
       composer: "Franz Liszt",
-      performer: "Martha Goldstein (via Pandora Music)",
+      performer: "Martha Goldstein (via Pandora Music, CC BY-SA 2.0)",
       source: "https://commons.wikimedia.org/wiki/File:Franz_Liszt_-_Liebestraum,_Ab_Major.ogg",
       ogg: "https://upload.wikimedia.org/wikipedia/commons/0/02/Franz_Liszt_-_Liebestraum%2C_Ab_Major.ogg",
       mp3: "https://upload.wikimedia.org/wikipedia/commons/transcoded/0/02/Franz_Liszt_-_Liebestraum%2C_Ab_Major.ogg/Franz_Liszt_-_Liebestraum%2C_Ab_Major.ogg.mp3",
@@ -2338,7 +2338,7 @@ export const site: Site = {
     {
       title: "Arabesque No. 1",
       composer: "Claude Debussy",
-      performer: "Patrizia Prati (Wikimedia Commons)",
+      performer: "Patrizia Prati (Wikimedia Commons, CC BY-SA 4.0)",
       source: "https://commons.wikimedia.org/wiki/File:Claude_Debussy_-_Premi%C3%A8re_Arabesque_-_Patrizia_Prati.ogg",
       ogg: "https://upload.wikimedia.org/wikipedia/commons/0/0f/Claude_Debussy_-_Premi%C3%A8re_Arabesque_-_Patrizia_Prati.ogg",
       mp3: "https://upload.wikimedia.org/wikipedia/commons/transcoded/0/0f/Claude_Debussy_-_Premi%C3%A8re_Arabesque_-_Patrizia_Prati.ogg/Claude_Debussy_-_Premi%C3%A8re_Arabesque_-_Patrizia_Prati.ogg.mp3",

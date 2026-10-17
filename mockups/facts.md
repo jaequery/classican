@@ -870,7 +870,7 @@ Painting: a piano in a violet Paris salon, streams of sixteenth notes over rolli
 3. A manuscript copy in the album of the Baroness d'Este is dated 1835 and inscribed "Composed for the Baroness d'Este". *(motif: the manuscript)*
 4. The right hand plays streams of sixteenth notes against the left hand's rolling triplets, two rhythms that never quite line up. *(motif: the notes)*
 5. The stormy C-sharp minor outer sections give way to a singing middle section in D-flat major, and the piece ends on a bright C-sharp major chord. *(motif: the keys)*
-6. That middle melody was borrowed for the vaudeville song "I'm Always Chasing Rainbows". *(motif: the rainbow)*
+6. That middle melody was borrowed for the popular song "I'm Always Chasing Rainbows". *(motif: the rainbow)*
 
 Sources: [Fantaisie-Impromptu (Wikipedia)](https://en.wikipedia.org/wiki/Fantaisie-Impromptu)
 
