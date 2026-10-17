@@ -830,6 +830,55 @@ Sources: [Má vlast (Wikipedia)](https://en.wikipedia.org/wiki/M%C3%A1_vlast)
 
 Sources: [Für Elise (Wikipedia)](https://en.wikipedia.org/wiki/F%C3%BCr_Elise), [Ludwig van Beethoven (Wikipedia)](https://en.wikipedia.org/wiki/Ludwig_van_Beethoven)
 
+### 77. Toccata and Fugue in D minor, BWV 565 · Johann Sebastian Bach
+
+- **Year:** c. 1704 or later (estimates run from 1704 to the 1750s) · `composedYear: 1704`, `approximate: true`
+- **Age:** about 19 if written at Arnstadt, where he was organist from 1703
+- **Place:** Probably Arnstadt, Germany
+- **Instruments:** Organ
+- **Reception:** The only near-contemporary source is a copy by Johannes Ringk. Mendelssohn gave its first major public performance in 1840; Stokowski's 1927 orchestration and Disney's *Fantasia* (1940) made it famous.
+
+Sources: [Toccata and Fugue in D minor, BWV 565 (Wikipedia)](https://en.wikipedia.org/wiki/Toccata_and_Fugue_in_D_minor,_BWV_565)
+
+### 78. Canon in D · Johann Pachelbel
+
+- **Year:** Between 1680 and 1706; neither date nor circumstances are known · `composedYear: 1680`, `approximate: true`
+- **Place:** Germany, exact place unknown
+- **Instruments:** Three violins and basso continuo
+- **Reception:** Oldest surviving copy 1838-1842; first printed in 1919, and made famous by Jean-François Paillard's 1968 recording.
+
+Sources: [Pachelbel's Canon (Wikipedia)](https://en.wikipedia.org/wiki/Pachelbel%27s_Canon)
+
+### 79. Messiah: Hallelujah Chorus · George Frideric Handel
+
+- **Year:** 1741 (22 August to 14 September), first performed 1742 · `composedYear: 1741`
+- **Age:** 56
+- **Place:** London, England; first performed in Dublin on 13 April 1742
+- **Instruments:** Chorus, trumpets, timpani, strings and continuo
+- **Reception:** The tradition of standing is first mentioned in a letter of 1756; there is no convincing evidence that King George II stood at the London premiere.
+
+Sources: [Messiah (Handel) (Wikipedia)](https://en.wikipedia.org/wiki/Messiah_(Handel))
+
+### 80. Water Music: Alla Hornpipe · George Frideric Handel
+
+- **Year:** 1717 (first performed 17 July 1717) · `composedYear: 1717`
+- **Age:** 32
+- **Place:** London, England, on the River Thames
+- **Instruments:** Strings, oboes, bassoon and horns
+- **Reception:** King George I had it repeated at least three times during the first trip.
+
+Sources: [Water Music (Wikipedia)](https://en.wikipedia.org/wiki/Water_Music)
+
+### 81. Symphony No. 9, Op. 125: Ode to Joy · Ludwig van Beethoven
+
+- **Year:** 1824 (first performed 7 May 1824) · `composedYear: 1824`, `beforeBirthday: true`
+- **Age:** 53. Premiered before his 54th birthday in December 1824.
+- **Place:** Vienna, Austria
+- **Instruments:** Orchestra, four vocal soloists and chorus (this recording is the instrumental Anthem of Europe, played by the United States Navy Band)
+- **Reception:** The audience cheered so loudly that contralto Caroline Unger is credited with turning the almost completely deaf Beethoven round to see them.
+
+Sources: [Symphony No. 9 (Beethoven) (Wikipedia)](https://en.wikipedia.org/wiki/Symphony_No._9_(Beethoven))
+
 ## Composers
 
 ### Erik Satie
@@ -1105,3 +1154,11 @@ Sources: [Franz Liszt (Wikipedia)](https://en.wikipedia.org/wiki/Franz_Liszt)
 - **Also:** He registered for law school at eighteen, withdrew after one semester, and studied in Rome with Giacomo Carissimi.
 
 Sources: [Marc-Antoine Charpentier (Wikipedia)](https://en.wikipedia.org/wiki/Marc-Antoine_Charpentier)
+
+### Johann Pachelbel
+
+- **Born:** 1653, Nuremberg, Germany · **Died:** 1706
+- **Money:** A church organist all his life, moving between posts in Vienna, Eisenach, Erfurt, Stuttgart, Gotha and finally Nuremberg.
+- **Also:** He taught Johann Christoph Bach, the elder brother who later taught Johann Sebastian.
+
+Sources: [Johann Pachelbel (Wikipedia)](https://en.wikipedia.org/wiki/Johann_Pachelbel)
