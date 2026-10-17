@@ -830,7 +830,106 @@ Sources: [Má vlast (Wikipedia)](https://en.wikipedia.org/wiki/M%C3%A1_vlast)
 
 Sources: [Für Elise (Wikipedia)](https://en.wikipedia.org/wiki/F%C3%BCr_Elise), [Ludwig van Beethoven (Wikipedia)](https://en.wikipedia.org/wiki/Ludwig_van_Beethoven)
 
-### 77. Fantaisie-Impromptu, Op. 66 · Frédéric Chopin
+### 77. Toccata and Fugue in D minor, BWV 565 · Johann Sebastian Bach
+
+- **Year:** c. 1704 or later (estimates run from 1704 to the 1750s) · `composedYear: 1704`, `approximate: true`
+- **Age:** about 19 if written at Arnstadt, where he was organist from 1703
+- **Place:** Probably Arnstadt, Germany
+- **Instruments:** Organ
+- **Reception:** The only near-contemporary source is a copy by Johannes Ringk. Mendelssohn gave its first major public performance in 1840; Stokowski's 1927 orchestration and Disney's *Fantasia* (1940) made it famous.
+
+Sources: [Toccata and Fugue in D minor, BWV 565 (Wikipedia)](https://en.wikipedia.org/wiki/Toccata_and_Fugue_in_D_minor,_BWV_565)
+
+### 78. Canon in D · Johann Pachelbel
+
+- **Year:** Between 1680 and 1706; neither date nor circumstances are known · `composedYear: 1680`, `approximate: true`
+- **Place:** Germany, exact place unknown
+- **Instruments:** Three violins and basso continuo
+- **Reception:** Oldest surviving copy 1838-1842; first printed in 1919, and made famous by Jean-François Paillard's 1968 recording.
+
+Sources: [Pachelbel's Canon (Wikipedia)](https://en.wikipedia.org/wiki/Pachelbel%27s_Canon)
+
+### 79. Messiah: Hallelujah Chorus · George Frideric Handel
+
+- **Year:** 1741 (22 August to 14 September), first performed 1742 · `composedYear: 1741`
+- **Age:** 56
+- **Place:** London, England; first performed in Dublin on 13 April 1742
+- **Instruments:** Chorus, trumpets, timpani, strings and continuo
+- **Reception:** The tradition of standing is first mentioned in a letter of 1756; there is no convincing evidence that King George II stood at the London premiere.
+
+Sources: [Messiah (Handel) (Wikipedia)](https://en.wikipedia.org/wiki/Messiah_(Handel))
+
+### 80. Water Music: Alla Hornpipe · George Frideric Handel
+
+- **Year:** 1717 (first performed 17 July 1717) · `composedYear: 1717`
+- **Age:** 32
+- **Place:** London, England, on the River Thames
+- **Instruments:** Strings, oboes, bassoon and horns
+- **Reception:** King George I had it repeated at least three times during the first trip.
+
+Sources: [Water Music (Wikipedia)](https://en.wikipedia.org/wiki/Water_Music)
+
+### 81. Symphony No. 9, Op. 125: Ode to Joy · Ludwig van Beethoven
+
+- **Year:** 1824 (first performed 7 May 1824) · `composedYear: 1824`, `beforeBirthday: true`
+- **Age:** 53. Premiered before his 54th birthday in December 1824.
+- **Place:** Vienna, Austria
+- **Instruments:** Orchestra, four vocal soloists and chorus (this recording is the instrumental Anthem of Europe, played by the United States Navy Band)
+- **Reception:** The audience cheered so loudly that contralto Caroline Unger is credited with turning the almost completely deaf Beethoven round to see them.
+
+Sources: [Symphony No. 9 (Beethoven) (Wikipedia)](https://en.wikipedia.org/wiki/Symphony_No._9_(Beethoven))
+
+### 82. The Nutcracker: Dance of the Sugar Plum Fairy · Pyotr Ilyich Tchaikovsky
+
+- **Year:** 1892 · `composedYear: 1892`
+- **Age:** 51 or 52 (born 7 May 1840) · `approximate: true`
+- **Place:** Russia; "Tchaikovsky composed parts of The Nutcracker in Rouen, France"
+- **Instruments:** Orchestra, with a celesta
+- **Reception:** The first staging, on 18 December 1892, "was not deemed a success", though some critics praised Antonietta Dell'Era's pointework as the Sugar Plum Fairy. The 20-minute suite, premiered nine months earlier, was more successful at first.
+
+Sources: [The Nutcracker (Wikipedia)](https://en.wikipedia.org/wiki/The_Nutcracker), [Celesta (Wikipedia)](https://en.wikipedia.org/wiki/Celesta)
+
+### 83. Swan Lake: Scene (Op. 20, No. 10) · Pyotr Ilyich Tchaikovsky
+
+- **Year:** 1875–76, premiered 1877 · `composedYear: 1876`, `approximate: true`
+- **Age:** about 35 or 36
+- **Place:** Moscow, Russia (commissioned by the director of the Moscow Imperial Theatres; premiered at the Bolshoi)
+- **Instruments:** Orchestra, with harp
+- **Reception:** "The première was not well received." Critics found the score "too noisy, too 'Wagnerian' and too symphonic". It is now "one of the most popular ballets of all time".
+
+Sources: [Swan Lake (Wikipedia)](https://en.wikipedia.org/wiki/Swan_Lake)
+
+### 84. Slavonic Dance No. 2 in E minor, Op. 72 · Antonín Dvořák
+
+- **Year:** 1886 · `composedYear: 1886`, `approximate: true`
+- **Age:** about 44 or 45 (born 8 September 1841)
+- **Place:** Bohemia (now the Czech Republic); published by Simrock
+- **Instruments:** Orchestra (originally piano four hands)
+- **Reception:** The dances "were well received at the time", and Simrock asked for the second set after the first sold well.
+
+Sources: [Slavonic Dances (Wikipedia)](https://en.wikipedia.org/wiki/Slavonic_Dances)
+
+### 85. Enigma Variations: Nimrod (Variation IX, Op. 36) · Edward Elgar
+
+- **Year:** 1898–99 (fully scored by 18 February 1899) · `composedYear: 1899`, `beforeBirthday: true`
+- **Age:** 41. Written before his 42nd birthday on 2 June 1899.
+- **Place:** Malvern, England, where he settled in 1891
+- **Instruments:** Orchestra
+- **Reception:** After its London premiere on 19 June 1899 the work "quickly achieved popularity and helped establish Elgar's growing reputation in Britain and internationally".
+
+Sources: [Enigma Variations (Wikipedia)](https://en.wikipedia.org/wiki/Enigma_Variations), [Edward Elgar (Wikipedia)](https://en.wikipedia.org/wiki/Edward_Elgar)
+
+### 86. Scheherazade: The Young Prince and the Young Princess (Op. 35, III) · Nikolai Rimsky-Korsakov
+
+- **Year:** 1888 (4 June to 7 August) · `composedYear: 1888`
+- **Age:** 44. Written after his 44th birthday on 18 March 1888.
+- **Place:** Nyezhgovitsy, beside Lake Cheremenets near Luga, Russia
+- **Instruments:** Orchestra, with a solo violin and harp
+- **Reception:** "One of Rimsky-Korsakov's most popular works", with "beguiling orchestral colors, fresh and piquant melodies".
+
+Sources: [Scheherazade (Rimsky-Korsakov) (Wikipedia)](https://en.wikipedia.org/wiki/Scheherazade_(Rimsky-Korsakov))
+
+### 87. Fantaisie-Impromptu, Op. 66 · Frédéric Chopin
 
 - **Year:** 1834, published 1855 · `composedYear: 1834`, `approximate: true` (the month is not recorded)
 - **Age:** about 24 (born 1810)
@@ -840,7 +939,7 @@ Sources: [Für Elise (Wikipedia)](https://en.wikipedia.org/wiki/F%C3%BCr_Elise),
 
 Sources: [Fantaisie-Impromptu (Wikipedia)](https://en.wikipedia.org/wiki/Fantaisie-Impromptu), [Frédéric Chopin (Wikipedia)](https://en.wikipedia.org/wiki/Fr%C3%A9d%C3%A9ric_Chopin)
 
-### 78. Prelude in D-flat major, Op. 28 No. 15 "Raindrop" · Frédéric Chopin
+### 88. Prelude in D-flat major, Op. 28 No. 15 "Raindrop" · Frédéric Chopin
 
 - **Year:** 1838–39, published 1839 · `composedYear: 1838`
 - **Age:** 28 (born 1810)
@@ -850,7 +949,7 @@ Sources: [Fantaisie-Impromptu (Wikipedia)](https://en.wikipedia.org/wiki/Fantais
 
 Sources: [Prelude, Op. 28, No. 15 (Chopin) (Wikipedia)](https://en.wikipedia.org/wiki/Prelude,_Op._28,_No._15_(Chopin))
 
-### 79. Liebestraum No. 3 · Franz Liszt
+### 89. Liebestraum No. 3 · Franz Liszt
 
 - **Year:** 1850 (the year the song and piano versions appeared) · `composedYear: 1850`, `approximate: true`
 - **Age:** about 39 (born 1811)
@@ -860,7 +959,7 @@ Sources: [Prelude, Op. 28, No. 15 (Chopin) (Wikipedia)](https://en.wikipedia.org
 
 Sources: [Liebesträume (Wikipedia)](https://en.wikipedia.org/wiki/Liebestr%C3%A4ume), [Franz Liszt (Wikipedia)](https://en.wikipedia.org/wiki/Franz_Liszt)
 
-### 80. Prelude in C-sharp minor, Op. 3 No. 2 · Sergei Rachmaninoff
+### 90. Prelude in C-sharp minor, Op. 3 No. 2 · Sergei Rachmaninoff
 
 - **Year:** 1892 · `composedYear: 1892`
 - **Age:** 19 (born 1873)
@@ -870,7 +969,7 @@ Sources: [Liebesträume (Wikipedia)](https://en.wikipedia.org/wiki/Liebestr%C3%A
 
 Sources: [Prelude in C-sharp minor (Rachmaninoff) (Wikipedia)](https://en.wikipedia.org/wiki/Prelude_in_C-sharp_minor_(Rachmaninoff))
 
-### 81. Arabesque No. 1 · Claude Debussy
+### 91. Arabesque No. 1 · Claude Debussy
 
 - **Year:** 1888–91 · `composedYear: 1890` (middle of the range), `approximate: true`
 - **Age:** about 28 (born 1862)
@@ -1155,3 +1254,19 @@ Sources: [Franz Liszt (Wikipedia)](https://en.wikipedia.org/wiki/Franz_Liszt)
 - **Also:** He registered for law school at eighteen, withdrew after one semester, and studied in Rome with Giacomo Carissimi.
 
 Sources: [Marc-Antoine Charpentier (Wikipedia)](https://en.wikipedia.org/wiki/Marc-Antoine_Charpentier)
+
+### Johann Pachelbel
+
+- **Born:** 1653, Nuremberg, Germany · **Died:** 1706
+- **Money:** A church organist all his life, moving between posts in Vienna, Eisenach, Erfurt, Stuttgart, Gotha and finally Nuremberg.
+- **Also:** He taught Johann Christoph Bach, the elder brother who later taught Johann Sebastian.
+
+Sources: [Johann Pachelbel (Wikipedia)](https://en.wikipedia.org/wiki/Johann_Pachelbel)
+
+### Edward Elgar
+
+- **Born:** 1857, in Lower Broadheath, near Worcester, England · **Died:** 1934
+- **Money:** After school he gave piano and violin lessons and worked occasionally in his father's shop. In 1884 he complained, "I have no money – not a cent."
+- **Also:** He was largely self-taught as a composer; his father could not afford to send him to the Leipzig Conservatory.
+
+Sources: [Edward Elgar (Wikipedia)](https://en.wikipedia.org/wiki/Edward_Elgar)

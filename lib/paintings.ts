@@ -108,6 +108,16 @@ export type PaintingId =
   | "te-deum"
   | "sarka"
   | "fur-elise"
+  | "toccata"
+  | "pachelbel-canon"
+  | "hallelujah"
+  | "water-music"
+  | "ode-to-joy"
+  | "sugar-plum"
+  | "swan-lake"
+  | "slavonic-dance"
+  | "nimrod"
+  | "scheherazade"
   | "fantaisie-impromptu"
   | "raindrop"
   | "liebestraum"
@@ -5857,7 +5867,750 @@ function renderFurEliseC(r: Raster, f: Frame) {
 }
 
 // ---------------------------------------------------------------------------
-// 77. Fantaisie-Impromptu: a storm of sixteenth notes over triplets, a manuscript, a rainbow
+// 77. Toccata and Fugue: a dark organ loft, the pipes fanned out, a copy of the score by candlelight
+// ---------------------------------------------------------------------------
+
+const toccataC = palette({
+  s0: "#14101c",
+  s1: "#251c34",
+  s2: "#3a2a4a",
+  pipe: "#b8bcc8",
+  pipeL: "#e8eaf0",
+  pipeD: "#6a6c80",
+  mouth: "#0e0c14",
+  wood: "#5a3420",
+  woodL: "#8a5632",
+  key: "#ece2c8",
+  ebony: "#1a1210",
+  paper: "#efe6cc",
+  paperS: "#b8a684",
+  ink: "#2a1e16",
+  wax: "#f0e8d8",
+  flame: "#f8d070",
+  glow: "#7a5a3a",
+});
+const toccataWallC = fracture(810, [[toccataC.c.s0, toccataC.c.s1], [toccataC.c.s1, toccataC.c.s0], [toccataC.c.s1, toccataC.c.s2]], 4);
+
+function renderToccataC(r: Raster, f: Frame) {
+  const { c } = toccataC;
+  paintPlanes(r, toccataWallC, f);
+  // Candlelight pools on the wall behind the score.
+  r.fill(ellipse(128, 52, 24, 20, 0, Math.PI * 2, 20), c.s2, c.glow, 3);
+
+  // The pipes, tallest in the middle, a bright glint running along them.
+  const lit = f.still ? 5 : Math.floor(f.t * 3) % 12;
+  for (let i = 0; i < 12; i++) {
+    const x = 24 + i * 6;
+    const h = 58 - Math.abs(i - 5.5) * 5;
+    r.fill(rect(x, 72 - h, 5, h), c.pipe, c.pipeD, 3);
+    r.fill(rect(x, 72 - h, 1, h), c.pipeL);
+    r.fill(rect(x + 1, 72 - 10, 3, 3), c.mouth);
+    r.fill(ellipse(x + 2.5, 72 - h, 2.5, 1, 0, Math.PI * 2, 8), c.mouth);
+    if (i === lit) r.fill(rect(x + 1, 74 - h, 2, h - 4), c.pipeL);
+  }
+
+  // The console: case, keys and a long pedal bar.
+  r.fill(rect(16, 72, 84, 22), c.wood, c.woodL, 2);
+  r.line(16, 72, 99, 72, c.woodL);
+  r.fill(rect(22, 76, 72, 6), c.key);
+  for (let x = 24; x < 92; x += 4) r.fill(rect(x, 76, 1, 4), c.ebony);
+  r.fill(rect(26, 88, 64, 3), c.woodL);
+
+  // The score on a stand, a candle beside it.
+  r.fill([[110, 78], [146, 78], [144, 48], [112, 48]].map((p) => drift(p as Pt, f, 0.3)), c.paper, c.paperS, 2);
+  for (let k = 0; k < 5; k++) r.line(115, 54 + k * 4, 141, 54 + k * 4, c.paperS);
+  const run = f.still ? 3 : Math.floor(f.t * 4) % 8;
+  for (let n = 0; n < 8; n++) r.dot(116 + n * 3, 66 - Math.abs(n - 3.5) * 2 - (n === run ? 1 : 0), c.ink);
+  r.fill(rect(124, 76, 4, 18), c.wood);
+  r.fill(rect(150, 70, 4, 24), c.wax);
+  const flick = Math.round(wave(f, 3.3) * 0.6);
+  r.fill([[150 + flick, 69], [152, 63 + flick], [154 - flick, 69]], c.flame);
+}
+
+// ---------------------------------------------------------------------------
+// 78. Canon in D: three violins entering one after another over a walking bass, a wedding ring
+// ---------------------------------------------------------------------------
+
+const canonC = palette({
+  w0: "#4a5266",
+  w1: "#667088",
+  w2: "#8490a4",
+  fl0: "#3a2a22",
+  fl1: "#5a4032",
+  vio: "#a8541e",
+  vioL: "#d88a3e",
+  vioD: "#6a3010",
+  string: "#e8dcc0",
+  ebony: "#1a1210",
+  cello: "#8a3c1c",
+  celloL: "#b8602c",
+  paper: "#efe6cc",
+  paperS: "#b8a684",
+  ink: "#2a1e16",
+  gold: "#e0b84a",
+  goldD: "#8a6424",
+  cush: "#7a2a3a",
+  cushL: "#a8485a",
+  glass: "#cfe0ec",
+  frame: "#d8ccb0",
+});
+const canonWallC = fracture(820, [[canonC.c.w0, canonC.c.w1], [canonC.c.w1, canonC.c.w2], [canonC.c.w1, canonC.c.w0]], 4, [-8, -8, 168, 74]);
+const canonFloorC = fracture(821, [[canonC.c.fl0, canonC.c.fl1], [canonC.c.fl1, canonC.c.fl0]], 3, [-8, 74, 168, 108]);
+
+function violinC(r: Raster, f: Frame, x: number, y: number, on: boolean) {
+  const { c } = canonC;
+  const sway = f.still ? 0 : wave(f, 1.1, x) * 0.04;
+  r.fill(place(ellipse(0, -3, 4.5, 4, 0, Math.PI * 2, 14), x, y, sway), c.vio, c.vioL, on ? 8 : 3);
+  r.fill(place(ellipse(0, 4, 5.5, 5, 0, Math.PI * 2, 14), x, y, sway), c.vio, c.vioL, on ? 8 : 3);
+  r.fill(place(rect(-1, -18, 2, 14), x, y, sway), c.ebony);
+  r.fill(place(ellipse(0, -19, 1.8, 1.8, 0, Math.PI * 2, 8), x, y, sway), c.vioD);
+  r.line(x, y - 14, x, y + 8, c.string);
+  r.fill(place(rect(-2, 6, 4, 1), x, y, sway), c.ebony);
+}
+
+function renderCanonC(r: Raster, f: Frame) {
+  const { c } = canonC;
+  paintPlanes(r, canonWallC, f);
+  paintPlanes(r, canonFloorC, f);
+
+  // A tall arched window.
+  r.fill([[8, 74], [8, 30], [14, 20], [24, 16], [34, 20], [40, 30], [40, 74]], c.frame);
+  r.fill([[11, 72], [11, 31], [16, 23], [24, 19], [32, 23], [37, 31], [37, 72]], c.glass, c.w2, 3);
+  r.fill(rect(23, 19, 2, 53), c.frame);
+
+  // The sheet pinned up: one short bass line, over and over.
+  r.fill(rect(124, 18, 26, 22), c.paper, c.paperS, 2);
+  for (let k = 0; k < 3; k++) r.line(127, 24 + k * 5, 147, 24 + k * 5, c.paperS);
+  for (let n = 0; n < 8; n++) r.dot(129 + n * 2.5, 33 - (n * 3) % 8 * 0.9, c.ink);
+
+  // Three violins, each lit as its turn comes round, two measures after the last.
+  const turn = f.still ? 0 : Math.floor(f.t * 0.8) % 3;
+  violinC(r, f, 60, 52, turn === 0);
+  violinC(r, f, 80, 58, turn === 1);
+  violinC(r, f, 100, 64, turn === 2);
+
+  // The cello that plays the bass.
+  r.fill(ellipse(26, 82, 11, 9, 0, Math.PI * 2, 20), c.cello, c.celloL, 3);
+  r.fill(ellipse(26, 68, 8, 7, 0, Math.PI * 2, 18), c.cello, c.celloL, 3);
+  r.fill(rect(25, 40, 2, 28), c.ebony);
+  r.line(26, 42, 26, 86, c.string);
+  r.fill(rect(25, 91, 2, 6), c.ebony);
+
+  // A wedding ring on a cushion.
+  r.fill(ellipse(132, 80, 11, 5, 0, Math.PI * 2, 16), c.cush, c.cushL, 3);
+  r.fill(ellipse(132, 77, 4, 3.5, 0, Math.PI * 2, 14), c.gold);
+  r.fill(ellipse(132, 77, 2.3, 2, 0, Math.PI * 2, 10), c.cush);
+  if (f.still || wave(f, 1.7) > 0) r.dot(135, 74, c.cushL);
+}
+
+// ---------------------------------------------------------------------------
+// 79. Hallelujah: the chorus in rising ranks, the trumpets above, an empty royal seat
+// ---------------------------------------------------------------------------
+
+const hallelujahC = palette({
+  s0: "#1c1424",
+  s1: "#34223a",
+  s2: "#5a3448",
+  robe: "#241a2c",
+  robeL: "#4a3a5a",
+  skin: "#d6ae88",
+  gold: "#e8c050",
+  goldL: "#fbe49a",
+  goldD: "#8a6424",
+  red: "#8a1e2c",
+  redL: "#b8344a",
+  wood: "#4e3020",
+  paper: "#efe6cc",
+  ink: "#2a1e16",
+  quill: "#e8e0d0",
+  ray: "#f4d878",
+});
+const hallelujahBackC = fracture(830, [[hallelujahC.c.s0, hallelujahC.c.s1], [hallelujahC.c.s1, hallelujahC.c.s0], [hallelujahC.c.s1, hallelujahC.c.s2]], 4);
+
+function renderHallelujahC(r: Raster, f: Frame) {
+  const { c } = hallelujahC;
+  paintPlanes(r, hallelujahBackC, f);
+
+  // Light spilling down from the trumpets.
+  const ray = 3 + Math.round(wave(f, 0.4) * 2);
+  r.fill([[70, 22], [90, 22], [118, 96], [42, 96]], c.s2, c.ray, ray);
+
+  // Trumpets raised high, a pair of them, with a flag of gold.
+  for (const side of [-1, 1]) {
+    const x = 80 + side * 15;
+    r.line(x - side * 12, 24, x + side * 6, 16, c.gold);
+    r.line(x - side * 12, 25, x + side * 6, 17, c.goldL);
+    r.fill([[x + side * 6, 12], [x + side * 14, 9], [x + side * 14, 23], [x + side * 6, 20]], c.gold, c.goldL, 5);
+    r.fill(rect(x - side * 8 - 1, 22, 3, 3), c.goldD);
+  }
+
+  // The chorus: four ranks rising, mouths open on the one word, gold edges to their music.
+  for (let row = 0; row < 4; row++) {
+    const y = 50 + row * 11;
+    const n = 9 + row;
+    for (let i = 0; i < n; i++) {
+      const x = 80 + (i - (n - 1) / 2) * 7;
+      const lift = f.still ? 0 : Math.max(0, wave(f, 2.2, i * 0.9 + row)) * 1.2;
+      r.fill([[x - 3, y + 11], [x + 3, y + 11], [x + 2, y + 3], [x - 2, y + 3]], c.robe, c.robeL, 2);
+      r.fill(ellipse(x, y + 1 - lift, 2.2, 2.4, 0, Math.PI * 2, 8), c.skin);
+      r.dot(x, y + 2 - lift, c.ink);
+    }
+  }
+
+  // An empty royal seat in a box at the side: the king who may, or may not, have stood.
+  r.fill(rect(6, 40, 30, 38), c.wood);
+  r.fill(rect(9, 43, 24, 32), c.red, c.redL, 3);
+  r.fill(rect(15, 54, 12, 14), c.gold, c.goldD, 3);
+  r.fill(rect(15, 48, 12, 7), c.red);
+  r.fill([[15, 48], [18, 43], [21, 47], [24, 43], [27, 48]], c.gold);
+  r.dot(18, 43, c.goldL);
+  r.dot(24, 43, c.goldL);
+
+  // The score and a quill.
+  r.fill(rect(126, 70, 26, 20), c.paper);
+  for (let k = 0; k < 4; k++) r.line(129, 75 + k * 4, 149, 75 + k * 4, c.s2);
+  r.line(150, 68, 136, 88, c.quill);
+  r.dot(136, 89, c.ink);
+}
+
+// ---------------------------------------------------------------------------
+// 80. Water Music: two barges on the Thames at dusk, the king's under its canopy, the players behind
+// ---------------------------------------------------------------------------
+
+const waterMusicC = palette({
+  sk0: "#2e3a5a",
+  sk1: "#5a5a82",
+  sk2: "#d89a6a",
+  wat0: "#1c2c48",
+  wat1: "#3a5478",
+  wat2: "#6a8aa8",
+  hull: "#3a2418",
+  hullL: "#6a4228",
+  canopy: "#8a1e2c",
+  canopyL: "#c04a50",
+  gold: "#e8c050",
+  goldL: "#fbe49a",
+  oar: "#a88a5a",
+  robe: "#2a2036",
+  skin: "#d6ae88",
+  horn: "#d8a838",
+  lamp: "#fbe49a",
+  bank: "#161c2c",
+});
+const waterSkyC = fracture(840, [[waterMusicC.c.sk0, waterMusicC.c.sk1], [waterMusicC.c.sk1, waterMusicC.c.sk2], [waterMusicC.c.sk1, waterMusicC.c.sk0]], 3, [-8, -8, 168, 58]);
+
+function renderWaterMusicC(r: Raster, f: Frame) {
+  const { c } = waterMusicC;
+  paintPlanes(r, waterSkyC, f);
+  r.fill([[-8, 46], [30, 40], [60, 44], [100, 38], [168, 44], [168, 58], [-8, 58]], c.bank);
+  for (const lx of [22, 70, 118]) r.dot(lx, 44, c.lamp);
+
+  // The river, ruffled by the barges' wake.
+  r.fill(rect(-8, 56, 176, 52), c.wat0, c.wat1, 4);
+  for (let k = 0; k < 14; k++) {
+    const y = 60 + k * 3;
+    const x0 = (k * 37) % 150;
+    const sway = wave(f, 0.9, k) * 3;
+    r.line(x0 + sway, y, x0 + 14 + sway, y, c.wat2);
+  }
+
+  // The king's barge, left: gilded prow, red canopy and its crown.
+  r.fill([[10, 70], [76, 70], [70, 80], [16, 80]], c.hull, c.hullL, 3);
+  r.line(10, 70, 76, 70, c.gold);
+  r.fill([[6, 70], [10, 70], [10, 62], [6, 60]], c.gold);
+  r.fill(rect(24, 52, 40, 18), c.canopyL, c.canopy, 3);
+  r.fill([[22, 52], [66, 52], [60, 46], [28, 46]], c.canopy, c.canopyL, 4);
+  r.fill([[40, 46], [44, 38], [48, 44], [52, 38], [56, 46]], c.gold);
+  r.dot(44, 38, c.goldL);
+  r.dot(52, 38, c.goldL);
+  for (let k = 0; k < 5; k++) r.line(18 + k * 14, 80, 12 + k * 14 + wave(f, 1, k) * 2, 92, c.oar);
+
+  // The players' barge, right: a row of musicians and a golden horn.
+  r.fill([[84, 72], [150, 72], [144, 82], [90, 82]], c.hull, c.hullL, 3);
+  for (let i = 0; i < 7; i++) {
+    const x = 90 + i * 8;
+    const bob = f.still ? 0 : Math.round(wave(f, 2, i) * 0.7);
+    r.fill([[x - 2, 72], [x + 3, 72], [x + 2, 62 + bob], [x - 1, 62 + bob]], c.robe);
+    r.fill(ellipse(x + 0.5, 60 + bob, 2, 2.2, 0, Math.PI * 2, 8), c.skin);
+  }
+  r.fill(ellipse(124, 56, 6, 6, 0, Math.PI * 2, 16), c.horn, c.goldL, 3);
+  r.fill(ellipse(124, 56, 3.5, 3.5, 0, Math.PI * 2, 12), c.sk0);
+  r.line(130, 56, 138, 60, c.horn);
+  r.line(131, 57, 139, 61, c.horn);
+  for (let k = 0; k < 4; k++) r.line(94 + k * 16, 82, 90 + k * 16 + wave(f, 1, k) * 2, 92, c.oar);
+}
+
+// ---------------------------------------------------------------------------
+// 81. Ode to Joy: Beethoven with his back to the hall, the chorus above, the circle of stars
+// ---------------------------------------------------------------------------
+
+const odeC = palette({
+  w0: "#2a2438",
+  w1: "#463a54",
+  w2: "#6a5468",
+  gold: "#e8c050",
+  goldL: "#fbe49a",
+  blue: "#1e3a8a",
+  blueL: "#3a5cb4",
+  coat: "#16121c",
+  coatL: "#34304a",
+  skin: "#d6ae88",
+  hair: "#8a8a98",
+  robe: "#3a2a4a",
+  robeL: "#6a5280",
+  hand: "#e8c8a0",
+  paper: "#efe6cc",
+  ink: "#2a1e16",
+  pit: "#0e0a14",
+  wood: "#5a3420",
+});
+const odeBackC = fracture(850, [[odeC.c.w0, odeC.c.w1], [odeC.c.w1, odeC.c.w0], [odeC.c.w1, odeC.c.w2]], 4, [-8, -8, 168, 56]);
+
+function renderOdeC(r: Raster, f: Frame) {
+  const { c } = odeC;
+  paintPlanes(r, odeBackC, f);
+
+  // The chorus on a gallery at the back: two ranks of faces over a gold rail.
+  r.fill(rect(40, 12, 80, 22), c.robe, c.robeL, 2);
+  for (let row = 0; row < 2; row++) {
+    for (let i = 0; i < 12; i++) {
+      const x = 46 + i * 6.2 + row * 3;
+      const open = f.still ? 0 : Math.max(0, wave(f, 2, i + row * 2)) * 0.8;
+      r.fill(ellipse(x, 18 + row * 8, 2, 2.3 + open * 0.3, 0, Math.PI * 2, 8), c.skin);
+    }
+  }
+  r.fill(rect(38, 33, 84, 2), c.gold);
+
+  // A blue banner with a ring of twelve gold stars.
+  r.fill(rect(124, 8, 32, 44), c.blue, c.blueL, 2);
+  for (let k = 0; k < 12; k++) {
+    const a = (k / 12) * Math.PI * 2;
+    const x = 140 + Math.cos(a) * 9;
+    const y = 30 + Math.sin(a) * 9;
+    r.dot(x, y, c.gold);
+    r.dot(x, y - 1, c.goldL);
+    r.dot(x - 1, y, c.gold);
+    r.dot(x + 1, y, c.gold);
+  }
+
+  // The orchestra pit and the hall: rows of heads, hands coming together.
+  r.fill(rect(-8, 56, 176, 52), c.pit, c.w0, 2);
+  for (let row = 0; row < 3; row++) {
+    for (let i = 0; i < 20; i++) {
+      const x = 4 + i * 8 + (row % 2) * 4;
+      r.fill(ellipse(x, 84 + row * 6, 2.8, 3, 0, Math.PI * 2, 8), c.coat);
+      const clap = f.still ? 0 : Math.max(0, wave(f, 5, i * 1.3 + row)) * 2;
+      r.dot(x - 1 - clap * 0.3, 80 + row * 6, c.hand);
+      r.dot(x + 1 + clap * 0.3, 80 + row * 6, c.hand);
+    }
+  }
+
+  // Beethoven from behind on his podium, arms up, a score open before him.
+  r.fill(rect(64, 74, 32, 8), c.wood);
+  r.fill([[70, 72], [90, 72], [87, 46], [73, 46]], c.coat, c.coatL, 2);
+  r.fill(ellipse(80, 40, 6, 7, 0, Math.PI * 2, 14), c.hair);
+  r.dot(73, 41, c.skin);
+  r.dot(87, 41, c.skin);
+  r.fill([[73, 38], [75, 31], [80, 29], [85, 31], [87, 38], [84, 34], [80, 33], [76, 34]], c.hair);
+  const beat = f.still ? 0 : wave(f, 3.2) * 3;
+  r.line(74, 50, 66, 40 + beat, c.coat);
+  r.line(75, 50, 67, 40 + beat, c.coat);
+  r.line(86, 50, 94, 40 - beat, c.coat);
+  r.line(85, 50, 93, 40 - beat, c.coat);
+  r.dot(66, 39 + beat, c.hand);
+  r.dot(94, 39 - beat, c.hand);
+  r.fill(rect(96, 62, 14, 10), c.paper);
+  r.line(103, 62, 103, 71, c.ink);
+  for (let k = 0; k < 3; k++) r.line(98, 65 + k * 2, 108, 65 + k * 2, c.ink);
+}
+
+// ---------------------------------------------------------------------------
+// 82. Sugar Plum Fairy: a celesta, fountains of drops and a fairy on pointe in the Land of Sweets
+// ---------------------------------------------------------------------------
+
+const sugarPlumC = palette({
+  n0: "#2a1a44",
+  n1: "#3e2860",
+  n2: "#5a3a7c",
+  star: "#f6e8f8",
+  pink: "#f0a0c4",
+  pinkL: "#f8cce0",
+  mint: "#9ad8c0",
+  mintL: "#c8f0e0",
+  plum: "#7a2a62",
+  plumL: "#a8468a",
+  sugar: "#f8f0f4",
+  wood: "#6a3a2a",
+  woodL: "#8e5a3e",
+  ivory: "#f0e8d4",
+  brass: "#d8a840",
+  drop: "#b8e8f8",
+  dropL: "#eefaff",
+  skin: "#f0c8b0",
+  tutu: "#fbd8ea",
+});
+const sugarPlumSkyC = fracture(810, [[sugarPlumC.c.n0, sugarPlumC.c.n1], [sugarPlumC.c.n1, sugarPlumC.c.n2], [sugarPlumC.c.n1, sugarPlumC.c.n0]], 4, [-8, -8, 168, 76]);
+const sugarPlumFloorC = fracture(811, [[sugarPlumC.c.pink, sugarPlumC.c.pinkL], [sugarPlumC.c.mint, sugarPlumC.c.mintL], [sugarPlumC.c.pinkL, sugarPlumC.c.sugar]], 3, [-8, 76, 168, 108]);
+
+function renderSugarPlumC(r: Raster, f: Frame) {
+  const { c } = sugarPlumC;
+  paintPlanes(r, sugarPlumSkyC, f);
+  paintPlanes(r, sugarPlumFloorC, f);
+  for (let k = 0; k < 14; k++) {
+    const sx = 6 + ((k * 37) % 150);
+    const sy = 4 + ((k * 23) % 40);
+    if (f.still || wave(f, 1.1, k) > -0.4) r.dot(sx, sy, c.star);
+  }
+
+  // Candy towers on the horizon: a gumdrop dome and a striped stick.
+  r.fill(ellipse(120, 70, 14, 16, Math.PI, Math.PI * 2, 14), c.plum, c.plumL, 3);
+  r.fill(rect(106, 70, 28, 6), c.plum);
+  r.fill(rect(148, 52, 5, 24), c.sugar);
+  for (let y = 54; y < 76; y += 4) r.fill(rect(148, y, 5, 2), c.pink);
+
+  // Fountains: drops thrown up and falling back, one arc after another.
+  for (const [fx, ph] of [[96, 0], [112, 1.6]] as [number, number][]) {
+    r.fill(ellipse(fx, 76, 6, 2, 0, Math.PI * 2, 10), c.mint);
+    for (let k = 0; k < 7; k++) {
+      const u = f.still ? k / 7 : ((f.t * 0.5 + k / 7 + ph) % 1);
+      const dx = (k % 2 ? 1 : -1) * u * (5 + k);
+      r.dot(Math.round(fx + dx), Math.round(76 - Math.sin(u * Math.PI) * (18 + k)), k % 3 ? c.drop : c.dropL);
+    }
+  }
+
+  // The celesta: a small upright, its keys lit, a brass hammer rail.
+  r.fill(rect(6, 54, 38, 26), c.wood, c.woodL, 3);
+  r.fill(rect(8, 56, 34, 8), c.woodL);
+  for (let x = 10; x < 40; x += 3) r.fill(rect(x, 58, 2, 4), c.brass);
+  r.fill(rect(8, 66, 34, 6), c.ivory);
+  for (let x = 10; x < 40; x += 4) r.fill(rect(x, 66, 1, 3), c.n0);
+  r.fill([[10, 80], [14, 80], [13, 92], [11, 92]], c.wood);
+  r.fill([[36, 80], [40, 80], [39, 92], [37, 92]], c.wood);
+  const ring = f.still ? 0 : Math.floor(f.t * 3) % 6;
+  r.dot(12 + ring * 5, 57, c.dropL);
+
+  // The Sugar Plum Fairy on pointe, arms up, her tutu a plate of pink petals.
+  const bob = Math.round(wave(f, 2.2));
+  const fy = 40 + bob;
+  r.fill(ellipse(70, fy + 4, 13, 5, 0, Math.PI * 2, 18), c.tutu, c.pinkL, 3);
+  r.fill([[66, fy + 3], [74, fy + 3], [73, fy - 12], [67, fy - 12]], c.pink, c.tutu, 2);
+  r.fill(ellipse(70, fy - 17, 3.2, 3.6, 0, Math.PI * 2, 10), c.skin);
+  r.fill(ellipse(70, fy - 21, 3.6, 2, Math.PI, Math.PI * 2, 8), c.plum);
+  r.line(67, fy - 10, 61, fy - 22, c.skin);
+  r.line(73, fy - 10, 79, fy - 22, c.skin);
+  r.line(69, fy + 8, 69, 64, c.skin);
+  r.line(71, fy + 8, 72, 62, c.skin);
+  r.dot(70, fy - 25, c.brass);
+  r.line(70, 64, 70, 66, c.sugar);
+}
+
+// ---------------------------------------------------------------------------
+// 83. Swan Lake, Scene: a swan on a moonlit lake before a ruined chapel
+// ---------------------------------------------------------------------------
+
+const swanLakeC = palette({
+  n0: "#0e1830",
+  n1: "#18284c",
+  n2: "#26406a",
+  lake0: "#142a48",
+  lake1: "#22446a",
+  moon: "#f2eed8",
+  moonL: "#fffcec",
+  moonS: "#c8c4a8",
+  swan: "#f4f2ec",
+  swanS: "#b6c0d0",
+  beak: "#e08a3a",
+  stone: "#46506a",
+  stoneL: "#66728e",
+  pine: "#0a1a24",
+  gleam: "#9cc4e0",
+  crown: "#e8c85a",
+});
+const swanLakeSkyC = fracture(820, [[swanLakeC.c.n0, swanLakeC.c.n1], [swanLakeC.c.n1, swanLakeC.c.n2], [swanLakeC.c.n1, swanLakeC.c.n0]], 4, [-8, -8, 168, 58]);
+const swanLakeWaterC = fracture(821, [[swanLakeC.c.lake0, swanLakeC.c.lake1], [swanLakeC.c.lake1, swanLakeC.c.lake0], [swanLakeC.c.lake0, swanLakeC.c.n1]], 3, [-8, 58, 168, 108]);
+
+function renderSwanLakeC(r: Raster, f: Frame) {
+  const { c } = swanLakeC;
+  paintPlanes(r, swanLakeSkyC, f);
+  paintPlanes(r, swanLakeWaterC, f);
+
+  // The moon, with its path laid across the lake.
+  r.fill(ellipse(124, 22, 11, 11, 0, Math.PI * 2, 24), c.moon, c.moonL, 3);
+  r.dot(121, 19, c.moonS);
+  r.dot(127, 25, c.moonS);
+  r.dot(120, 24, c.moonS);
+  for (let k = 0; k < 8; k++) {
+    const gx = 124 + Math.round(wave(f, 1.3, k) * 2) + (k % 2 ? 2 : -2);
+    r.line(gx - 4 + k, 60 + k * 4, gx + 4 - k * 0.3, 60 + k * 4, c.gleam);
+  }
+
+  // A ruined chapel on the far shore, pines either side.
+  r.fill(rect(14, 40, 26, 18), c.stone, c.stoneL, 2);
+  r.fill([[12, 40], [27, 26], [42, 40]], c.stone);
+  r.fill(ellipse(27, 50, 3, 5, Math.PI, Math.PI * 2, 8), c.n0);
+  r.fill(rect(24, 50, 6, 8), c.n0);
+  r.fill(rect(36, 32, 4, 8), c.stoneL);
+  for (const px of [4, 46, 56]) r.fill([[px - 5, 58], [px, 36], [px + 5, 58]], c.pine);
+
+  // The swan: a long curved neck, a crowned head, wings lifted a little.
+  const sway = Math.round(wave(f, 0.7) * 1.2);
+  r.fill(ellipse(76, 74, 20, 8, 0, Math.PI * 2, 20), c.swan, c.swanS, 3);
+  r.fill([[58, 72], [48, 56], [56, 66], [66, 70]], c.swan, c.swanS, 2);
+  r.fill([[84, 72], [98, 54 + sway], [104, 68], [96, 74]], c.swan, c.swanS, 2);
+  for (let k = 0; k < 10; k++) {
+    const t = k / 9;
+    r.fill(ellipse(60 - Math.sin(t * 2.4) * 8, 68 - t * 30, 3.2 - t * 0.6, 2.4, 0, Math.PI * 2, 8), c.swan, c.swanS, 2);
+  }
+  r.fill(ellipse(56 + sway, 38, 3.6, 2.8, 0, Math.PI * 2, 10), c.swan);
+  r.fill([[48 + sway, 38], [52 + sway, 37], [52 + sway, 40]], c.beak);
+  r.line(53 + sway, 34, 56 + sway, 33, c.crown);
+  r.dot(54 + sway, 37, c.n0);
+  r.line(56, 82, 96, 82, c.gleam);
+  r.line(60, 85, 90, 85, c.swanS);
+}
+
+// ---------------------------------------------------------------------------
+// 84. Slavonic Dance No. 2: a village green in Bohemia, a fiddler and dancing couples
+// ---------------------------------------------------------------------------
+
+const slavonicC = palette({
+  sky0: "#f0d8a8",
+  sky1: "#e8b080",
+  sky2: "#d88a6c",
+  hill0: "#6a7a3a",
+  hill1: "#8a9a4a",
+  grass0: "#4a6a30",
+  grass1: "#6e8a3c",
+  church: "#f0e6d0",
+  roof: "#9c3a2a",
+  roofD: "#6a2418",
+  linden: "#365a28",
+  lindenL: "#58803a",
+  trunk: "#4a3020",
+  skin: "#e8b890",
+  red: "#c83a3a",
+  blue: "#2a4a8a",
+  white: "#f6f0e4",
+  black: "#1a1410",
+  gold: "#e0b040",
+  fiddle: "#8a4a22",
+});
+const slavonicSkyC = fracture(830, [[slavonicC.c.sky0, slavonicC.c.sky1], [slavonicC.c.sky1, slavonicC.c.sky2], [slavonicC.c.sky0, slavonicC.c.sky2]], 4, [-8, -8, 168, 52]);
+const slavonicGroundC = fracture(831, [[slavonicC.c.hill0, slavonicC.c.hill1], [slavonicC.c.grass0, slavonicC.c.grass1], [slavonicC.c.grass1, slavonicC.c.hill1]], 4, [-8, 52, 168, 108]);
+
+function dancerS(r: Raster, f: Frame, x: number, y: number, skirt: number, bodice: number, phase: number) {
+  const { c } = slavonicC;
+  const turn = Math.round(wave(f, 2.4, phase) * 3);
+  r.fill([[x - 2, y], [x + 2, y], [x + 7 + turn, y + 12], [x - 7 + turn, y + 12]], skirt, c.white, 2);
+  r.fill(rect(x - 2, y - 8, 4, 8), bodice);
+  r.fill(ellipse(x, y - 11, 2.4, 2.6, 0, Math.PI * 2, 8), c.skin);
+  r.line(x - 2, y - 7, x - 6, y - 12, c.skin);
+  r.line(x + 2, y - 7, x + 6, y - 12, c.skin);
+  r.line(x - 2 + turn * 0.4, y + 12, x - 2, y + 17, c.black);
+  r.line(x + 2 + turn * 0.4, y + 12, x + 3, y + 17, c.black);
+}
+
+function renderSlavonicC(r: Raster, f: Frame) {
+  const { c } = slavonicC;
+  paintPlanes(r, slavonicSkyC, f);
+  paintPlanes(r, slavonicGroundC, f);
+  r.fill(ellipse(60, 30, 9, 9, 0, Math.PI * 2, 18), c.gold);
+
+  // The village: a white church with a red roof and a spire, and small houses.
+  r.fill(rect(112, 38, 22, 20), c.church);
+  r.fill([[110, 38], [123, 28], [136, 38]], c.roof, c.roofD, 2);
+  r.fill(rect(120, 20, 6, 14), c.church);
+  r.fill([[119, 20], [123, 8], [127, 20]], c.roofD);
+  r.dot(123, 7, c.gold);
+  r.fill(ellipse(123, 52, 2.4, 4, Math.PI, Math.PI * 2, 8), c.black);
+  r.fill(rect(140, 44, 16, 14), c.church);
+  r.fill([[138, 44], [148, 36], [158, 44]], c.roof, c.roofD, 2);
+  r.fill(rect(96, 46, 12, 12), c.church);
+  r.fill([[94, 46], [102, 40], [110, 46]], c.roof);
+
+  // A linden tree on the green, a swing of leaves in the breeze.
+  r.fill(rect(16, 40, 4, 22), c.trunk);
+  for (const [lx, ly, lr] of [[12, 34, 9], [24, 33, 9], [18, 25, 9]] as [number, number, number][])
+    r.fill(ellipse(lx + Math.round(wave(f, 0.6, lx) * 0.8), ly, lr, lr * 0.8, 0, Math.PI * 2, 14), c.linden, c.lindenL, 3);
+
+  // A fiddler on a barrel, bow sawing back and forth.
+  r.fill(rect(30, 66, 10, 12), c.trunk);
+  r.fill(rect(32, 54, 6, 12), c.blue);
+  r.fill(ellipse(35, 51, 2.6, 2.8, 0, Math.PI * 2, 8), c.skin);
+  r.fill(rect(32, 46, 6, 3), c.black);
+  r.fill(ellipse(40, 58, 3, 2.2, 0, Math.PI * 2, 8), c.fiddle);
+  r.line(37, 56, 43, 55, c.fiddle);
+  const bow = Math.round(wave(f, 5) * 3);
+  r.line(38 + bow, 52, 48 + bow, 63, c.white);
+  r.line(33, 58, 40, 58, c.skin);
+
+  // Two couples whirling on the green, red and blue skirts spinning.
+  dancerS(r, f, 64, 70, c.red, c.white, 0);
+  dancerS(r, f, 76, 69, c.blue, c.red, 0.8);
+  dancerS(r, f, 90, 76, c.red, c.blue, 1.7);
+  dancerS(r, f, 102, 75, c.gold, c.white, 2.5);
+}
+
+// ---------------------------------------------------------------------------
+// 85. Nimrod: a hunter on the Malvern ridge at dawn, a score on a desk, a wreath of poppies
+// ---------------------------------------------------------------------------
+
+const nimrodC = palette({
+  sky0: "#e8c8a0",
+  sky1: "#d8a088",
+  sky2: "#a88aa0",
+  hill0: "#4a5a58",
+  hill1: "#627268",
+  hill2: "#788a6c",
+  green0: "#3a5a34",
+  green1: "#547448",
+  sun: "#f8e098",
+  hunter: "#161820",
+  bow: "#5a3a22",
+  paper: "#efe6cc",
+  paperS: "#b8a684",
+  ink: "#2a1e16",
+  wood: "#5a3420",
+  woodL: "#7e4c2c",
+  quill: "#e8e0d0",
+  poppy: "#c82a22",
+  poppyD: "#8a1814",
+  leaf: "#2e5a2e",
+  flame: "#f8d070",
+  wax: "#f0e8d8",
+});
+const nimrodSkyC = fracture(840, [[nimrodC.c.sky0, nimrodC.c.sky1], [nimrodC.c.sky1, nimrodC.c.sky2], [nimrodC.c.sky0, nimrodC.c.sky2]], 4, [-8, -8, 168, 50]);
+const nimrodHillsC = fracture(841, [[nimrodC.c.hill0, nimrodC.c.hill1], [nimrodC.c.hill1, nimrodC.c.hill2], [nimrodC.c.green0, nimrodC.c.green1]], 4, [-8, 40, 168, 108]);
+
+function renderNimrodC(r: Raster, f: Frame) {
+  const { c } = nimrodC;
+  paintPlanes(r, nimrodSkyC, f);
+  paintPlanes(r, nimrodHillsC, f);
+  r.fill(ellipse(60, 30, 8, 8, 0, Math.PI * 2, 16), c.sun, c.sky0, 2);
+
+  // The ridge of the Malvern Hills, and a hunter against the dawn: a bow, a quiver, a hound.
+  r.fill([[40, 56], [70, 36], [96, 34], [120, 40], [150, 50], [160, 56]], c.hill0, c.hill1, 3);
+  const hx = 104;
+  const hy = 34;
+  r.fill([[hx - 2, hy], [hx + 2, hy], [hx + 3, hy - 10], [hx - 3, hy - 10]], c.hunter);
+  r.fill(ellipse(hx, hy - 13, 2.4, 2.6, 0, Math.PI * 2, 8), c.hunter);
+  r.line(hx - 2, hy, hx - 3, hy + 6, c.hunter);
+  r.line(hx + 2, hy, hx + 3, hy + 6, c.hunter);
+  r.line(hx + 3, hy - 9, hx + 9, hy - 14, c.bow);
+  r.line(hx + 9, hy - 18, hx + 9, hy - 6, c.bow);
+  r.line(hx + 8, hy - 17, hx + 8, hy - 7, c.paperS);
+  r.line(hx - 3, hy - 9, hx - 5, hy - 15, c.bow);
+  r.fill(ellipse(hx - 12 + Math.round(wave(f, 0.5)), hy + 3, 4, 2, 0, Math.PI * 2, 8), c.hunter);
+  r.fill(rect(hx - 15, hy + 3, 2, 4), c.hunter);
+
+  // A desk with the score open, a quill, a candle.
+  r.fill(rect(4, 66, 66, 8), c.wood, c.woodL, 2);
+  r.fill(rect(8, 74, 4, 20), c.wood);
+  r.fill(rect(62, 74, 4, 20), c.wood);
+  r.fill([[12, 66], [58, 66], [54, 50], [16, 50]], c.paper, c.paperS, 2);
+  for (let k = 0; k < 4; k++) r.line(18, 55 + k * 3, 52, 55 + k * 3, c.paperS);
+  // The slow, rising opening, a note on each stave line in turn.
+  for (let n = 0; n < 8; n++) r.dot(20 + n * 4, 64 - n - (f.still ? 0 : Math.floor(f.t * 2) % 2) * (n % 3 === 0 ? 1 : 0), c.ink);
+  r.line(58, 66, 70, 48, c.quill);
+  r.line(70, 48, 72, 45, c.ink);
+  r.fill(rect(2, 58, 3, 8), c.wax);
+  const flick = Math.round(wave(f, 3.1) * 0.6);
+  r.fill([[2 + flick, 57], [3.5, 52 + flick], [5 - flick, 57]], c.flame);
+
+  // A wreath of poppies for the Cenotaph.
+  for (let k = 0; k < 14; k++) {
+    const a = (k / 14) * Math.PI * 2;
+    const px = 128 + Math.cos(a) * 14;
+    const py = 78 + Math.sin(a) * 12;
+    r.fill(ellipse(px, py, 3, 2.6, 0, Math.PI * 2, 8), k % 2 ? c.poppy : c.poppyD);
+    r.dot(Math.round(px), Math.round(py), c.ink);
+    if (k % 3 === 0) r.fill(ellipse(px + Math.cos(a + 0.4) * 4, py + Math.sin(a + 0.4) * 4, 2, 1.2, 0, Math.PI * 2, 6), c.leaf);
+  }
+  r.line(128, 90, 128, 96, c.leaf);
+  r.fill([[124, 96], [132, 96], [131, 91], [125, 91]], c.poppyD);
+}
+
+// ---------------------------------------------------------------------------
+// 86. Scheherazade: a palace balcony at night, a young prince and princess, the Sultan, a violin
+// ---------------------------------------------------------------------------
+
+const scheherazadeC = palette({
+  n0: "#14123a",
+  n1: "#241e58",
+  n2: "#3a3078",
+  star: "#fff0c0",
+  moon: "#f2e4a8",
+  wall0: "#8a5a3a",
+  wall1: "#aa7a4a",
+  tile: "#2a6a8a",
+  tileL: "#58a8c0",
+  gold: "#e8b840",
+  goldD: "#a87820",
+  prince: "#2a3a8a",
+  princess: "#c0346a",
+  veil: "#f0c8dc",
+  skin: "#d8a078",
+  sultan: "#6a1818",
+  turban: "#f0e8d0",
+  black: "#18100c",
+  violin: "#a8541e",
+  violinL: "#d88a3a",
+  rug: "#8a1a2a",
+  rugL: "#c8584a",
+  lamp: "#f8d870",
+});
+const scheherazadeSkyC = fracture(850, [[scheherazadeC.c.n0, scheherazadeC.c.n1], [scheherazadeC.c.n1, scheherazadeC.c.n2], [scheherazadeC.c.n1, scheherazadeC.c.n0]], 4, [-8, -8, 168, 70]);
+const scheherazadeFloorC = fracture(851, [[scheherazadeC.c.rug, scheherazadeC.c.rugL], [scheherazadeC.c.wall0, scheherazadeC.c.wall1], [scheherazadeC.c.rugL, scheherazadeC.c.rug]], 3, [-8, 70, 168, 108]);
+
+function renderScheherazadeC(r: Raster, f: Frame) {
+  const { c } = scheherazadeC;
+  paintPlanes(r, scheherazadeSkyC, f);
+  paintPlanes(r, scheherazadeFloorC, f);
+  for (let k = 0; k < 16; k++) if (f.still || wave(f, 1.2, k) > -0.5) r.dot(4 + ((k * 41) % 152), 3 + ((k * 17) % 34), c.star);
+  r.fill(ellipse(18, 18, 8, 8, 0, Math.PI * 2, 18), c.moon);
+  r.fill(ellipse(22, 16, 7, 7, 0, Math.PI * 2, 18), c.n1);
+
+  // Domes and minarets of the palace against the night.
+  r.fill(ellipse(96, 50, 22, 24, Math.PI, Math.PI * 2, 20), c.tile, c.tileL, 3);
+  r.line(96, 26, 96, 18, c.gold);
+  r.dot(96, 17, c.gold);
+  r.fill(rect(74, 50, 44, 20), c.wall1, c.wall0, 2);
+  for (const ax of [82, 96, 110]) r.fill(ellipse(ax, 62, 4, 7, Math.PI, Math.PI * 2, 8), c.n0);
+  for (const mx of [64, 128]) {
+    r.fill(rect(mx - 2, 30, 4, 40), c.wall1);
+    r.fill([[mx - 3, 30], [mx, 20], [mx + 3, 30]], c.tile);
+    r.dot(mx, 19, c.gold);
+  }
+
+  // The young prince and young princess on the balcony, side by side.
+  const sway = Math.round(wave(f, 0.9) * 1.2);
+  r.fill([[26, 86], [44, 86], [42, 58], [28, 58]], c.prince, c.tile, 2);
+  r.fill(ellipse(35, 52, 4.2, 4.6, 0, Math.PI * 2, 10), c.skin);
+  r.fill(ellipse(35, 48, 5, 3, Math.PI, Math.PI * 2, 10), c.turban);
+  r.dot(35, 45, c.gold);
+  r.fill([[46, 86], [62, 86], [60, 60], [48, 60]], c.princess, c.veil, 2);
+  r.fill(ellipse(54 + sway * 0.3, 54, 4, 4.4, 0, Math.PI * 2, 10), c.skin);
+  r.fill([[48, 52], [54, 46], [60, 52], [61, 66 + sway], [47, 66]], c.veil, c.princess, 2);
+  r.line(44, 70, 47, 70, c.skin);
+
+  // The Sultan, watching from the shadows with a lamp at his side.
+  r.fill([[132, 86], [152, 86], [148, 56], [136, 56]], c.sultan, c.goldD, 2);
+  r.fill(ellipse(142, 50, 4.4, 4.6, 0, Math.PI * 2, 10), c.skin);
+  r.fill(ellipse(142, 45, 6, 4, Math.PI, Math.PI * 2, 10), c.turban);
+  r.line(139, 52, 145, 52, c.black);
+  r.fill(ellipse(124, 80, 3, 2, 0, Math.PI * 2, 8), c.lamp);
+  r.dot(124 + Math.round(wave(f, 3) * 0.6), 77, c.lamp);
+
+  // A violin lying on a cushion between them, the voice of Scheherazade.
+  r.fill(ellipse(88, 82, 8, 5, 0, Math.PI * 2, 14), c.violin, c.violinL, 2);
+  r.fill(ellipse(97, 82, 6, 4, 0, Math.PI * 2, 12), c.violin, c.violinL, 2);
+  r.line(102, 82, 112, 82, c.black);
+  r.line(84, 80, 100, 84, c.turban);
+  r.fill(rect(78, 88, 40, 3), c.goldD);
+}
+
+// ---------------------------------------------------------------------------
+// 87. Fantaisie-Impromptu: a storm of sixteenth notes over triplets, a manuscript, a rainbow
 // ---------------------------------------------------------------------------
 
 const fantaisieC = palette({
@@ -5953,7 +6706,7 @@ function renderFantaisieC(r: Raster, f: Frame) {
 }
 
 // ---------------------------------------------------------------------------
-// 78. Raindrop Prelude: a monastery cell in Valldemossa, rain on the glass, one note repeating
+// 88. Raindrop Prelude: a monastery cell in Valldemossa, rain on the glass, one note repeating
 // ---------------------------------------------------------------------------
 
 const raindropC = palette({
@@ -6028,7 +6781,7 @@ function renderRaindropC(r: Raster, f: Frame) {
 }
 
 // ---------------------------------------------------------------------------
-// 79. Liebestraum No. 3: a moonlit window, the open poem and a rose, a piano
+// 89. Liebestraum No. 3: a moonlit window, the open poem and a rose, a piano
 // ---------------------------------------------------------------------------
 
 const liebestraumC = palette({
@@ -6098,7 +6851,7 @@ function renderLiebestraumC(r: Raster, f: Frame) {
 }
 
 // ---------------------------------------------------------------------------
-// 80. Prelude in C-sharp minor: Kremlin bell tower at dusk, a great bell, the forty rubles
+// 90. Prelude in C-sharp minor: Kremlin bell tower at dusk, a great bell, the forty rubles
 // ---------------------------------------------------------------------------
 
 const moscowC = palette({
@@ -6167,7 +6920,7 @@ function renderMoscowC(r: Raster, f: Frame) {
 }
 
 // ---------------------------------------------------------------------------
-// 81. Arabesque No. 1: whiplash vines round an Art Nouveau window, a piano below
+// 91. Arabesque No. 1: whiplash vines round an Art Nouveau window, a piano below
 // ---------------------------------------------------------------------------
 
 const arabesqueC = palette({
@@ -6808,6 +7561,76 @@ export const paintings: Painting[] = [
     colors: furEliseC.colors,
     motifs: { piano: [38, 62, 24], leaf: [38, 43, 12], elise: [130, 32, 16] },
     render: renderFurEliseC,
+  },
+  {
+    id: "toccata",
+    alt: "A dark church organ loft: twelve silver pipes fanned out like a crest above the console, and beside it a handwritten copy of the score on a stand, lit by a single candle.",
+    colors: toccataC.colors,
+    motifs: { pipes: [60, 44, 30], manuscript: [128, 62, 18] },
+    render: renderToccataC,
+  },
+  {
+    id: "pachelbel-canon",
+    alt: "A blue-grey room with a tall arched window: three violins side by side, each lit in turn, a cello for the bass, a sheet of music pinned to the wall and a gold wedding ring on a red cushion.",
+    colors: canonC.colors,
+    motifs: { violins: [80, 56, 26], bass: [26, 66, 18], score: [137, 29, 13], ring: [132, 78, 9] },
+    render: renderCanonC,
+  },
+  {
+    id: "hallelujah",
+    alt: "A concert hall in purple shadow: four rising ranks of singers, a pair of gold trumpets raised above them, an empty royal box with a crowned red seat, and a score with a quill.",
+    colors: hallelujahC.colors,
+    motifs: { choir: [80, 68, 32], trumpets: [80, 16, 24], throne: [21, 56, 18], score: [139, 80, 14] },
+    render: renderHallelujahC,
+  },
+  {
+    id: "water-music",
+    alt: "The River Thames at dusk: the king's barge with a red canopy and a gold crown, and a second barge behind it carrying a row of musicians and a golden horn.",
+    colors: waterMusicC.colors,
+    motifs: { barge: [80, 66, 44], horn: [126, 56, 10], crown: [48, 42, 10] },
+    render: renderWaterMusicC,
+  },
+  {
+    id: "ode-to-joy",
+    alt: "A Viennese concert hall: Beethoven seen from behind on a podium, arms raised, a chorus on a gallery above, rows of applauding heads below and a blue banner ringed with twelve gold stars.",
+    colors: odeC.colors,
+    motifs: { composer: [80, 52, 24], choir: [80, 22, 26], score: [103, 67, 9], stars: [140, 30, 14] },
+    render: renderOdeC,
+  },
+  {
+    id: "sugar-plum",
+    alt: "A Land of Sweets under a purple night sky: a celesta with glowing keys, two fountains throwing up drops of water, and the Sugar Plum Fairy in a pink tutu dancing on pointe.",
+    colors: sugarPlumC.colors,
+    motifs: { celesta: [24, 66, 20], fountain: [104, 62, 18], fairy: [70, 36, 16] },
+    render: renderSugarPlumC,
+  },
+  {
+    id: "swan-lake",
+    alt: "A white swan with a golden crown on a dark moonlit lake, a full moon and its glittering path behind her, and a ruined stone chapel among pines on the far shore.",
+    colors: swanLakeC.colors,
+    motifs: { moon: [124, 22, 14], swan: [72, 62, 26], lake: [96, 80, 22] },
+    render: renderSwanLakeC,
+  },
+  {
+    id: "slavonic-dance",
+    alt: "A Bohemian village green at sunset: a white church with a red roof, a linden tree, a fiddler on a barrel and two couples in bright folk costume whirling in a dance.",
+    colors: slavonicC.colors,
+    motifs: { fiddle: [38, 56, 14], dancers: [82, 66, 24], village: [126, 40, 22] },
+    render: renderSlavonicC,
+  },
+  {
+    id: "nimrod",
+    alt: "Dawn over the Malvern Hills with the black silhouette of a hunter holding a bow and a hound beside him, a desk with an open music score and a candle, and a wreath of red poppies.",
+    colors: nimrodC.colors,
+    motifs: { hunter: [106, 24, 16], desk: [34, 60, 22], poppies: [128, 78, 18] },
+    render: renderNimrodC,
+  },
+  {
+    id: "scheherazade",
+    alt: "A palace balcony under a crescent moon, with domes and minarets, a young prince and princess side by side, the Sultan watching from the shadows and a violin lying on a gold-trimmed rug.",
+    colors: scheherazadeC.colors,
+    motifs: { prince: [46, 62, 22], sultan: [142, 62, 18], violin: [92, 82, 14] },
+    render: renderScheherazadeC,
   },
   {
     id: "fantaisie-impromptu",
