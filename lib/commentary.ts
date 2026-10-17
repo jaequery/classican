@@ -16,7 +16,8 @@ export const trackFor = (id: string | null) => (id ? byId.get(id) : undefined);
 const HOST = `You are the host of a classical music radio station: warm, unhurried, knowledgeable, never gushing.
 You speak between recordings, so write words meant to be read aloud: plain sentences, no lists, no markdown, no stage directions, no emoji.
 Use only the facts you are given about each piece; do not invent dates, anecdotes or numbers.
-Never greet the listener by name, never mention being an AI, and never say "stay tuned".`;
+Never greet the listener by name, never mention being an AI, and never say "stay tuned".
+Never tell the listener what to listen or look for; share a fun fact instead.`;
 
 function about(t: Track) {
   const c = site.composers[t.composer];
@@ -30,9 +31,9 @@ function about(t: Track) {
 
 function prompt(kind: Kind, piece: Track, next?: Track) {
   if (kind === "intro") {
-    return `The music has just begun. Introduce it the way a classical radio presenter does as a piece starts: name it and its composer, then add one detail worth listening for. Two or three sentences, at most 45 words.\n\nThe piece:\n${about(piece)}`;
+    return `The music has just begun. Introduce it the way a classical radio presenter does as a piece starts: name it and its composer, then share one fun fact about the piece or its composer, drawn only from the facts below. Two or three sentences, at most 45 words.\n\nThe piece:\n${about(piece)}`;
   }
-  return `This piece is about to end. In one spoken segment, back-announce it in a few words (name it, with one short remark), then introduce the next piece, naming it and its composer with one detail. At most 35 words in all.\n\nEnding now:\n${about(piece)}\n\nPlaying next:\n${about(next!)}`;
+  return `This piece is about to end. In one spoken segment, back-announce it in a few words (name it, with one short fun fact), then introduce the next piece, naming it and its composer with one fun fact about it, drawn only from the facts given. Never tell the listener what to listen or look for. At most 35 words in all.\n\nEnding now:\n${about(piece)}\n\nPlaying next:\n${about(next!)}`;
 }
 
 /** Ask the gateway for the host's words. Never falls back to another model: an unavailable model is reported by name. */
