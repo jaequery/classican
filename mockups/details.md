@@ -833,7 +833,7 @@ Sources: [Für Elise (Wikipedia)](https://en.wikipedia.org/wiki/F%C3%BCr_Elise),
 ### 77. The Nutcracker: Dance of the Sugar Plum Fairy · Pyotr Ilyich Tchaikovsky
 
 - **Year:** 1892 · `composedYear: 1892`
-- **Age:** 51 or 52 (born 7 May 1840)
+- **Age:** 51 or 52 (born 7 May 1840) · `approximate: true`
 - **Place:** Russia; "Tchaikovsky composed parts of The Nutcracker in Rouen, France"
 - **Instruments:** Orchestra, with a celesta
 - **Reception:** The first staging, on 18 December 1892, "was not deemed a success", though some critics praised Antonietta Dell'Era's pointework as the Sugar Plum Fairy. The 20-minute suite, premiered nine months earlier, was more successful at first.

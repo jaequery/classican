@@ -2256,6 +2256,7 @@ export const site: Site = {
       details: {
         year: "1892",
         composedYear: 1892,
+        approximate: true,
         place: "Russia; parts were written in Rouen, France",
         instruments: "Orchestra, with a celesta",
         reception: "The first staging was not deemed a success, though some critics praised Antonietta Dell’Era’s pointework as the Sugar Plum Fairy. The 20-minute suite, premiered nine months earlier, did better at first.",

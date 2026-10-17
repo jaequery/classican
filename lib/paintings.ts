@@ -6046,7 +6046,7 @@ function renderSlavonicC(r: Raster, f: Frame) {
   const { c } = slavonicC;
   paintPlanes(r, slavonicSkyC, f);
   paintPlanes(r, slavonicGroundC, f);
-  r.fill(ellipse(24, 40, 9, 9, 0, Math.PI * 2, 18), c.gold);
+  r.fill(ellipse(60, 30, 9, 9, 0, Math.PI * 2, 18), c.gold);
 
   // The village: a white church with a red roof and a spire, and small houses.
   r.fill(rect(112, 38, 22, 20), c.church);
@@ -6118,7 +6118,7 @@ function renderNimrodC(r: Raster, f: Frame) {
   const { c } = nimrodC;
   paintPlanes(r, nimrodSkyC, f);
   paintPlanes(r, nimrodHillsC, f);
-  r.fill(ellipse(86, 44, 9, 9, Math.PI, Math.PI * 2, 16), c.sun, c.sky0, 2);
+  r.fill(ellipse(60, 30, 8, 8, 0, Math.PI * 2, 16), c.sun, c.sky0, 2);
 
   // The ridge of the Malvern Hills, and a hunter against the dawn: a bow, a quiver, a hound.
   r.fill([[40, 56], [70, 36], [96, 34], [120, 40], [150, 50], [160, 56]], c.hill0, c.hill1, 3);
@@ -6827,7 +6827,7 @@ export const paintings: Painting[] = [
   },
   {
     id: "slavonic-dance",
-    alt: "A Bohemian village green at sunset: a white church with a red roof, a linden tree, a fiddler on a barrel and two couples in red and blue folk costume whirling in a dance.",
+    alt: "A Bohemian village green at sunset: a white church with a red roof, a linden tree, a fiddler on a barrel and two couples in bright folk costume whirling in a dance.",
     colors: slavonicC.colors,
     motifs: { fiddle: [38, 56, 14], dancers: [82, 66, 24], village: [126, 40, 22] },
     render: renderSlavonicC,
@@ -6841,7 +6841,7 @@ export const paintings: Painting[] = [
   },
   {
     id: "scheherazade",
-    alt: "A palace balcony under a crescent moon, with domes and minarets, a young prince and princess side by side, the Sultan watching from the shadows and a violin lying on a cushion.",
+    alt: "A palace balcony under a crescent moon, with domes and minarets, a young prince and princess side by side, the Sultan watching from the shadows and a violin lying on a gold-trimmed rug.",
     colors: scheherazadeC.colors,
     motifs: { prince: [46, 62, 22], sultan: [142, 62, 18], violin: [92, 82, 14] },
     render: renderScheherazadeC,

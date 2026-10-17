@@ -915,7 +915,7 @@ Sources: [Enigma Variations (Wikipedia)](https://en.wikipedia.org/wiki/Enigma_Va
 
 ## Scheherazade: The Young Prince and the Young Princess · Nikolai Rimsky-Korsakov
 
-Painting: a palace balcony under a crescent moon, a young prince and princess side by side, the Sultan watching from the shadows and a violin on a cushion.
+Painting: a palace balcony under a crescent moon, a young prince and princess side by side, the Sultan watching from the shadows and a violin on a rug.
 
 1. This is the third movement of Scheherazade, a suite based on One Thousand and One Nights, also known as The Arabian Nights. *(motif: the prince and princess)*
 2. In the framing story, Sultan Shakhriar, convinced that all women are false, vowed to put each wife to death after the first night. *(motif: the Sultan)*
