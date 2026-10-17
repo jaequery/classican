@@ -925,3 +925,68 @@ Painting: Beethoven seen from behind on a podium, arms raised, a chorus on a gal
 6. Beethoven's manuscript, kept in the Berlin State Library, was listed by UNESCO in 2001 as the first musical score on its Memory of the World register. *(motif: the score)*
 
 Sources: [Symphony No. 9 (Beethoven) (Wikipedia)](https://en.wikipedia.org/wiki/Symphony_No._9_(Beethoven))
+
+## The Nutcracker: Dance of the Sugar Plum Fairy · Pyotr Ilyich Tchaikovsky
+
+Painting: a purple night in the Land of Sweets: a celesta with glowing keys, two fountains throwing up drops of water, and the Sugar Plum Fairy on pointe in a pink tutu.
+
+1. Its French title is Variation de la Fée Dragée: the solo of the Sugar Plum Fairy in the ballet The Nutcracker. *(motif: the fairy)*
+2. The tinkling sound is a celesta, a keyboard instrument invented in 1886 by the Parisian harmonium builder Auguste Mustel. *(motif: the celesta)*
+3. Tchaikovsky is usually cited as the first major composer to use the celesta in a work for full symphony orchestra. *(motif: the celesta)*
+4. The choreographer Marius Petipa asked for music that resembles "drops of water shooting out of fountains". *(motif: the fountains)*
+5. The ballet opened on 18 December 1892 (6 December in the old Russian calendar) at the Mariinsky Theatre, on a double bill with Tchaikovsky's last opera, Iolanta. *(motif: the fairy)*
+6. Nine months before the ballet, Tchaikovsky premiered a 20-minute Nutcracker Suite. For a while it was more successful than the ballet itself.
+
+Sources: [The Nutcracker (Wikipedia)](https://en.wikipedia.org/wiki/The_Nutcracker), [Celesta (Wikipedia)](https://en.wikipedia.org/wiki/Celesta)
+
+## Swan Lake: Scene · Pyotr Ilyich Tchaikovsky
+
+Painting: a crowned white swan on a dark moonlit lake, the moon's glittering path behind her and a ruined chapel among pines on the far shore.
+
+1. This is No. 10 of the ballet, the Scène that opens Act II at the lakeside, where the swan maidens appear by moonlight. *(motif: the moon)*
+2. The story is of Odette, a princess turned into a swan by an evil sorcerer's curse. *(motif: the swan)*
+3. The swan theme here may be older than the ballet. Two of Tchaikovsky's relatives said he first used it in a little ballet, The Lake of the Swans, made at their home in 1871. *(motif: the lake)*
+4. In May 1875 the director of the Moscow theatres, Vladimir Begichev, commissioned the score and paid Tchaikovsky 800 rubles.
+5. It premiered at the Bolshoi Theatre in Moscow on 4 March 1877 (20 February in the old Russian calendar), choreographed by Julius Reisinger.
+6. Tchaikovsky died on 6 November 1893. Most productions now follow the 1895 revival by Marius Petipa and Lev Ivanov, for which Riccardo Drigo revised the score. *(motif: the swan)*
+
+Sources: [Swan Lake (Wikipedia)](https://en.wikipedia.org/wiki/Swan_Lake)
+
+## Slavonic Dance No. 2 in E minor, Op. 72 · Antonín Dvořák
+
+Painting: a Bohemian village green at sunset: a white church with a red roof, a linden tree, a fiddler on a barrel and two couples in red and blue costume whirling.
+
+1. This is the second dance of Dvořák's second set of Slavonic Dances, Op. 72. Some editions number it No. 10.
+2. Dvořák was little known and of modest means until Brahms recommended him to his own publisher, Fritz Simrock, who asked for dance-like music. *(motif: the fiddler)*
+3. Dvořák took Brahms's Hungarian Dances as a model, but used the rhythms of Bohemian folk music rather than actual folk tunes. *(motif: the dancers)*
+4. He wrote them for piano four hands first. Simrock then asked for orchestral versions, and both were published within the year.
+5. The success of Op. 46 led Simrock to ask for another set in 1886. This is from it. *(motif: the village)*
+6. Most of the Slavonic Dances use Czech dance patterns, but this one is a dumka, a form that comes from Ukraine. *(motif: the dancers)*
+
+Sources: [Slavonic Dances (Wikipedia)](https://en.wikipedia.org/wiki/Slavonic_Dances)
+
+## Enigma Variations: Nimrod · Edward Elgar
+
+Painting: dawn over the Malvern Hills with a hunter and his hound on the ridge, a desk with the open score and a candle, and a wreath of red poppies.
+
+1. Nimrod is Variation IX of Elgar's Enigma Variations, in which each variation is a musical sketch of one of his friends. This one is August Jaeger, an editor at his publisher, Novello. *(motif: the desk and score)*
+2. Nimrod is described in the Old Testament as "a mighty hunter before the Lord", and Jäger is German for hunter. *(motif: the hunter)*
+3. Elgar said it is "the story of something that happened": when he was ready to give up music, Jaeger urged him on by pointing to Beethoven, who wrote more and more beautiful music despite his worries. *(motif: the desk and score)*
+4. The opening bars hint at the slow movement of Beethoven's Pathétique Sonata. Elgar called it "only a hint, not a quotation". *(motif: the desk and score)*
+5. It is always played at the Cenotaph in Whitehall at the annual National Service of Remembrance. *(motif: the poppies)*
+6. The variations were first performed at St James's Hall in London on 19 June 1899, conducted by Hans Richter.
+
+Sources: [Enigma Variations (Wikipedia)](https://en.wikipedia.org/wiki/Enigma_Variations)
+
+## Scheherazade: The Young Prince and the Young Princess · Nikolai Rimsky-Korsakov
+
+Painting: a palace balcony under a crescent moon, a young prince and princess side by side, the Sultan watching from the shadows and a violin on a rug.
+
+1. This is the third movement of Scheherazade, a suite based on One Thousand and One Nights, also known as The Arabian Nights. *(motif: the prince and princess)*
+2. In the framing story, Sultan Shakhriar, convinced that all women are false, vowed to put each wife to death after the first night. *(motif: the Sultan)*
+3. The Sultana Scheherazade saved her life by entertaining him with tales, told one after another, for a thousand and one nights. *(motif: the violin)*
+4. Her voice in the music is a tender, winding solo violin, accompanied by harp. *(motif: the violin)*
+5. Rimsky-Korsakov finished the score between 4 June and 7 August 1888, at a dacha beside Lake Cheremenets near Luga.
+6. He deliberately made the movement titles vague so they would not point to particular tales. It premiered in Saint Petersburg on 28 October 1888, conducted by him.
+
+Sources: [Scheherazade (Rimsky-Korsakov) (Wikipedia)](https://en.wikipedia.org/wiki/Scheherazade_(Rimsky-Korsakov))
