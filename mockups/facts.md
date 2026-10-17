@@ -861,6 +861,71 @@ Painting: a Viennese fortepiano in April with the album leaf on its desk, a cand
 
 Sources: [Für Elise (Wikipedia)](https://en.wikipedia.org/wiki/F%C3%BCr_Elise)
 
+## Toccata and Fugue in D minor, BWV 565 · Johann Sebastian Bach
+
+Painting: a dark organ loft with twelve silver pipes fanned out above the console and a copy of the score on a stand beside a candle.
+
+1. It opens with a single-voice flourish high on the keyboard, doubled at the octave, then spirals down to a diminished seventh chord over a held bass note. *(motif: the pipes)*
+2. No one knows exactly when it was written. Estimates run from 1704 to the 1750s, and many scholars favour Bach's years as organist at Arnstadt.
+3. No manuscript in Bach's hand survives. The only near-contemporary source is a copy by Johannes Ringk, a pupil of Bach's pupil Johann Peter Kellner. *(motif: the manuscript)*
+4. Some scholars have doubted that Bach wrote it. Others, such as Christoph Wolff, call that a pseudo-problem, and no Bach catalogue lists it as doubtful.
+5. Mendelssohn gave its first major public performance on 6 August 1840 in Leipzig. *(motif: the manuscript)*
+6. Leopold Stokowski recorded his orchestral version in 1927; it opened Disney's 1940 film Fantasia. *(motif: the pipes)*
+
+Sources: [Toccata and Fugue in D minor, BWV 565 (Wikipedia)](https://en.wikipedia.org/wiki/Toccata_and_Fugue_in_D_minor,_BWV_565)
+
+## Canon in D · Johann Pachelbel
+
+Painting: three violins hung side by side, each lit in turn, a cello for the bass, a sheet of music pinned to the wall and a gold wedding ring on a red cushion.
+
+1. Pachelbel wrote it for three violins and basso continuo, paired with a gigue, and both pieces are in D major. *(motif: the violins)*
+2. Neither the date nor the circumstances of its composition are known. Guesses range from 1680 to 1706.
+3. Listen to the bass: it plays the same eight-chord pattern 28 times, while the three violins enter one after another, two measures apart. *(motif: the bass)*
+4. The oldest surviving copy dates from 1838 to 1842. It was first printed in 1919, and first recorded in Berlin in 1938. *(motif: the score)*
+5. It is famously played at weddings and funerals across the western world. *(motif: the ring)*
+6. Its chord progression turns up in many pop songs, among them Oasis's "Don't Look Back in Anger".
+
+Sources: [Pachelbel's Canon (Wikipedia)](https://en.wikipedia.org/wiki/Pachelbel%27s_Canon)
+
+## Messiah: Hallelujah Chorus · George Frideric Handel
+
+Painting: four rising ranks of singers under a pair of gold trumpets, an empty royal box with a crowned red seat, and a score with a quill.
+
+1. Handel wrote all of Messiah in 24 days, from 22 August to 14 September 1741. *(motif: the score)*
+2. Messiah was first performed in Dublin on 13 April 1742, with Handel conducting. The Hallelujah chorus ends its second part. *(motif: the choir)*
+3. The words were chosen by Charles Jennens from the King James Bible and the Psalms of the Book of Common Prayer. *(motif: the choir)*
+4. Audiences stand for it. The story is that King George II rose to his feet at the London premiere, though there is no convincing evidence that he was there. *(motif: the throne)*
+5. The earliest mention of standing is a letter of 1756, three years before Handel died. *(motif: the throne)*
+6. Listen for the trumpets and drums joining the chorus, and for how often the single word "Hallelujah" is repeated. *(motif: the trumpets)*
+
+Sources: [Messiah (Handel) (Wikipedia)](https://en.wikipedia.org/wiki/Messiah_(Handel))
+
+## Water Music: Alla Hornpipe · George Frideric Handel
+
+Painting: the Thames at dusk, the king's barge with a red canopy and gold crown, and a second barge carrying a row of musicians and a golden horn.
+
+1. Water Music was first played on 17 July 1717 for King George I, who sailed up the River Thames in a royal barge. *(motif: the barges)*
+2. The musicians, about fifty of them, played from a second barge that followed the king's. *(motif: the barges)*
+3. The king liked it so much that he had it repeated at least three times, on the way to Chelsea and on the way back.
+4. Water Music is three suites, in F, D and G. The Alla Hornpipe is the second movement of the Suite in D major. *(motif: the horn)*
+5. "Alla hornpipe" means "in the style of a hornpipe", a lively English dance. Listen for the horns calling over the strings. *(motif: the horn)*
+6. The first printed full score did not appear until 1788, 71 years after the river trip. *(motif: the crown)*
+
+Sources: [Water Music (Wikipedia)](https://en.wikipedia.org/wiki/Water_Music)
+
+## Symphony No. 9: Ode to Joy · Ludwig van Beethoven
+
+Painting: Beethoven seen from behind on a podium, arms raised, a chorus on a gallery above, rows of applauding heads below and a blue banner ringed with twelve gold stars.
+
+1. The Ninth was first performed in Vienna on 7 May 1824. Beethoven, almost completely deaf, stood on stage beating time for an orchestra he could not hear. *(motif: the composer)*
+2. At the end the contralto Caroline Unger is credited with turning him round to face the applauding audience. *(motif: the composer)*
+3. It was the first symphony by a major composer to use singers: four soloists and a chorus join the orchestra in the finale. *(motif: the choir)*
+4. The words are from Friedrich Schiller's poem "An die Freude" ("To Joy"), written in 1785 and revised in 1803. *(motif: the score)*
+5. The melody was adopted as the anthem of the Council of Europe in 1972 and of the European Union in 1985; this recording is that instrumental version. *(motif: the stars)*
+6. Beethoven's manuscript, kept in the Berlin State Library, was listed by UNESCO in 2001 as the first musical score on its Memory of the World register. *(motif: the score)*
+
+Sources: [Symphony No. 9 (Beethoven) (Wikipedia)](https://en.wikipedia.org/wiki/Symphony_No._9_(Beethoven))
+
 ## The Nutcracker: Dance of the Sugar Plum Fairy · Pyotr Ilyich Tchaikovsky
 
 Painting: a purple night in the Land of Sweets: a celesta with glowing keys, two fountains throwing up drops of water, and the Sugar Plum Fairy on pointe in a pink tutu.
