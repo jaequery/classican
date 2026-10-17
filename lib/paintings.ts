@@ -5988,7 +5988,7 @@ function renderSwanLakeC(r: Raster, f: Frame) {
   const sway = Math.round(wave(f, 0.7) * 1.2);
   r.fill(ellipse(76, 74, 20, 8, 0, Math.PI * 2, 20), c.swan, c.swanS, 3);
   r.fill([[58, 72], [48, 56], [56, 66], [66, 70]], c.swan, c.swanS, 2);
-  r.fill([[92, 68], [100, 52 + sway], [104, 66]], c.swan, c.swanS, 2);
+  r.fill([[84, 72], [98, 54 + sway], [104, 68], [96, 74]], c.swan, c.swanS, 2);
   for (let k = 0; k < 10; k++) {
     const t = k / 9;
     r.fill(ellipse(60 - Math.sin(t * 2.4) * 8, 68 - t * 30, 3.2 - t * 0.6, 2.4, 0, Math.PI * 2, 8), c.swan, c.swanS, 2);
