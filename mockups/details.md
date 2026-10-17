@@ -929,6 +929,55 @@ Sources: [Enigma Variations (Wikipedia)](https://en.wikipedia.org/wiki/Enigma_Va
 
 Sources: [Scheherazade (Rimsky-Korsakov) (Wikipedia)](https://en.wikipedia.org/wiki/Scheherazade_(Rimsky-Korsakov))
 
+### 92. Ave Maria (Ellens dritter Gesang, D. 839) · Franz Schubert
+
+- **Year:** 1825 (the source gives no month) · `composedYear: 1825`
+- **Age:** about 28. Born 31 January 1797; the month of composition is not documented.
+- **Place:** Austria; said to have been first performed at Countess Sophie Weissenwolff's castle in Steyregg (the place of composition is not given)
+- **Instruments:** Voice and piano. This recording is by an accordion orchestra.
+- **Reception:** How it was first received is not recorded. It is now so often sung as a prayer that many assume Schubert wrote it for one.
+
+Sources: [Ellens dritter Gesang (Wikipedia)](https://en.wikipedia.org/wiki/Ellens_dritter_Gesang), [the recording's Commons page](https://commons.wikimedia.org/wiki/File:Schubert%27s_Ave_Maria,_D.839_(accordion_orchestra)_-_Paul_De_Bra.ogg)
+
+### 93. Hungarian Dance No. 5 · Johannes Brahms
+
+- **Year:** published 1869 (Book 1) · `composedYear: 1869`
+- **Age:** about 36 (the date of composition before publication is not documented)
+- **Place:** probably Vienna, Austria (the source does not say)
+- **Instruments:** Piano four hands; orchestrated by others (Albert Parlow 1876, Martin Schmeling). This recording is Artur Nikisch playing the Welte-Mignon reproducing piano on 9 February 1906.
+- **Reception:** How it was first received is not recorded. The Hungarian Dances became among Brahms's most popular works, and the most profitable for him.
+
+Sources: [Hungarian Dances (Brahms) (Wikipedia)](https://en.wikipedia.org/wiki/Hungarian_Dances_(Brahms)), [the recording's Commons page](https://commons.wikimedia.org/wiki/File:Brahms_nikisch_hd5.ogg)
+
+### 94. Lullaby (Wiegenlied), Op. 49 No. 4 · Johannes Brahms
+
+- **Year:** 1868 (first published November 1868) · `composedYear: 1868`
+- **Age:** about 35 (Born 7 May 1833; the month of composition is not documented)
+- **Place:** Vienna, Austria, where it was first performed (the place of composition is not given)
+- **Instruments:** Voice and piano
+- **Reception:** First performed in public in Vienna on 22 December 1869 by Luise Dustmann, with Clara Schumann at the piano.
+
+Sources: [Wiegenlied (Brahms) (Wikipedia)](https://en.wikipedia.org/wiki/Wiegenlied_(Brahms)), [the recording's Commons page](https://commons.wikimedia.org/wiki/File:Brahms_-_Schumann-Heink_-_Wiegenlied_(Berceuse)_(1915).ogg)
+
+### 95. Pavane pour une infante défunte · Maurice Ravel
+
+- **Year:** 1899 · `composedYear: 1899`
+- **Age:** about 24. Born 7 March 1875; the month of composition is not documented.
+- **Place:** Paris, France, where Ravel was studying at the Conservatoire (the source does not name the place of composition)
+- **Instruments:** Solo piano; Ravel orchestrated it in 1910. This recording is for piano.
+- **Reception:** Little noticed until Ricardo Viñes played it on 5 April 1902. The orchestral version was first performed on 27 February 1911 in Manchester under Henry Wood. Ravel later called it "poor in form".
+
+Sources: [Pavane pour une infante défunte (Wikipedia)](https://en.wikipedia.org/wiki/Pavane_pour_une_infante_d%C3%A9funte), [the recording's Commons page](https://commons.wikimedia.org/wiki/File:Maurice_Ravel_-_Th%C3%A9r%C3%A8se_Dussaut_-_Pavane_pour_une_infante_d%C3%A9funte.ogg)
+
+### 96. The Planets, Op. 32: Jupiter, the Bringer of Jollity · Gustav Holst
+
+- **Year:** 1914 (the suite 1914–17) · `composedYear: 1914`
+- **Age:** about 39 (Born 21 September 1874; the date of Jupiter within 1914 is not documented)
+- **Place:** London, England, where he taught (the source does not say where it was written)
+- **Instruments:** Large orchestra. This recording is a transcription for wind band by Merlin Patterson.
+- **Reception:** The suite was first performed on 29 September 1918 at the Queen's Hall, London, under Adrian Boult, for about 250 invited guests. The first complete public performance was on 15 November 1920.
+
+Sources: [The Planets (Wikipedia)](https://en.wikipedia.org/wiki/The_Planets), [Jupiter, the Bringer of Jollity (Wikipedia)](https://en.wikipedia.org/wiki/Jupiter,_the_Bringer_of_Jollity), [the recording's Commons page](https://commons.wikimedia.org/wiki/File:Holst_The_Planets_Jupiter.ogg)
 ### 87. Fantaisie-Impromptu, Op. 66 · Frédéric Chopin
 
 - **Year:** 1834, published 1855 · `composedYear: 1834`, `approximate: true` (the month is not recorded)
@@ -1270,3 +1319,19 @@ Sources: [Johann Pachelbel (Wikipedia)](https://en.wikipedia.org/wiki/Johann_Pac
 - **Also:** He was largely self-taught as a composer; his father could not afford to send him to the Leipzig Conservatory.
 
 Sources: [Edward Elgar (Wikipedia)](https://en.wikipedia.org/wiki/Edward_Elgar)
+
+### Gustav Holst
+
+- **Born:** 1874, Cheltenham, England · **Died:** 1934
+- **Money:** Composing alone did not pay enough, so he worked as a professional trombonist in seaside and theatre orchestras, then taught; he was director of music at St Paul's Girls' School from 1905 until his death.
+- **Also:** Neuritis in his right arm ended his hopes of becoming a pianist. He dropped the "von" from his surname in 1918.
+
+Sources: [Gustav Holst (Wikipedia)](https://en.wikipedia.org/wiki/Gustav_Holst)
+
+### Maurice Ravel
+
+- **Born:** 1875, Ciboure, France · **Died:** 1937
+- **Money:** He grew up comfortably, his father a successful engineer and inventor, and was "known for his indifference to financial matters". Commissions came from Diaghilev, Ida Rubinstein and Paul Wittgenstein.
+- **Also:** He made five attempts at the Prix de Rome, the last causing a national scandal in 1905, and declined the Légion d'honneur in 1920.
+
+Sources: [Maurice Ravel (Wikipedia)](https://en.wikipedia.org/wiki/Maurice_Ravel)
