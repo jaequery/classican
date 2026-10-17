@@ -269,6 +269,11 @@ The player uses Commons' MP3 transcode where the browser supports MP3, and the o
 | Te Deum: Prelude | Marc-Antoine Charpentier | Ian Dollins, organ (via Musopen) | [File:Charpentier, Te Deum (Prelude).ogg](https://commons.wikimedia.org/wiki/File:Charpentier,_Te_Deum_(Prelude).ogg) |
 | Má vlast: Šárka | Bedřich Smetana | Musopen | [File:Bedrich Smetana - ma vlast - iii. sarka.ogg](https://commons.wikimedia.org/wiki/File:Bedrich_Smetana_-_ma_vlast_-_iii._sarka.ogg) |
 | Für Elise | Ludwig van Beethoven | V. Gao (Wikimedia Commons) | [File:FurElise.ogg](https://commons.wikimedia.org/wiki/File:FurElise.ogg) |
+| Toccata and Fugue in D minor, BWV 565 | Johann Sebastian Bach | Ashtar Moïra, organ | [File:Toccata et Fugue BWV565.ogg](https://commons.wikimedia.org/wiki/File:Toccata_et_Fugue_BWV565.ogg) |
+| Canon in D | Johann Pachelbel | Michael Fischer v. Mollard | [File:Pachelbel's Canon per 3 violini e basso.ogg](https://commons.wikimedia.org/wiki/File:Pachelbel%27s_Canon_per_3_violini_e_basso.ogg) |
+| Messiah: Hallelujah Chorus | George Frideric Handel | An oratorio chorus (Edison recording, 1916) | [File:Messiah Hallelujah Chorus 1916.ogg](https://commons.wikimedia.org/wiki/File:Messiah_Hallelujah_Chorus_1916.ogg) |
+| Water Music: Alla Hornpipe | George Frideric Handel | Marine Chamber Orchestra, United States Marine Band | [File:Handel's Water Music - 12. Alla hornpipe - Chamber Orchestra - United States Marine Band.opus](https://commons.wikimedia.org/wiki/File:Handel%27s_Water_Music_-_12._Alla_hornpipe_-_Chamber_Orchestra_-_United_States_Marine_Band.opus) |
+| Symphony No. 9: Ode to Joy | Ludwig van Beethoven | United States Navy Band (Anthem of Europe arrangement) | [File:Anthem of Europe (US Navy instrumental long version).ogg](https://commons.wikimedia.org/wiki/File:Anthem_of_Europe_(US_Navy_instrumental_long_version).ogg) |
 
 `mockups/` holds the design concepts explored for the site: `concept-*.html` for the first version,
 `facts-concept-*.html` for the facts and paintings (Concept 4, Spotlight, was built), and
