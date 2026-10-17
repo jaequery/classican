@@ -830,6 +830,56 @@ Sources: [Má vlast (Wikipedia)](https://en.wikipedia.org/wiki/M%C3%A1_vlast)
 
 Sources: [Für Elise (Wikipedia)](https://en.wikipedia.org/wiki/F%C3%BCr_Elise), [Ludwig van Beethoven (Wikipedia)](https://en.wikipedia.org/wiki/Ludwig_van_Beethoven)
 
+### 77. The Nutcracker: Dance of the Sugar Plum Fairy · Pyotr Ilyich Tchaikovsky
+
+- **Year:** 1892 · `composedYear: 1892`
+- **Age:** 51 or 52 (born 7 May 1840)
+- **Place:** Russia; "Tchaikovsky composed parts of The Nutcracker in Rouen, France"
+- **Instruments:** Orchestra, with a celesta
+- **Reception:** The first staging, on 18 December 1892, "was not deemed a success", though some critics praised Antonietta Dell'Era's pointework as the Sugar Plum Fairy. The 20-minute suite, premiered nine months earlier, was more successful at first.
+
+Sources: [The Nutcracker (Wikipedia)](https://en.wikipedia.org/wiki/The_Nutcracker), [Celesta (Wikipedia)](https://en.wikipedia.org/wiki/Celesta)
+
+### 78. Swan Lake: Scene (Op. 20, No. 10) · Pyotr Ilyich Tchaikovsky
+
+- **Year:** 1875–76, premiered 1877 · `composedYear: 1876`, `approximate: true`
+- **Age:** about 35 or 36
+- **Place:** Moscow, Russia (commissioned by the director of the Moscow Imperial Theatres; premiered at the Bolshoi)
+- **Instruments:** Orchestra, with harp
+- **Reception:** "The première was not well received." Critics found the score "too noisy, too 'Wagnerian' and too symphonic". It is now "one of the most popular ballets of all time".
+
+Sources: [Swan Lake (Wikipedia)](https://en.wikipedia.org/wiki/Swan_Lake)
+
+### 79. Slavonic Dance No. 2 in E minor, Op. 72 · Antonín Dvořák
+
+- **Year:** 1886 · `composedYear: 1886`, `approximate: true`
+- **Age:** about 44 or 45 (born 8 September 1841)
+- **Place:** Bohemia (now the Czech Republic); published by Simrock
+- **Instruments:** Orchestra (originally piano four hands)
+- **Reception:** The dances "were well received at the time", and Simrock asked for the second set after the first sold well.
+
+Sources: [Slavonic Dances (Wikipedia)](https://en.wikipedia.org/wiki/Slavonic_Dances)
+
+### 80. Enigma Variations: Nimrod (Variation IX, Op. 36) · Edward Elgar
+
+- **Year:** 1898–99 (fully scored by 18 February 1899) · `composedYear: 1899`, `beforeBirthday: true`
+- **Age:** 41. Written before his 42nd birthday on 2 June 1899.
+- **Place:** Malvern, England, where he settled in 1891
+- **Instruments:** Orchestra
+- **Reception:** After its London premiere on 19 June 1899 the work "quickly achieved popularity and helped establish Elgar's growing reputation in Britain and internationally".
+
+Sources: [Enigma Variations (Wikipedia)](https://en.wikipedia.org/wiki/Enigma_Variations), [Edward Elgar (Wikipedia)](https://en.wikipedia.org/wiki/Edward_Elgar)
+
+### 81. Scheherazade: The Young Prince and the Young Princess (Op. 35, III) · Nikolai Rimsky-Korsakov
+
+- **Year:** 1888 (4 June to 7 August) · `composedYear: 1888`
+- **Age:** 44. Written after his 44th birthday on 18 March 1888.
+- **Place:** Nyezhgovitsy, beside Lake Cheremenets near Luga, Russia
+- **Instruments:** Orchestra, with a solo violin and harp
+- **Reception:** "One of Rimsky-Korsakov's most popular works", with "beguiling orchestral colors, fresh and piquant melodies".
+
+Sources: [Scheherazade (Rimsky-Korsakov) (Wikipedia)](https://en.wikipedia.org/wiki/Scheherazade_(Rimsky-Korsakov))
+
 ## Composers
 
 ### Erik Satie
@@ -1105,3 +1155,11 @@ Sources: [Franz Liszt (Wikipedia)](https://en.wikipedia.org/wiki/Franz_Liszt)
 - **Also:** He registered for law school at eighteen, withdrew after one semester, and studied in Rome with Giacomo Carissimi.
 
 Sources: [Marc-Antoine Charpentier (Wikipedia)](https://en.wikipedia.org/wiki/Marc-Antoine_Charpentier)
+
+### Edward Elgar
+
+- **Born:** 1857, in Lower Broadheath, near Worcester, England · **Died:** 1934
+- **Money:** After school he gave piano and violin lessons and worked occasionally in his father's shop. In 1884 he complained, "I have no money – not a cent."
+- **Also:** He was largely self-taught as a composer; his father could not afford to send him to the Leipzig Conservatory.
+
+Sources: [Edward Elgar (Wikipedia)](https://en.wikipedia.org/wiki/Edward_Elgar)

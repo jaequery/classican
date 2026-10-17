@@ -269,6 +269,11 @@ The player uses Commons' MP3 transcode where the browser supports MP3, and the o
 | Te Deum: Prelude | Marc-Antoine Charpentier | Ian Dollins, organ (via Musopen) | [File:Charpentier, Te Deum (Prelude).ogg](https://commons.wikimedia.org/wiki/File:Charpentier,_Te_Deum_(Prelude).ogg) |
 | Má vlast: Šárka | Bedřich Smetana | Musopen | [File:Bedrich Smetana - ma vlast - iii. sarka.ogg](https://commons.wikimedia.org/wiki/File:Bedrich_Smetana_-_ma_vlast_-_iii._sarka.ogg) |
 | Für Elise | Ludwig van Beethoven | V. Gao (Wikimedia Commons) | [File:FurElise.ogg](https://commons.wikimedia.org/wiki/File:FurElise.ogg) |
+| The Nutcracker: Dance of the Sugar Plum Fairy | Pyotr Ilyich Tchaikovsky | Free Classical Music (Wikimedia Commons, CC BY 3.0) | [File:Tchaikovsky - Dance of the Sugar Plum Fairy - The Nutcracker.ogg](https://commons.wikimedia.org/wiki/File:Tchaikovsky_-_Dance_of_the_Sugar_Plum_Fairy_-_The_Nutcracker.ogg) |
+| Swan Lake: Scene | Pyotr Ilyich Tchaikovsky | London Philharmonic Orchestra, John Barbirolli, 1933 (public domain) | [File:Tchaikovsky Swan Lake Op.20 No.10. Scène.ogg](https://commons.wikimedia.org/wiki/File:Tchaikovsky_Swan_Lake_Op.20_No.10._Sc%C3%A8ne.ogg) |
+| Slavonic Dance No. 2 in E minor, Op. 72 | Antonín Dvořák | Wikimedia Commons (public domain; Commons' ogg and mp3 transcodes of the wav) | [File:Dvorak Slavonic Dance Op 72, No. 2.wav](https://commons.wikimedia.org/wiki/File:Dvorak_Slavonic_Dance_Op_72,_No._2.wav) |
+| Enigma Variations: Nimrod | Edward Elgar | Hallé Orchestra, John Barbirolli, 1947 (public domain) | [File:Elgar; Enigma variations, Theme IX. Nimrod.ogg](https://commons.wikimedia.org/wiki/File:Elgar;_Enigma_variations,_Theme_IX._Nimrod.ogg) |
+| Scheherazade: The Young Prince and the Young Princess | Nikolai Rimsky-Korsakov | San Francisco Symphony, Pierre Monteux, 1942 (CC0) | [File:Rimsky-Korsakov. Scheherazade, Symphonic Suite, Op. 35 - 03 The Young Prince And Princess.ogg](https://commons.wikimedia.org/wiki/File:Rimsky-Korsakov._Scheherazade,_Symphonic_Suite,_Op._35_-_03_The_Young_Prince_And_Princess.ogg) |
 
 `mockups/` holds the design concepts explored for the site: `concept-*.html` for the first version,
 `facts-concept-*.html` for the facts and paintings (Concept 4, Spotlight, was built), and
