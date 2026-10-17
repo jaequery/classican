@@ -1053,3 +1053,66 @@ Painting: banded Jupiter with its red spot and four moons over a village green w
 5. Holst disliked hearing the suite end on Jupiter for a happy ending: "in the real work the end is not happy at all".
 
 Sources: [The Planets (Wikipedia)](https://en.wikipedia.org/wiki/The_Planets), [Jupiter, the Bringer of Jollity (Wikipedia)](https://en.wikipedia.org/wiki/Jupiter,_the_Bringer_of_Jollity), [Gustav Holst (Wikipedia)](https://en.wikipedia.org/wiki/Gustav_Holst)
+## Fantaisie-Impromptu, Op. 66 · Frédéric Chopin
+
+Painting: a piano in a violet Paris salon, streams of sixteenth notes over rolling triplets, a manuscript leaf and a rainbow over a clearing storm.
+
+1. Chopin wrote it in 1834 but never published it. His friend Julian Fontana printed it in 1855, six years after Chopin died. *(motif: the manuscript)*
+2. No one knows why Chopin held it back. One theory is that it sounds too much like Moscheles's Impromptu, Op. 89, or like Beethoven's "Moonlight" Sonata. *(motif: the manuscript)*
+3. A manuscript copy in the album of the Baroness d'Este is dated 1835 and inscribed "Composed for the Baroness d'Este". *(motif: the manuscript)*
+4. The right hand plays streams of sixteenth notes against the left hand's rolling triplets, two rhythms that never quite line up. *(motif: the notes)*
+5. The stormy C-sharp minor outer sections give way to a singing middle section in D-flat major, and the piece ends on a bright C-sharp major chord. *(motif: the keys)*
+6. That middle melody was borrowed for the popular song "I'm Always Chasing Rainbows". *(motif: the rainbow)*
+
+Sources: [Fantaisie-Impromptu (Wikipedia)](https://en.wikipedia.org/wiki/Fantaisie-Impromptu)
+
+## Prelude in D-flat major, Op. 28 No. 15 "Raindrop" · Frédéric Chopin
+
+Painting: a stone monastery cell on Mallorca, rain on an arched window, an upright piano whose repeated notes light one by one, and a lamp on the sill.
+
+1. Part of the 24 Preludes was written in the winter of 1838 in a former monastery at Valldemossa on Mallorca, where Chopin stayed with George Sand. *(motif: the cell)*
+2. It is called "Raindrop" because the note A-flat repeats all the way through, and to many listeners it sounds like drops falling. *(motif: the rain)*
+3. Sand wrote that Chopin dreamed he was drowned in a lake, icy drops falling on his chest. She never said which piece he played that evening, but critics assume it was this one. *(motif: the rain)*
+4. Chopin himself denied hearing the rain, and protested against "the childishness of such aural imitations". *(motif: the piano)*
+5. In the dark middle section the repeated note turns to G-sharp and the key moves to C-sharp minor, before the calm opening returns. *(motif: the repeated note)*
+6. At five to seven minutes it is the longest of the 24 Preludes.
+
+Sources: [Prelude, Op. 28, No. 15 (Chopin) (Wikipedia)](https://en.wikipedia.org/wiki/Prelude,_Op._28,_No._15_(Chopin))
+
+## Liebestraum No. 3 · Franz Liszt
+
+Painting: a moonlit window with drawn curtains, a piano whose desk holds an open book of poems, and a red rose.
+
+1. Liebesträume means "dreams of love". It is a set of three solo piano nocturnes, and No. 3 is the best known. *(motif: the moon)*
+2. Each began as a song for voice and piano, setting a poem by Ludwig Uhland or Ferdinand Freiligrath. The piano versions appeared together with the songs in 1850. *(motif: the book)*
+3. No. 3 sets Freiligrath's poem "O lieb, so lang du lieben kannst": "O love, as long as you can love". *(motif: the book)*
+4. The poem is about unconditional, mature love, unlike the religious love of No. 1 and the erotic love of No. 2. *(motif: the rose)*
+5. It is in A-flat major, in three sections divided by fast cadenzas. *(motif: the piano)*
+6. One melody runs all the way through, returning in octaves and then in arpeggios near the climax. *(motif: the piano)*
+
+Sources: [Liebesträume (Wikipedia)](https://en.wikipedia.org/wiki/Liebestr%C3%A4ume)
+
+## Prelude in C-sharp minor, Op. 3 No. 2 · Sergei Rachmaninoff
+
+Painting: a Kremlin-style bell tower at snowy dusk, a great bell swinging in a timber frame, and a stack of coins on the snow.
+
+1. Rachmaninoff was 19 when he wrote it, just after graduating from the Moscow Conservatory, and he played the first performance himself on 26 September 1892. *(motif: the tower)*
+2. It is the second of five Morceaux de fantaisie, Op. 3, all dedicated to his harmony teacher Anton Arensky. *(motif: the tower)*
+3. It is nicknamed "The Bells of Moscow": the opening is said to echo the chimes of the Kremlin. *(motif: the bell)*
+4. It opens with three fortissimo notes, then drops to piano pianissimo in the third bar as the theme begins. *(motif: the bell)*
+5. Russia had not joined the Berne Convention, so he earned no royalties: his only income from it was a 40-ruble fee, about two months' wages for a factory worker. *(motif: the coins)*
+6. Audiences came to shout "C-sharp!" for it as an encore. Tired of it, he said "Many, many times I wish I had never written it", and called it his "Frankenstein".
+
+Sources: [Prelude in C-sharp minor (Rachmaninoff) (Wikipedia)](https://en.wikipedia.org/wiki/Prelude_in_C-sharp_minor_(Rachmaninoff))
+
+## Arabesque No. 1 · Claude Debussy
+
+Painting: a pale green room, an arched window onto a morning sky, Art Nouveau vines curling in from both sides, and a piano below.
+
+1. Debussy wrote the two Arabesques between 1888 and 1891, when he was still in his twenties. *(motif: the window)*
+2. An arabesque is a flowing, curving line. Debussy saw a musical arabesque as a line curved in accordance with nature, like the shapes of Art Nouveau. *(motif: the vines)*
+3. This first one is in E major and marked Andantino con moto, "a little slowly, with motion". *(motif: the piano)*
+4. The left hand has an E major arpeggio, while the right hand's tune winds downward on a pentatonic scale. *(motif: the piano)*
+5. It appears in the 2001 Japanese film All About Lily Chou-Chou.
+
+Sources: [Deux arabesques (Wikipedia)](https://en.wikipedia.org/wiki/Deux_arabesques)

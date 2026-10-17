@@ -1,6 +1,6 @@
 # classican
 
-One screen of public-domain classical music for studying and deep work. The only interface is one
+One screen of classical music, almost all of it public domain, for studying and deep work. The only interface is one
 borderless strip along the bottom edge, on a dark gradient that rises out of the painting like film
 subtitles: the piece's title and composer on the left, previous, play/pause and next in the centre,
 and like, comments, volume, details and a "⋯" menu on the right. Behind it is an original pixel
@@ -198,7 +198,8 @@ words appear without fading, and hover changes are immediate.
 ## Audio sources
 
 Every recording is streamed from Wikimedia Commons and marked **public domain** on its file page
-(Public domain, the Public Domain Mark, or a CC0 dedication).
+(Public domain, the Public Domain Mark, or a CC0 dedication), except where the table names a free Creative Commons licence (CC BY-SA), which
+requires crediting the performer, as the table does.
 The player uses Commons' MP3 transcode where the browser supports MP3, and the original Ogg otherwise.
 
 | Piece | Composer | Performer / source | Commons file |
@@ -284,6 +285,11 @@ The player uses Commons' MP3 transcode where the browser supports MP3, and the o
 | Lullaby (Wiegenlied), Op. 49 No. 4 | Johannes Brahms | Ernestine Schumann-Heink, contralto, 1915 | [File:Brahms - Schumann-Heink - Wiegenlied (Berceuse) (1915).ogg](https://commons.wikimedia.org/wiki/File:Brahms_-_Schumann-Heink_-_Wiegenlied_(Berceuse)_(1915).ogg) |
 | Pavane pour une infante défunte | Maurice Ravel | Thérèse Dussaut, piano, 1976 (CC BY-SA 2.0) | [File:Maurice Ravel - Thérèse Dussaut - Pavane pour une infante défunte.ogg](https://commons.wikimedia.org/wiki/File:Maurice_Ravel_-_Th%C3%A9r%C3%A8se_Dussaut_-_Pavane_pour_une_infante_d%C3%A9funte.ogg) |
 | The Planets: Jupiter, the Bringer of Jollity | Gustav Holst | United States Air Force Heritage of America Band (wind band transcription) | [File:Holst The Planets Jupiter.ogg](https://commons.wikimedia.org/wiki/File:Holst_The_Planets_Jupiter.ogg) |
+| Fantaisie-Impromptu, Op. 66 | Frédéric Chopin | Muriel Nguyen Xuan (CC BY-SA 4.0) | [File:Muriel-Nguyen-Xuan-Chopin-fantaisie-impromptu-opus66.ogg](https://commons.wikimedia.org/wiki/File:Muriel-Nguyen-Xuan-Chopin-fantaisie-impromptu-opus66.ogg) |
+| Prelude in D-flat major, Op. 28 No. 15 “Raindrop” | Frédéric Chopin | Giorgi Latsabidze (public domain) | [File:Chopin Prelude Op 28 N 15 Giorgi Latsabidze performs.ogg](https://commons.wikimedia.org/wiki/File:Chopin_Prelude_Op_28_N_15_Giorgi_Latsabidze_performs.ogg) |
+| Liebestraum No. 3 | Franz Liszt | Martha Goldstein (via Pandora Music, CC BY-SA 2.0) | [File:Franz Liszt - Liebestraum, Ab Major.ogg](https://commons.wikimedia.org/wiki/File:Franz_Liszt_-_Liebestraum,_Ab_Major.ogg) |
+| Prelude in C-sharp minor, Op. 3 No. 2 | Sergei Rachmaninoff | Sergei Rachmaninoff, piano (public domain) | [File:Sergei Rachmaninoff performs Rachmaninoff's Prelude in C sharp minor, Op. 3.ogg](https://commons.wikimedia.org/wiki/File:Sergei_Rachmaninoff_performs_Rachmaninoff's_Prelude_in_C_sharp_minor,_Op._3.ogg) |
+| Arabesque No. 1 | Claude Debussy | Patrizia Prati (CC BY-SA 4.0) | [File:Claude Debussy - Première Arabesque - Patrizia Prati.ogg](https://commons.wikimedia.org/wiki/File:Claude_Debussy_-_Première_Arabesque_-_Patrizia_Prati.ogg) |
 
 `mockups/` holds the design concepts explored for the site: `concept-*.html` for the first version,
 `facts-concept-*.html` for the facts and paintings (Concept 4, Spotlight, was built), and

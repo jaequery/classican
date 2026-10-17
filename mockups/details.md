@@ -929,7 +929,7 @@ Sources: [Enigma Variations (Wikipedia)](https://en.wikipedia.org/wiki/Enigma_Va
 
 Sources: [Scheherazade (Rimsky-Korsakov) (Wikipedia)](https://en.wikipedia.org/wiki/Scheherazade_(Rimsky-Korsakov))
 
-### 87. Ave Maria (Ellens dritter Gesang, D. 839) · Franz Schubert
+### 92. Ave Maria (Ellens dritter Gesang, D. 839) · Franz Schubert
 
 - **Year:** 1825 (the source gives no month) · `composedYear: 1825`
 - **Age:** about 28. Born 31 January 1797; the month of composition is not documented.
@@ -939,7 +939,7 @@ Sources: [Scheherazade (Rimsky-Korsakov) (Wikipedia)](https://en.wikipedia.org/w
 
 Sources: [Ellens dritter Gesang (Wikipedia)](https://en.wikipedia.org/wiki/Ellens_dritter_Gesang), [the recording's Commons page](https://commons.wikimedia.org/wiki/File:Schubert%27s_Ave_Maria,_D.839_(accordion_orchestra)_-_Paul_De_Bra.ogg)
 
-### 88. Hungarian Dance No. 5 · Johannes Brahms
+### 93. Hungarian Dance No. 5 · Johannes Brahms
 
 - **Year:** published 1869 (Book 1) · `composedYear: 1869`
 - **Age:** about 36 (the date of composition before publication is not documented)
@@ -949,7 +949,7 @@ Sources: [Ellens dritter Gesang (Wikipedia)](https://en.wikipedia.org/wiki/Ellen
 
 Sources: [Hungarian Dances (Brahms) (Wikipedia)](https://en.wikipedia.org/wiki/Hungarian_Dances_(Brahms)), [the recording's Commons page](https://commons.wikimedia.org/wiki/File:Brahms_nikisch_hd5.ogg)
 
-### 89. Lullaby (Wiegenlied), Op. 49 No. 4 · Johannes Brahms
+### 94. Lullaby (Wiegenlied), Op. 49 No. 4 · Johannes Brahms
 
 - **Year:** 1868 (first published November 1868) · `composedYear: 1868`
 - **Age:** about 35 (Born 7 May 1833; the month of composition is not documented)
@@ -959,7 +959,7 @@ Sources: [Hungarian Dances (Brahms) (Wikipedia)](https://en.wikipedia.org/wiki/H
 
 Sources: [Wiegenlied (Brahms) (Wikipedia)](https://en.wikipedia.org/wiki/Wiegenlied_(Brahms)), [the recording's Commons page](https://commons.wikimedia.org/wiki/File:Brahms_-_Schumann-Heink_-_Wiegenlied_(Berceuse)_(1915).ogg)
 
-### 90. Pavane pour une infante défunte · Maurice Ravel
+### 95. Pavane pour une infante défunte · Maurice Ravel
 
 - **Year:** 1899 · `composedYear: 1899`
 - **Age:** about 24. Born 7 March 1875; the month of composition is not documented.
@@ -969,7 +969,7 @@ Sources: [Wiegenlied (Brahms) (Wikipedia)](https://en.wikipedia.org/wiki/Wiegenl
 
 Sources: [Pavane pour une infante défunte (Wikipedia)](https://en.wikipedia.org/wiki/Pavane_pour_une_infante_d%C3%A9funte), [the recording's Commons page](https://commons.wikimedia.org/wiki/File:Maurice_Ravel_-_Th%C3%A9r%C3%A8se_Dussaut_-_Pavane_pour_une_infante_d%C3%A9funte.ogg)
 
-### 91. The Planets, Op. 32: Jupiter, the Bringer of Jollity · Gustav Holst
+### 96. The Planets, Op. 32: Jupiter, the Bringer of Jollity · Gustav Holst
 
 - **Year:** 1914 (the suite 1914–17) · `composedYear: 1914`
 - **Age:** about 39 (Born 21 September 1874; the date of Jupiter within 1914 is not documented)
@@ -978,6 +978,55 @@ Sources: [Pavane pour une infante défunte (Wikipedia)](https://en.wikipedia.org
 - **Reception:** The suite was first performed on 29 September 1918 at the Queen's Hall, London, under Adrian Boult, for about 250 invited guests. The first complete public performance was on 15 November 1920.
 
 Sources: [The Planets (Wikipedia)](https://en.wikipedia.org/wiki/The_Planets), [Jupiter, the Bringer of Jollity (Wikipedia)](https://en.wikipedia.org/wiki/Jupiter,_the_Bringer_of_Jollity), [the recording's Commons page](https://commons.wikimedia.org/wiki/File:Holst_The_Planets_Jupiter.ogg)
+### 87. Fantaisie-Impromptu, Op. 66 · Frédéric Chopin
+
+- **Year:** 1834, published 1855 · `composedYear: 1834`, `approximate: true` (the month is not recorded)
+- **Age:** about 24 (born 1810)
+- **Place:** Paris, France, where Chopin lived from 1831
+- **Instruments:** Solo piano
+- **Reception:** Chopin did not release it; Julian Fontana issued it in 1855 with the waltzes Opp. 69 and 70, six years after Chopin's death.
+
+Sources: [Fantaisie-Impromptu (Wikipedia)](https://en.wikipedia.org/wiki/Fantaisie-Impromptu), [Frédéric Chopin (Wikipedia)](https://en.wikipedia.org/wiki/Fr%C3%A9d%C3%A9ric_Chopin)
+
+### 88. Prelude in D-flat major, Op. 28 No. 15 "Raindrop" · Frédéric Chopin
+
+- **Year:** 1838–39, published 1839 · `composedYear: 1838`
+- **Age:** 28 (born 1810)
+- **Place:** Valldemossa, Mallorca, Spain
+- **Instruments:** Solo piano
+- **Reception:** Published in 1839 among the 24 Preludes; the repeated note led listeners to call it "Raindrop".
+
+Sources: [Prelude, Op. 28, No. 15 (Chopin) (Wikipedia)](https://en.wikipedia.org/wiki/Prelude,_Op._28,_No._15_(Chopin))
+
+### 89. Liebestraum No. 3 · Franz Liszt
+
+- **Year:** 1850 (the year the song and piano versions appeared) · `composedYear: 1850`, `approximate: true`
+- **Age:** about 39 (born 1811)
+- **Place:** Weimar, Germany, where Liszt lived from 1848
+- **Instruments:** Solo piano
+- **Reception:** The best known of the three Liebesträume.
+
+Sources: [Liebesträume (Wikipedia)](https://en.wikipedia.org/wiki/Liebestr%C3%A4ume), [Franz Liszt (Wikipedia)](https://en.wikipedia.org/wiki/Franz_Liszt)
+
+### 90. Prelude in C-sharp minor, Op. 3 No. 2 · Sergei Rachmaninoff
+
+- **Year:** 1892 · `composedYear: 1892`
+- **Age:** 19 (born 1873)
+- **Place:** Moscow, Russia
+- **Instruments:** Solo piano
+- **Reception:** Premiered by the composer on 26 September 1892 at the Moscow Electrical Exhibition; a review said it "aroused enthusiasm". It became known simply as "The Prelude".
+
+Sources: [Prelude in C-sharp minor (Rachmaninoff) (Wikipedia)](https://en.wikipedia.org/wiki/Prelude_in_C-sharp_minor_(Rachmaninoff))
+
+### 91. Arabesque No. 1 · Claude Debussy
+
+- **Year:** 1888–91 · `composedYear: 1890` (middle of the range), `approximate: true`
+- **Age:** about 28 (born 1862)
+- **Place:** Paris, France
+- **Instruments:** Solo piano
+- **Reception:** Written while Debussy was in his twenties; now one of his best-known piano pieces, used in the 2001 film All About Lily Chou-Chou.
+
+Sources: [Deux arabesques (Wikipedia)](https://en.wikipedia.org/wiki/Deux_arabesques), [Claude Debussy (Wikipedia)](https://en.wikipedia.org/wiki/Claude_Debussy)
 
 ## Composers
 
