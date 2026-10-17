@@ -990,3 +990,66 @@ Painting: a palace balcony under a crescent moon, a young prince and princess si
 6. He deliberately made the movement titles vague so they would not point to particular tales. It premiered in Saint Petersburg on 28 October 1888, conducted by him.
 
 Sources: [Scheherazade (Rimsky-Korsakov) (Wikipedia)](https://en.wikipedia.org/wiki/Scheherazade_(Rimsky-Korsakov))
+
+## Ave Maria · Franz Schubert
+
+Painting: a moonlit Scottish loch, Ellen kneeling with a small light in the Goblin's cave, a castle with lit windows on the far shore.
+
+1. Schubert did not write a prayer. He set "Ellens dritter Gesang" ("Ellen's Third Song"), D. 839, a song from Walter Scott's poem The Lady of the Lake in a German translation by Adam Storck. *(motif: Ellen)*
+2. In the poem Ellen Douglas sings to the Virgin Mary while sheltering in the Goblin's cave, and the chieftain Roderick Dhu overhears her on his way to battle. *(motif: the cave)*
+3. The song's opening words and refrain are "Ave Maria", which may be why people fitted the Latin Catholic prayer to Schubert's melody. Many now assume he wrote it for that prayer. *(motif: Ellen)*
+4. It was published in 1826 as Op. 52, one of seven songs Schubert composed from Scott's poem in 1825.
+5. It is said to have been first performed at the castle of Countess Sophie Weissenwolff in Steyregg, Austria. The song was dedicated to her, and she came to be called "the lady of the lake". *(motif: the castle)*
+6. Disney's Fantasia (1940) ends with it, in an arrangement by Leopold Stokowski, straight after Night on Bald Mountain.
+
+Sources: [Ellens dritter Gesang (Wikipedia)](https://en.wikipedia.org/wiki/Ellens_dritter_Gesang)
+
+## Hungarian Dance No. 5 · Johannes Brahms
+
+Painting: a lantern-lit Hungarian tavern with a fiddler, a couple dancing a csárdás and a reproducing piano with its paper roll unwinding.
+
+1. This is the fifth of Brahms's 21 Hungarian Dances, first published in 1869 in the first two books, which were written for two players at one piano. *(motif: the dancers)*
+2. It is based on a csárdás, "Bártfai emlék", by the bandmaster Béla Kéler. Brahms mistook it for a folk tune, and Kéler accused him of publishing it as his own. *(motif: the fiddler)*
+3. Brahms wrote it in F-sharp minor. Albert Parlow's 1876 orchestration moved it to G minor, and it is marked Allegro – Vivace. *(motif: the dancers)*
+4. This recording is a piano roll. Artur Nikisch, the great conductor, played it on 9 February 1906 for the Welte-Mignon reproducing piano, which replays the performer's own touch. *(motif: the roll)*
+5. Leopold Stokowski and the Philadelphia Orchestra recorded Nos. 5 and 6 in 1917.
+
+Sources: [Hungarian Dances (Brahms) (Wikipedia)](https://en.wikipedia.org/wiki/Hungarian_Dances_(Brahms)), [the recording's Commons page](https://commons.wikimedia.org/wiki/File:Brahms_nikisch_hd5.ogg)
+
+## Lullaby (Wiegenlied), Op. 49 No. 4 · Johannes Brahms
+
+Painting: a moonlit nursery with a rocking cradle, a vase of roses, a window of stars and a piano with the song open on its desk.
+
+1. Brahms wrote it as a lied for voice and piano, and dedicated it to Bertha Faber on the birth of her second son. *(motif: the cradle)*
+2. He had loved Bertha when she was young. He shaped the melody so that it hints, as a hidden counter-melody, at a song she used to sing to him. *(motif: the roses)*
+3. The first verse comes from Des Knaben Wunderhorn, a collection of German folk poems. The first edition had only that verse, and Brahms later added a second adapted from an 1849 poem by Georg Scherer. *(motif: the cradle)*
+4. At its first public performance in Vienna, on 22 December 1869, Clara Schumann was at the piano. *(motif: the piano)*
+5. In 1877 Brahms reused the tune as the second theme of the first movement of his Second Symphony.
+6. This recording was made in 1915 by the contralto Ernestine Schumann-Heink (1861–1936).
+
+Sources: [Wiegenlied (Brahms) (Wikipedia)](https://en.wikipedia.org/wiki/Wiegenlied_(Brahms)), [the recording's Commons page](https://commons.wikimedia.org/wiki/File:Brahms_-_Schumann-Heink_-_Wiegenlied_(Berceuse)_(1915).ogg)
+
+## Pavane pour une infante défunte · Maurice Ravel
+
+Painting: a hall of the Spanish court with a chequered floor, a little infanta in a hooped gown before a gilt mirror, and a horn on a stand.
+
+1. Ravel wrote it in 1899, while studying at the Paris Conservatoire under Gabriel Fauré, and dedicated it to his patron the Princesse de Polignac.
+2. He called it "an evocation of a pavane that a little princess might, in former times, have danced at the Spanish court". *(motif: the infanta)*
+3. The title is not about any real princess. Ravel told a friend that it "has nothing to do with the composition. I simply liked the sound of those words". *(motif: the infanta)*
+4. A pavane was a slow, processional dance popular in the courts of 16th- and 17th-century Europe. *(motif: the hall)*
+5. Ravel orchestrated it in 1910 and gave the lead melody to the horn, the instrument heard in the painting. *(motif: the horn)*
+6. He later came to find it "poor in form" and too much under the influence of Chabrier.
+
+Sources: [Pavane pour une infante défunte (Wikipedia)](https://en.wikipedia.org/wiki/Pavane_pour_une_infante_d%C3%A9funte)
+
+## The Planets: Jupiter, the Bringer of Jollity · Gustav Holst
+
+Painting: banded Jupiter with its red spot and four moons over a village green where a ring of dancers circles, a church beside them.
+
+1. Holst began The Planets in 1914 with Mars, then wrote Venus and Jupiter. The suite was finished in 1917. *(motif: Jupiter)*
+2. Holst called astrology his "pet vice". Each movement of The Planets is a portrait of a planet's astrological character, and Jupiter is the Bringer of Jollity. *(motif: Jupiter)*
+3. The big, slow tune in the middle, marked andante maestoso, is taken at half the speed of the lively opening. *(motif: the dancers)*
+4. In 1921 Holst reused that tune for a setting of Cecil Spring Rice's poem "I Vow to Thee, My Country". He was exhausted at the time, and noticed that the words fitted. *(motif: the church)*
+5. Holst disliked hearing the suite end on Jupiter for a happy ending: "in the real work the end is not happy at all".
+
+Sources: [The Planets (Wikipedia)](https://en.wikipedia.org/wiki/The_Planets), [Jupiter, the Bringer of Jollity (Wikipedia)](https://en.wikipedia.org/wiki/Jupiter,_the_Bringer_of_Jollity), [Gustav Holst (Wikipedia)](https://en.wikipedia.org/wiki/Gustav_Holst)

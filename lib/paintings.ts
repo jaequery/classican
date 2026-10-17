@@ -117,7 +117,12 @@ export type PaintingId =
   | "swan-lake"
   | "slavonic-dance"
   | "nimrod"
-  | "scheherazade";
+  | "scheherazade"
+  | "ave-maria"
+  | "hungarian-dance-5"
+  | "lullaby"
+  | "pavane"
+  | "jupiter";
 
 export type Painting = {
   id: PaintingId;
@@ -6605,6 +6610,388 @@ function renderScheherazadeC(r: Raster, f: Frame) {
 }
 
 // ---------------------------------------------------------------------------
+// 87. Ave Maria: Ellen's prayer in the Goblin's cave, a lit castle across the loch
+// ---------------------------------------------------------------------------
+
+const aveC = palette({
+  s0: "#1a2640",
+  s1: "#344668",
+  s2: "#7a7098",
+  moon: "#f0e8c8",
+  moonG: "#b8b4b8",
+  hill: "#141c2c",
+  hillL: "#24304a",
+  rock: "#2c2830",
+  rockL: "#4a4048",
+  cave: "#0c0a10",
+  w0: "#1c2e50",
+  w1: "#32507a",
+  wL: "#6a88b0",
+  glow: "#f6c860",
+  glowD: "#c88c34",
+  robe: "#c4d0e6",
+  robeS: "#8c9cc0",
+  skin: "#e4c8a8",
+  hair: "#48301e",
+  stone: "#2a2432",
+  stoneL: "#443c50",
+  win: "#f8d070",
+});
+const aveSkyC = fracture(810, [[aveC.c.s0, aveC.c.s1], [aveC.c.s1, aveC.c.s2], [aveC.c.s0, aveC.c.s0]], 4, [-8, -8, 168, 52]);
+const aveWaterC = fracture(811, [[aveC.c.w0, aveC.c.w1], [aveC.c.w1, aveC.c.wL], [aveC.c.w0, aveC.c.w0]], 3, [-8, 52, 168, 108]);
+
+function renderAveC(r: Raster, f: Frame) {
+  const { c } = aveC;
+  paintPlanes(r, aveSkyC, f);
+  paintPlanes(r, aveWaterC, f);
+
+  // A moon over the far hills, its path laid across the loch.
+  r.fill(ellipse(104, 16, 11, 11, 0, Math.PI * 2, 20), c.s2, c.s1, 6);
+  r.fill(ellipse(104, 16, 6, 6, 0, Math.PI * 2, 16), c.moon, c.moonG, 3);
+  r.fill([[-8, 52], [10, 40], [30, 46], [60, 34], [90, 44], [120, 36], [150, 44], [168, 40], [168, 54], [-8, 54]], c.hill, c.hillL, 4);
+  for (let k = 0; k < 5; k++) r.line(98 + k * 2, 54 + k * 8, 110 - k * 2, 54 + k * 8, f.still || wave(f, 0.9, k) > -0.2 ? c.wL : c.w1);
+
+  // The castle on the far shore, its windows lit.
+  r.fill(rect(122, 34, 30, 20), c.stone, c.stoneL, 3);
+  r.fill(rect(120, 28, 8, 26), c.stone, c.stoneL, 3);
+  r.fill(rect(146, 30, 8, 24), c.stone, c.stoneL, 3);
+  r.fill([[119, 28], [124, 22], [129, 28]], c.stone);
+  r.fill([[145, 30], [150, 24], [155, 30]], c.stone);
+  for (const [wx, wy] of [[123, 36], [133, 40], [141, 40], [149, 38], [123, 44], [137, 46]]) r.fill(rect(wx, wy, 2, 3), c.win);
+  r.fill(rect(112, 54, 56, 2), c.stone);
+
+  // The Goblin's cave: a rock mouth on the left shore, a hollow of dark inside.
+  r.fill([[-8, 24], [30, 20], [52, 36], [58, 56], [52, 76], [-8, 76]], c.rock, c.rockL, 4);
+  r.fill([[6, 76], [8, 44], [20, 34], [38, 38], [46, 52], [48, 76]], c.cave);
+  r.fill(ellipse(28, 62, 15, 12, 0, Math.PI * 2, 20), c.glowD, c.cave, 10);
+
+  // Ellen kneels with her hands raised, a small light before her.
+  const sway = f.still ? 0 : Math.sin(f.t * 0.7) * 0.4;
+  r.fill([[20, 76], [36, 76], [34, 66], [30, 56], [26, 56], [22, 66]], c.robe, c.robeS, 5);
+  r.fill(ellipse(28, 52 + sway, 3.2, 3.6, 0, Math.PI * 2, 12), c.skin);
+  r.fill([[24, 51], [32, 51], [33, 60], [23, 60]], c.hair);
+  r.fill(ellipse(28, 52 + sway, 2.4, 2.8, 0, Math.PI * 2, 10), c.skin);
+  r.line(25, 60, 27, 54, c.skin);
+  r.line(31, 60, 29, 54, c.skin);
+  const flick = Math.round(wave(f, 3.3) * 0.6);
+  r.fill([[39 + flick, 74], [40.5, 68 + flick], [42 - flick, 74]], c.glow);
+  r.fill(rect(39, 74, 3, 3), c.moon);
+  for (let k = 0; k < 4; k++) r.dot(30 + k * 5, f.still ? 40 : 40 + ((f.t * 3 + k * 7) % 14), c.glow);
+}
+
+// ---------------------------------------------------------------------------
+// 88. Hungarian Dance No. 5: a Hungarian tavern, a fiddler, a csárdás and Nikisch's reproducing piano
+// ---------------------------------------------------------------------------
+
+const hdFiveC = palette({
+  w0: "#4a2a24",
+  w1: "#6a3c2c",
+  w2: "#8a5236",
+  fl0: "#2a1a14",
+  fl1: "#4a3022",
+  lamp: "#f8d070",
+  lampD: "#d89a34",
+  coat: "#1e1a2a",
+  coatL: "#3a3250",
+  skin: "#dcb48c",
+  violin: "#a8541c",
+  bow: "#e8dcc0",
+  red: "#c4282c",
+  redL: "#e85a48",
+  white: "#f0e8d8",
+  boot: "#120c0a",
+  piano: "#3a2218",
+  pianoL: "#5e3a26",
+  roll: "#eadfc2",
+  hole: "#2a1c14",
+  gold: "#c89a3a",
+  vest: "#2a5a3a",
+});
+const hdFiveWallC = fracture(820, [[hdFiveC.c.w0, hdFiveC.c.w1], [hdFiveC.c.w1, hdFiveC.c.w2], [hdFiveC.c.w0, hdFiveC.c.w0]], 4, [-8, -8, 168, 64]);
+const hdFiveFloorC = fracture(821, [[hdFiveC.c.fl0, hdFiveC.c.fl1], [hdFiveC.c.fl1, hdFiveC.c.fl0]], 3, [-8, 64, 168, 108]);
+
+function renderHdFiveC(r: Raster, f: Frame) {
+  const { c } = hdFiveC;
+  paintPlanes(r, hdFiveWallC, f);
+  paintPlanes(r, hdFiveFloorC, f);
+
+  // Lanterns across the beams.
+  r.line(0, 8, 160, 12, c.fl1);
+  for (const lx of [24, 62, 100, 138]) {
+    const sw = f.still ? 0 : Math.sin(f.t * 1.1 + lx) * 1.2;
+    r.line(lx, 10, lx + sw, 15, c.fl1);
+    r.fill(ellipse(lx + sw, 18, 3.4, 4, 0, Math.PI * 2, 12), c.lamp, c.lampD, 6);
+  }
+
+  // The fiddler: tilted head, the violin under his chin, the bow sawing fast.
+  const sawing = f.still ? 0 : Math.sin(f.t * 7) * 4;
+  r.fill([[14, 90], [38, 90], [34, 56], [28, 48], [22, 48], [18, 56]], c.coat, c.coatL, 4);
+  r.fill(rect(23, 58, 6, 14), c.vest);
+  r.fill(ellipse(26, 41, 4, 4.6, 0, Math.PI * 2, 12), c.skin);
+  r.fill([[22, 37], [30, 37], [31, 33], [21, 33]], c.coat);
+  r.fill(ellipse(33, 50, 4.5, 2.6, 0, Math.PI * 2, 12), c.violin);
+  r.line(30, 49, 40, 44, c.violin);
+  r.line(26 - sawing * 0.2, 60, 46 + sawing, 54 - sawing * 0.3, c.bow);
+  r.line(34, 58, 28, 66, c.skin);
+
+  // Two dancers in a csárdás: his boots stamping, her red skirt flaring as they turn.
+  const turn = f.still ? 0 : f.t * 1.6;
+  const flare = 11 + Math.sin(turn * 2) * 2;
+  r.fill([[66, 86], [78, 86], [76, 52], [70, 52]], c.coat, c.coatL, 3);
+  r.fill(ellipse(72, 46, 4, 4.6, 0, Math.PI * 2, 12), c.skin);
+  r.fill([[67, 43], [77, 43], [76, 38], [68, 38]], c.coat);
+  r.fill(rect(66, 86, 5, 3), c.boot);
+  r.fill(rect(74 + (f.still ? 0 : Math.round(Math.max(0, Math.sin(f.t * 5)))), 86, 5, 3), c.boot);
+  r.fill([[96, 90], [108 + flare * 0.3, 90], [104 + flare, 78], [100 - flare * 0.3, 60], [92 - flare * 0.4, 78]], c.red, c.redL, 5);
+  r.fill([[97, 62], [103, 62], [102, 52], [98, 52]], c.white);
+  r.fill(ellipse(100, 46, 4, 4.6, 0, Math.PI * 2, 12), c.skin);
+  r.fill([[96, 44], [104, 44], [104, 38], [96, 38]], c.hole);
+  r.line(78, 54, 98, 54, c.skin);
+
+  // A reproducing piano at the right, its paper roll unwinding past the tracker bar, hole by hole.
+  r.fill([[116, 90], [158, 90], [158, 40], [116, 40]], c.piano, c.pianoL, 3);
+  r.fill(rect(118, 42, 38, 20), c.hole);
+  r.fill(rect(122, 46, 30, 10), c.roll);
+  for (let k = 0; k < 9; k++) {
+    const hy = 47 + ((k * 5 + (f.still ? 0 : Math.floor(f.t * 6))) % 9);
+    r.fill(rect(124 + ((k * 7) % 26), hy, 2, 1), c.hole);
+  }
+  r.fill(rect(118, 64, 38, 4), c.white);
+  for (let x = 120; x < 156; x += 3) r.fill(rect(x, 64, 1, 3), c.hole);
+}
+
+// ---------------------------------------------------------------------------
+// 89. Lullaby: a moonlit nursery, a rocking cradle, roses and the piano that played the tune
+// ---------------------------------------------------------------------------
+
+const lullC = palette({
+  w0: "#2a3050",
+  w1: "#3e4670",
+  w2: "#566090",
+  fl0: "#2e2230",
+  fl1: "#4a3a48",
+  sky: "#0e1430",
+  skyL: "#1c2650",
+  moon: "#f4ecd0",
+  star: "#fff4c8",
+  frame: "#c8b894",
+  wood: "#6a4428",
+  woodL: "#8e6238",
+  quilt: "#8ab0d0",
+  quiltL: "#c8dcec",
+  sheet: "#f0eadc",
+  baby: "#e8c8a8",
+  rose: "#d03a56",
+  roseL: "#f07890",
+  leaf: "#3a6a40",
+  vase: "#c8b8a0",
+  piano: "#1e1620",
+  pianoL: "#3a2c3a",
+  ivory: "#ece2c8",
+  ebony: "#1a1210",
+  paper: "#efe6cc",
+  ink: "#2a1e16",
+});
+const lullWallC = fracture(830, [[lullC.c.w0, lullC.c.w1], [lullC.c.w1, lullC.c.w2], [lullC.c.w0, lullC.c.w0]], 4, [-8, -8, 168, 70]);
+const lullFloorC = fracture(831, [[lullC.c.fl0, lullC.c.fl1], [lullC.c.fl1, lullC.c.fl0]], 3, [-8, 70, 168, 108]);
+const lullStars: Pt[] = [[22, 14], [34, 24], [44, 12], [30, 36], [48, 30], [18, 30]];
+
+function renderLullC(r: Raster, f: Frame) {
+  const { c } = lullC;
+  paintPlanes(r, lullWallC, f);
+  paintPlanes(r, lullFloorC, f);
+
+  // The window: a night sky, a moon, a handful of stars winking.
+  r.fill(rect(10, 4, 46, 46), c.frame);
+  r.fill(rect(12, 6, 42, 42), c.sky, c.skyL, 5);
+  r.fill(ellipse(42, 18, 5, 5, 0, Math.PI * 2, 16), c.moon);
+  lullStars.forEach(([sx, sy], i) => {
+    if (f.still || wave(f, 1.3, i * 1.7) > -0.5) r.dot(sx, sy, c.star);
+  });
+  r.fill(rect(32, 6, 2, 42), c.frame);
+  r.fill(rect(12, 26, 42, 2), c.frame);
+
+  // The cradle on its rockers, a sleeper under a pale quilt.
+  const rock = f.still ? 0 : Math.sin(f.t * 1.4) * 2.2;
+  r.fill([[28 + rock, 80], [74 + rock, 80], [70, 90], [32, 90]], c.wood, c.woodL, 3);
+  r.fill([[30 + rock, 80], [72 + rock, 80], [76 + rock, 62], [26 + rock, 62]], c.wood, c.woodL, 3);
+  r.fill([[33 + rock, 78], [69 + rock, 78], [72 + rock, 64], [30 + rock, 64]], c.sheet);
+  r.fill(ellipse(40 + rock, 68, 4.4, 4, 0, Math.PI * 2, 12), c.baby);
+  r.fill([[36 + rock, 70], [70 + rock, 70], [69 + rock, 78], [34 + rock, 78]], c.quilt, c.quiltL, 4);
+  r.line(26 + rock, 62, 26 + rock, 52, c.wood);
+  r.line(76 + rock, 62, 76 + rock, 52, c.wood);
+
+  // A vase of roses on the sill, for the woman the tune is dedicated to.
+  r.fill([[84, 62], [94, 62], [92, 50], [86, 50]], c.vase);
+  for (const [rx, ry] of [[85, 44], [90, 40], [94, 45]] as Pt[]) {
+    r.fill(ellipse(rx, ry, 3, 3, 0, Math.PI * 2, 10), c.rose);
+    r.dot(rx, ry - 1, c.roseL);
+  }
+  r.line(87, 50, 85, 46, c.leaf);
+  r.line(90, 50, 90, 43, c.leaf);
+  r.line(92, 50, 94, 47, c.leaf);
+
+  // An upright piano with the song open on its desk.
+  r.fill(rect(106, 40, 50, 50), c.piano, c.pianoL, 3);
+  r.fill(rect(112, 44, 38, 16), c.paper);
+  for (let k = 0; k < 4; k++) r.line(114, 48 + k * 3, 148, 48 + k * 3, c.ink);
+  for (let n = 0; n < 7; n++) r.dot(116 + n * 5, 47 + ((n * 2 + (f.still ? 0 : Math.floor(f.t * 1.5))) % 7), c.ink);
+  r.fill(rect(108, 64, 46, 5), c.ivory);
+  for (let x = 110; x < 152; x += 3) if (x % 12 !== 2) r.fill(rect(x, 64, 1, 3), c.ebony);
+}
+
+// ---------------------------------------------------------------------------
+// 90. Pavane: a hall of the Spanish court, a little infanta in her hooped gown, a horn for the melody
+// ---------------------------------------------------------------------------
+
+const pavC = palette({
+  w0: "#2a1c1c",
+  w1: "#42282a",
+  w2: "#5e3a32",
+  fl0: "#d8ccb0",
+  fl1: "#2a2224",
+  mirror: "#7a8a94",
+  mirrorL: "#c4d0d4",
+  frame: "#c89a3a",
+  frameD: "#8a6424",
+  gown: "#b8a4c8",
+  gownS: "#7a6a98",
+  gownL: "#e8dcf0",
+  skin: "#ecd0b4",
+  hair: "#5a3a22",
+  ribbon: "#c4282c",
+  lace: "#f4eedc",
+  horn: "#d8a838",
+  hornD: "#8a6424",
+  shade: "#120c0e",
+  flame: "#f8d070",
+  curtain: "#6a1c28",
+  curtainL: "#8e2c3a",
+});
+const pavWallC = fracture(860, [[pavC.c.w0, pavC.c.w1], [pavC.c.w1, pavC.c.w2], [pavC.c.w0, pavC.c.w0]], 4, [-8, -8, 168, 62]);
+
+function renderPavaneC(r: Raster, f: Frame) {
+  const { c } = pavC;
+  paintPlanes(r, pavWallC, f);
+
+  // A chequered floor running back into the hall.
+  r.fill(rect(-8, 62, 176, 46), c.fl1);
+  for (let row = 0; row < 7; row++) {
+    const y0 = 62 + row * row * 0.9 + row * 3;
+    const y1 = 62 + (row + 1) * (row + 1) * 0.9 + (row + 1) * 3;
+    const w = 12 + row * 5;
+    for (let x = -80; x < 240; x += w) if (((x / w) | 0) + row & 1) r.fill([[x, y0], [x + w, y0], [x + w, y1], [x, y1]], c.fl0, c.fl1, 5);
+  }
+
+  // A gilt-framed mirror at the back and a velvet curtain, as in a Velázquez court.
+  r.fill(rect(44, 8, 44, 40), c.frame, c.frameD, 4);
+  r.fill(rect(47, 11, 38, 34), c.mirror, c.mirrorL, 4);
+  r.fill(rect(60, 20, 12, 18), c.shade, c.mirror, 4);
+  r.fill([[104, 0], [124, 0], [118, 30], [106, 60], [100, 60], [102, 26]], c.curtain, c.curtainL, 4);
+  r.fill([[-8, 0], [26, 0], [22, 24], [8, 62], [-8, 62]], c.curtain, c.curtainL, 4);
+
+  // The infanta: a wide stiff gown, a small pale face, a red ribbon, a slow curtsey.
+  const sway = f.still ? 0 : Math.sin(f.t * 0.8) * 1.2;
+  r.fill([[80 + sway * 0.3, 40], [87, 44], [100, 82], [118, 90], [42, 90], [60, 82], [73, 44]], c.gown, c.gownS, 5);
+  r.fill([[62, 82], [98, 82], [102, 86], [58, 86]], c.gownL);
+  r.fill([[75, 40], [85, 40], [87, 50], [73, 50]], c.lace);
+  r.fill(ellipse(80 + sway * 0.3, 32, 5, 5.6, 0, Math.PI * 2, 14), c.skin);
+  r.fill([[74, 31], [86, 31], [87, 24], [80, 20], [73, 24]], c.hair);
+  r.fill(rect(83, 22, 4, 3), c.ribbon);
+  r.dot(78, 33, c.shade);
+  r.dot(82, 33, c.shade);
+
+  // A horn on a stand at the right, which Ravel gave the lead melody in 1910.
+  r.fill(ellipse(140, 66, 11, 11, 0, Math.PI * 2, 24), c.horn, c.hornD, 4);
+  r.fill(ellipse(140, 66, 8, 8, 0, Math.PI * 2, 24), c.w0);
+  r.fill([[148, 62], [156, 50], [158, 56], [150, 70]], c.horn, c.hornD, 3);
+  r.line(140, 77, 140, 92, c.hornD);
+  const flick = Math.round(wave(f, 3.1) * 0.6);
+  r.fill(rect(24, 78, 3, 7), c.lace);
+  r.fill([[24 + flick, 77], [25.5, 72 + flick], [27 - flick, 77]], c.flame);
+}
+
+// ---------------------------------------------------------------------------
+// 91. Jupiter: the banded planet and its moons, a ring of dancers below, a church for the hymn
+// ---------------------------------------------------------------------------
+
+const jupC = palette({
+  s0: "#0a0c24",
+  s1: "#161a44",
+  s2: "#2a2a6a",
+  star: "#fff4c8",
+  j0: "#e8c898",
+  j1: "#c88c58",
+  j2: "#f4e4c0",
+  j3: "#a05c3c",
+  spot: "#c84a30",
+  moon: "#e8e0d0",
+  moonD: "#9a9488",
+  hill: "#141a34",
+  hillL: "#222c52",
+  grass: "#1c3430",
+  grassL: "#2e5240",
+  dance: "#f6c860",
+  danceB: "#e86a50",
+  danceC: "#78b8e0",
+  skin: "#e4c8a8",
+  church: "#1a1830",
+  churchL: "#34305a",
+  win: "#f8d070",
+});
+const jupSkyC = fracture(850, [[jupC.c.s0, jupC.c.s1], [jupC.c.s1, jupC.c.s2], [jupC.c.s0, jupC.c.s0]], 4, [-8, -8, 168, 74]);
+const jupStars: Pt[] = [[8, 10], [20, 30], [34, 8], [50, 22], [62, 6], [14, 50], [44, 44], [70, 36], [152, 8], [148, 56]];
+
+function renderJupiterC(r: Raster, f: Frame) {
+  const { c } = jupC;
+  paintPlanes(r, jupSkyC, f);
+  jupStars.forEach(([sx, sy], i) => {
+    if (f.still || wave(f, 1.2, i * 2.1) > -0.4) r.dot(sx, sy, c.star);
+  });
+
+  // Jupiter: a disc cut into pale and rust bands, with the Great Red Spot.
+  const disc = ellipse(112, 30, 26, 26, 0, Math.PI * 2, 40);
+  r.fill(disc, c.j0, c.j2, 4);
+  const bands: [number, number, number][] = [[10, 6, c.j1], [20, 5, c.j3], [32, 6, c.j1], [42, 5, c.j3], [50, 5, c.j1]];
+  for (const [by, bh, bc] of bands) {
+    const wob = f.still ? 0 : Math.sin(f.t * 0.5 + by) * 1.2;
+    r.fill(clipConvex(rect(80, 4 + by + wob, 64, bh), disc), bc, c.j0, 5);
+  }
+  r.fill(ellipse(120, 38, 6, 3.4, 0, Math.PI * 2, 12), c.spot, c.j3, 3);
+  r.tint(clipConvex(rect(122, 4, 24, 52), disc), { [c.j0]: c.j1, [c.j1]: c.j3, [c.j2]: c.j1 }, 8);
+
+  // Four moons on slow orbits, as Galileo first saw them.
+  for (let k = 0; k < 4; k++) {
+    const ang = f.still ? k * 1.7 : f.t * (0.5 - k * 0.1) + k * 1.7;
+    const mx = 112 + Math.cos(ang) * (34 + k * 6);
+    const my = 30 + Math.sin(ang) * (5 + k * 1.6);
+    r.fill(ellipse(mx, my, 1.8 - k * 0.15, 1.8 - k * 0.15, 0, Math.PI * 2, 8), c.moon, c.moonD, 6);
+  }
+
+  // Hills, a ring of dancers on the green, and a church with its windows lit.
+  r.fill([[-8, 100], [-8, 70], [30, 64], [70, 72], [110, 66], [168, 70], [168, 100]], c.hill, c.hillL, 4);
+  r.fill([[-8, 100], [-8, 80], [60, 78], [120, 80], [168, 78], [168, 100]], c.grass, c.grassL, 4);
+  r.fill(rect(128, 66, 16, 18), c.church, c.churchL, 3);
+  r.fill([[126, 66], [136, 52], [146, 66]], c.church);
+  r.fill(rect(134, 40, 4, 12), c.church);
+  r.fill([[133, 40], [136, 34], [139, 40]], c.church);
+  r.fill(rect(134, 70, 2, 4), c.win);
+  r.fill(rect(139, 70, 2, 4), c.win);
+  const spin = f.still ? 0 : f.t * 0.9;
+  for (let k = 0; k < 8; k++) {
+    const a = spin + (k / 8) * Math.PI * 2;
+    const dx = 52 + Math.cos(a) * 24;
+    const dy = 88 + Math.sin(a) * 4;
+    const lift = f.still ? 0 : Math.round(Math.max(0, Math.sin(f.t * 4 + k * 1.3)) * 2);
+    const col = [c.dance, c.danceB, c.danceC][k % 3];
+    r.fill([[dx - 2, dy - lift], [dx + 2, dy - lift], [dx + 1, dy - 8 - lift], [dx - 1, dy - 8 - lift]], col);
+    r.dot(dx, dy - 10 - lift, c.skin);
+    r.line(dx - 3, dy - 12 - lift, dx - 1, dy - 8 - lift, col);
+    r.line(dx + 3, dy - 12 - lift, dx + 1, dy - 8 - lift, col);
+  }
+}
+
+// ---------------------------------------------------------------------------
 
 export const paintings: Painting[] = [
   {
@@ -7243,5 +7630,40 @@ export const paintings: Painting[] = [
     colors: scheherazadeC.colors,
     motifs: { prince: [46, 62, 22], sultan: [142, 62, 18], violin: [92, 82, 14] },
     render: renderScheherazadeC,
+  },
+  {
+    id: "ave-maria",
+    alt: "A moonlit Scottish loch: a woman in pale robes kneels in a rocky cave with a small light, and a castle with lit windows stands on the far shore.",
+    colors: aveC.colors,
+    motifs: { ellen: [28, 56, 14], cave: [28, 56, 22], castle: [136, 40, 18] },
+    render: renderAveC,
+  },
+  {
+    id: "hungarian-dance-5",
+    alt: "A lantern-lit Hungarian tavern: a fiddler bowing hard, a couple dancing a csárdás in a flare of red skirt, and a reproducing piano on the right with a perforated paper roll unwinding.",
+    colors: hdFiveC.colors,
+    motifs: { fiddler: [28, 54, 18], dancers: [86, 62, 22], roll: [136, 52, 14] },
+    render: renderHdFiveC,
+  },
+  {
+    id: "lullaby",
+    alt: "A moonlit nursery: a baby asleep in a rocking wooden cradle under a pale quilt, a window of stars, a vase of red roses and an upright piano with the song open on its desk.",
+    colors: lullC.colors,
+    motifs: { cradle: [50, 72, 18], roses: [90, 44, 10], piano: [130, 56, 22], window: [32, 26, 20] },
+    render: renderLullC,
+  },
+  {
+    id: "pavane",
+    alt: "A hall of the Spanish court with a chequered floor: a little infanta in a wide lilac gown with a red ribbon in her hair stands before a gilt mirror and a velvet curtain, a brass horn on a stand at the right.",
+    colors: pavC.colors,
+    motifs: { infanta: [80, 56, 24], hall: [80, 84, 22], horn: [140, 66, 14] },
+    render: renderPavaneC,
+  },
+  {
+    id: "jupiter",
+    alt: "A starry night: the banded planet Jupiter with its red spot and four small moons, a ring of dancers on a village green and a church with lit windows.",
+    colors: jupC.colors,
+    motifs: { jupiter: [112, 30, 26], dancers: [52, 84, 22], church: [136, 62, 14] },
+    render: renderJupiterC,
   },
 ];
