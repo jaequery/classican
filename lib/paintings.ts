@@ -117,7 +117,12 @@ export type PaintingId =
   | "swan-lake"
   | "slavonic-dance"
   | "nimrod"
-  | "scheherazade";
+  | "scheherazade"
+  | "fantaisie-impromptu"
+  | "raindrop"
+  | "liebestraum"
+  | "moscow-bells"
+  | "arabesque";
 
 export type Painting = {
   id: PaintingId;
@@ -6605,6 +6610,389 @@ function renderScheherazadeC(r: Raster, f: Frame) {
 }
 
 // ---------------------------------------------------------------------------
+// 87. Fantaisie-Impromptu: a storm of sixteenth notes over triplets, a manuscript, a rainbow
+// ---------------------------------------------------------------------------
+
+const fantaisieC = palette({
+  w0: "#1c1830",
+  w1: "#2c2650",
+  w2: "#43396c",
+  fl0: "#16121e",
+  fl1: "#2a2034",
+  piano: "#0e0c14",
+  pianoL: "#2c2838",
+  ivory: "#e8e2d2",
+  ebony: "#0c0a10",
+  sky: "#3a4a78",
+  skyL: "#5d6e9c",
+  cloud: "#242a4a",
+  bolt: "#f2f0b8",
+  red: "#d6504e",
+  amber: "#e8a64c",
+  green: "#6cb27a",
+  blue: "#5a8ad2",
+  violet: "#8c6ac0",
+  frame: "#8a7a62",
+  paper: "#eadfc2",
+  paperS: "#b3a483",
+  ink: "#241a14",
+  note: "#f4e6a8",
+  triplet: "#e08a6c",
+});
+const fantaisieWallC = fracture(810, [[fantaisieC.c.w0, fantaisieC.c.w1], [fantaisieC.c.w1, fantaisieC.c.w2], [fantaisieC.c.w1, fantaisieC.c.w0]], 4, [-8, -8, 168, 72]);
+const fantaisieFloorC = fracture(811, [[fantaisieC.c.fl0, fantaisieC.c.fl1], [fantaisieC.c.fl1, fantaisieC.c.fl0]], 3, [-8, 72, 168, 108]);
+
+/** A curved band between two radii, from one angle to another, as one polygon. */
+function arcBand(cx: number, cy: number, r0: number, r1: number, from: number, to: number, n = 24): Pt[] {
+  const out: Pt[] = [];
+  for (let i = 0; i <= n; i++) {
+    const a = from + ((to - from) * i) / n;
+    out.push([cx + Math.cos(a) * r1, cy + Math.sin(a) * r1]);
+  }
+  for (let i = n; i >= 0; i--) {
+    const a = from + ((to - from) * i) / n;
+    out.push([cx + Math.cos(a) * r0, cy + Math.sin(a) * r0]);
+  }
+  return out;
+}
+
+/** A row of piano keys: ivory, with the black ones in the usual groups of two and three. */
+function keyboard(r: Raster, x: number, y: number, w: number, ivory: number, ebony: number) {
+  r.fill(rect(x, y, w, 6), ivory);
+  for (let k = x + 3; k < x + w - 2; k += 3) r.dot(k, y + 5, ebony);
+  for (let k = x + 2, i = 0; k < x + w - 3; k += 3, i++) if (i % 7 !== 2 && i % 7 !== 6) r.fill(rect(k, y, 2, 3), ebony);
+}
+
+function renderFantaisieC(r: Raster, f: Frame) {
+  const { c } = fantaisieC;
+  paintPlanes(r, fantaisieWallC, f);
+  paintPlanes(r, fantaisieFloorC, f);
+
+  // A window onto a storm that is clearing: dark cloud, a last bolt, a rainbow.
+  r.fill(rect(92, 4, 52, 54), c.frame);
+  r.fill(rect(94, 6, 48, 50), c.sky, c.skyL, 6);
+  r.fill([[94, 6], [142, 6], [142, 20], [128, 17], [116, 22], [104, 16], [94, 21]].map((p) => drift(p as Pt, f, 0.5)), c.cloud, c.sky, 3);
+  const bolt = f.still || wave(f, 1.3) > 0.55;
+  if (bolt) r.line(112, 21, 108, 28, c.bolt);
+  if (bolt) r.line(108, 28, 111, 28, c.bolt);
+  const bands = [c.red, c.amber, c.green, c.blue, c.violet];
+  bands.forEach((col, i) => {
+    r.fill(arcBand(120, 62, 26 - i * 2.4, 28.4 - i * 2.4, Math.PI * 1.08, Math.PI * 1.92), col);
+  });
+  r.fill(rect(116, 6, 2, 50), c.frame);
+  r.fill(rect(94, 30, 48, 2), c.frame);
+
+  // The manuscript on the desk: an album leaf, dedication at the head.
+  r.fill([[10, 52], [36, 52], [34, 28], [12, 28]], c.paper, c.paperS, 2);
+  r.line(15, 32, 30, 32, c.ink);
+  for (let k = 0; k < 4; k++) r.line(14, 37 + k * 4, 32, 37 + k * 4, c.paperS);
+  for (let n = 0; n < 7; n++) r.dot(15 + n * 2.4, 36 + (n % 3) * 4 - 1, c.ink);
+
+  // Sixteenth notes in the right hand run in a stream; the left hand's triplets roll beneath at another pace.
+  for (let n = 0; n < 16; n++) {
+    const x = (n * 6 + (f.still ? 0 : f.t * 18)) % 96;
+    r.fill(ellipse(24 + x, 62 - Math.sin(x * 0.12) * 5 - 6, 1.6, 1.2, 0, Math.PI * 2, 8), c.note);
+    r.line(25.6 + x, 62 - Math.sin(x * 0.12) * 5 - 6, 25.6 + x, 55 - Math.sin(x * 0.12) * 5, c.note);
+  }
+  for (let n = 0; n < 12; n++) {
+    const x = (n * 8 + (f.still ? 0 : f.t * 13.5)) % 96;
+    r.fill(ellipse(24 + x, 72 + Math.sin(x * 0.1 + 1) * 2, 2, 1.5, 0, Math.PI * 2, 8), c.triplet);
+  }
+
+  // The piano.
+  r.fill(rect(10, 78, 110, 12), c.piano, c.pianoL, 3);
+  keyboard(r, 16, 76, 96, c.ivory, c.ebony);
+  for (const x of [14, 62, 114]) r.fill(rect(x, 90, 3, 10), c.piano);
+}
+
+// ---------------------------------------------------------------------------
+// 88. Raindrop Prelude: a monastery cell in Valldemossa, rain on the glass, one note repeating
+// ---------------------------------------------------------------------------
+
+const raindropC = palette({
+  w0: "#2c3230",
+  w1: "#3e4642",
+  w2: "#566058",
+  fl0: "#1c1c1a",
+  fl1: "#2e2c28",
+  frame: "#6a6a5c",
+  sky: "#5c7078",
+  skyL: "#8aa0a4",
+  cloud: "#3c4c54",
+  drop: "#c8dcdc",
+  piano: "#3a2418",
+  pianoL: "#5e3c24",
+  ivory: "#e6e0cc",
+  ebony: "#14100c",
+  paper: "#e4d8b8",
+  paperS: "#a8987a",
+  ink: "#1c140e",
+  lit: "#f2c85a",
+  lamp: "#9a7a3a",
+  flame: "#f8d878",
+  glow: "#7a6a44",
+});
+const raindropWallC = fracture(820, [[raindropC.c.w0, raindropC.c.w1], [raindropC.c.w1, raindropC.c.w2], [raindropC.c.w1, raindropC.c.w0]], 4, [-8, -8, 168, 72]);
+const raindropFloorC = fracture(821, [[raindropC.c.fl0, raindropC.c.fl1], [raindropC.c.fl1, raindropC.c.fl0]], 3, [-8, 72, 168, 108]);
+
+function renderRaindropC(r: Raster, f: Frame) {
+  const { c } = raindropC;
+  paintPlanes(r, raindropWallC, f);
+  paintPlanes(r, raindropFloorC, f);
+
+  // A deep arched window in the stone cell, a storm over Mallorca behind it.
+  const arch = [...ellipse(122, 28, 18, 20, Math.PI, Math.PI * 2, 14), [140, 64], [104, 64]] as Pt[];
+  r.fill(arch.map((p) => [p[0] + (p[0] > 122 ? 3 : -3) * 0, p[1]] as Pt), c.frame);
+  const glass = [...ellipse(122, 29, 15, 17, Math.PI, Math.PI * 2, 14), [137, 62], [107, 62]] as Pt[];
+  r.fill(glass, c.sky, c.skyL, 5);
+  r.fill([[107, 14], [137, 14], [137, 26], [124, 23], [114, 28], [107, 24]].map((p) => drift(p as Pt, f, 0.5)), c.cloud, c.sky, 4);
+  // Rain falls outside; drops run down the glass.
+  for (let k = 0; k < 14; k++) {
+    const fall = f.still ? k * 5 : (f.t * 28 + k * 17) % 60;
+    const x = 108 + ((k * 7) % 28);
+    const y = 12 + fall;
+    if (y < 60) r.line(x, y, x - 1, y + 3, c.drop);
+  }
+  for (let k = 0; k < 5; k++) {
+    const run = f.still ? k * 6 : (f.t * 3 + k * 11) % 44;
+    r.dot(111 + k * 6, 16 + run, c.drop);
+  }
+  r.line(122, 12, 122, 62, c.frame);
+  r.line(107, 38, 137, 38, c.frame);
+
+  // An upright piano with its score; the repeated note lit one beat at a time.
+  r.fill(rect(10, 22, 52, 56), c.piano, c.pianoL, 3);
+  r.fill(rect(16, 26, 40, 22), c.paper, c.paperS, 2);
+  r.line(18, 30, 54, 30, c.paperS);
+  r.line(18, 34, 54, 34, c.paperS);
+  r.line(18, 38, 54, 38, c.paperS);
+  const beat = f.still ? 2 : Math.floor(f.t * 3) % 8;
+  for (let n = 0; n < 8; n++) r.fill(rect(19 + n * 4.4, 33, 2, 2), n === beat ? c.lit : c.ink);
+  r.fill(rect(8, 56, 56, 6), c.piano, c.pianoL, 2);
+  keyboard(r, 12, 54, 48, c.ivory, c.ebony);
+  for (const x of [12, 58]) r.fill(rect(x, 62, 3, 24), c.piano);
+
+  // A lamp on the stone sill, the only warm light in the cell.
+  r.tint([[70, 78], [100, 78], [96, 100], [74, 100]], { [c.fl0]: c.fl1, [c.fl1]: c.glow }, 5);
+  r.fill(rect(82, 66, 6, 12), c.lamp);
+  r.fill(rect(79, 76, 12, 3), c.lamp);
+  const flick = Math.round(wave(f, 3.4) * 0.6);
+  r.fill([[83 + flick, 65], [85, 59 + flick], [87 - flick, 65]], c.flame);
+}
+
+// ---------------------------------------------------------------------------
+// 89. Liebestraum No. 3: a moonlit window, the open poem and a rose, a piano
+// ---------------------------------------------------------------------------
+
+const liebestraumC = palette({
+  w0: "#1c2040",
+  w1: "#2c3260",
+  w2: "#44508a",
+  fl0: "#14142a",
+  fl1: "#24223e",
+  sky: "#0e1430",
+  skyL: "#1c2850",
+  moon: "#f4ecc8",
+  moonS: "#c8c08c",
+  frame: "#b0a078",
+  curtain: "#7c2c4c",
+  curtainL: "#a8446a",
+  piano: "#1a1018",
+  pianoL: "#3c2a34",
+  ivory: "#ece4d2",
+  ebony: "#0c080c",
+  paper: "#eee2c4",
+  paperS: "#b8a888",
+  ink: "#2a1c1c",
+  rose: "#d8445e",
+  roseL: "#f08a96",
+  stem: "#3a6a4a",
+  vase: "#8ab0c8",
+  star: "#e8e4c0",
+});
+const liebestraumWallC = fracture(830, [[liebestraumC.c.w0, liebestraumC.c.w1], [liebestraumC.c.w1, liebestraumC.c.w2], [liebestraumC.c.w1, liebestraumC.c.w0]], 4, [-8, -8, 168, 72]);
+const liebestraumFloorC = fracture(831, [[liebestraumC.c.fl0, liebestraumC.c.fl1], [liebestraumC.c.fl1, liebestraumC.c.fl0]], 3, [-8, 72, 168, 108]);
+
+function renderLiebestraumC(r: Raster, f: Frame) {
+  const { c } = liebestraumC;
+  paintPlanes(r, liebestraumWallC, f);
+  paintPlanes(r, liebestraumFloorC, f);
+
+  // A tall window: night sky, stars, a large moon, curtains drawn back.
+  r.fill(rect(14, 4, 54, 66), c.frame);
+  r.fill(rect(16, 6, 50, 62), c.sky, c.skyL, 6);
+  [[22, 14], [30, 30], [58, 12], [48, 40], [24, 50], [60, 34]].forEach(([sx, sy], i) => {
+    if (f.still || wave(f, 0.6, i * 1.7) > -0.5) r.dot(sx, sy, c.star);
+  });
+  r.fill(ellipse(40, 26, 11, 11, 0, Math.PI * 2, 24), c.moon, c.moonS, 3);
+  r.fill(ellipse(36, 23, 3, 3, 0, Math.PI * 2, 8), c.moonS);
+  r.fill([[16, 6], [26, 6], [22, 36], [28, 68], [16, 68]].map((p) => drift(p as Pt, f, 0.4)), c.curtain, c.curtainL, 3);
+  r.fill([[66, 6], [56, 6], [60, 36], [54, 68], [66, 68]].map((p) => drift(p as Pt, f, 0.4)), c.curtain, c.curtainL, 3);
+  r.fill(rect(39, 6, 2, 62), c.frame);
+  r.fill(rect(16, 36, 50, 2), c.frame);
+
+  // The piano, and on its desk the poem, open beside a rose.
+  r.fill(rect(82, 40, 62, 40), c.piano, c.pianoL, 3);
+  r.fill([[94, 46], [130, 46], [128, 66], [96, 66]], c.paper, c.paperS, 2);
+  r.line(112, 46, 112, 66, c.paperS);
+  for (let k = 0; k < 5; k++) {
+    r.line(98, 50 + k * 3, 109, 50 + k * 3, c.paperS);
+    r.line(115, 50 + k * 3, 126, 50 + k * 3, c.paperS);
+  }
+  r.fill(rect(78, 72, 72, 6), c.piano, c.pianoL, 2);
+  keyboard(r, 82, 70, 62, c.ivory, c.ebony);
+  for (const x of [80, 146]) r.fill(rect(x, 78, 3, 22), c.piano);
+  r.fill(rect(134, 32, 5, 8), c.vase);
+  r.line(136, 32, 136, 20, c.stem);
+  const sway = Math.round(wave(f, 0.5) * 0.6);
+  r.fill(ellipse(136 + sway, 17, 4, 4, 0, Math.PI * 2, 10), c.rose);
+  r.fill(ellipse(135 + sway, 16, 1.8, 1.8, 0, Math.PI * 2, 8), c.roseL);
+  r.tint([[70, 80], [100, 80], [94, 100], [60, 100]], { [c.fl0]: c.fl1, [c.fl1]: c.w2 }, 5);
+}
+
+// ---------------------------------------------------------------------------
+// 90. Prelude in C-sharp minor: Kremlin bell tower at dusk, a great bell, the forty rubles
+// ---------------------------------------------------------------------------
+
+const moscowC = palette({
+  s0: "#241838",
+  s1: "#4a2a54",
+  s2: "#8a4a5c",
+  s3: "#d08a62",
+  snow0: "#c8c4d8",
+  snow1: "#e8e4ee",
+  tower: "#5a2e2e",
+  towerL: "#8a4640",
+  towerD: "#2e1818",
+  gold: "#e0b448",
+  goldD: "#98702a",
+  win: "#f4c866",
+  bell: "#c08a36",
+  bellL: "#e8b85a",
+  bellD: "#7a5420",
+  beam: "#2a1c14",
+  rope: "#d8c8a0",
+  coin: "#a8a8b8",
+  coinD: "#5c5c70",
+  star: "#e8504a",
+});
+const moscowSkyC = fracture(840, [[moscowC.c.s0, moscowC.c.s1], [moscowC.c.s1, moscowC.c.s2], [moscowC.c.s2, moscowC.c.s3], [moscowC.c.s1, moscowC.c.s0]], 4, [-8, -8, 168, 74]);
+
+function renderMoscowC(r: Raster, f: Frame) {
+  const { c } = moscowC;
+  paintPlanes(r, moscowSkyC, f);
+  r.fill(rect(-4, 74, 168, 30), c.snow0, c.snow1, 6);
+  for (let k = 0; k < 10; k++) {
+    const fall = f.still ? k * 7 : (f.t * 4 + k * 13) % 80;
+    r.dot(Math.round(6 + k * 16 + Math.sin(f.t * 0.6 + k) * 3), Math.round(fall), c.snow1);
+  }
+
+  // The tower: brick stages, a clock face, a gold onion dome and a red star.
+  r.fill(rect(34, 36, 28, 40), c.tower, c.towerL, 3);
+  r.fill(rect(32, 32, 32, 6), c.towerD);
+  r.fill(rect(38, 18, 20, 16), c.tower, c.towerL, 3);
+  r.fill([[36, 18], [60, 18], [48, 6]], c.towerD);
+  r.fill(ellipse(48, 10, 4, 5, 0, Math.PI * 2, 12), c.gold, c.goldD, 4);
+  r.line(48, 4, 48, 0, c.gold);
+  r.dot(48, 2, c.star);
+  r.fill(ellipse(48, 46, 7, 7, 0, Math.PI * 2, 14), c.win);
+  r.line(48, 46, 48, 41, c.towerD);
+  r.line(48, 46, 52, 47, c.towerD);
+  for (const x of [41, 52]) r.fill(rect(x, 22, 3, 8), c.win);
+  for (const [dx, dh] of [[10, 12], [20, 8]] as [number, number][]) {
+    r.fill(rect(dx, 76 - dh * 2, 8, dh * 2), c.towerD, c.tower, 2);
+    r.fill(ellipse(dx + 4, 76 - dh * 2, 5, 6, 0, Math.PI * 2, 12), c.gold, c.goldD, 4);
+  }
+
+  // A great bell hung in a timber frame, swinging as it tolls.
+  r.fill(rect(98, 22, 52, 5), c.beam);
+  for (const x of [98, 146]) r.fill(rect(x, 22, 4, 56), c.beam);
+  const swing = f.still ? 0 : Math.sin(f.t * 1.4) * 0.12;
+  const bell: Pt[] = [[-5, -8], [5, -8], [6, -4], [9, 6], [12, 14], [-12, 14], [-9, 6], [-6, -4]];
+  r.fill(place(bell, 124, 38, swing).map((p) => p), c.bell, c.bellL, 5);
+  r.fill(place([[-12, 14], [12, 14], [12, 16], [-12, 16]], 124, 38, swing), c.bellD);
+  r.line(124, 27, Math.round(124 + Math.sin(swing) * 8), 31, c.rope);
+  r.fill(ellipse(124 + Math.sin(swing) * 14, 38 + 17, 2.4, 2.4, 0, Math.PI * 2, 8), c.bellD);
+
+  // Forty rubles: a small stack of coins on the snow.
+  for (let k = 0; k < 5; k++) r.fill(ellipse(22, 90 - k * 2, 7, 2, 0, Math.PI * 2, 12), c.coin, c.coinD, 4);
+  r.fill(ellipse(34, 92, 6, 1.8, 0, Math.PI * 2, 12), c.coin, c.coinD, 4);
+}
+
+// ---------------------------------------------------------------------------
+// 91. Arabesque No. 1: whiplash vines round an Art Nouveau window, a piano below
+// ---------------------------------------------------------------------------
+
+const arabesqueC = palette({
+  w0: "#cfd8b8",
+  w1: "#dde4c6",
+  w2: "#e8e8d0",
+  fl0: "#8a7a5a",
+  fl1: "#a28e68",
+  vine: "#4c7a52",
+  vineL: "#74a470",
+  vineD: "#2c5038",
+  bud: "#e8a0a8",
+  budL: "#f6d0d0",
+  sky: "#b4d4dc",
+  skyL: "#dceae6",
+  frame: "#7a6a44",
+  gold: "#d4a840",
+  piano: "#2a2018",
+  pianoL: "#4e3c2c",
+  ivory: "#f0ead8",
+  ebony: "#14100c",
+  star: "#fff6c8",
+});
+const arabesqueWallC = fracture(850, [[arabesqueC.c.w0, arabesqueC.c.w1], [arabesqueC.c.w1, arabesqueC.c.w2], [arabesqueC.c.w1, arabesqueC.c.w0]], 4, [-8, -8, 168, 72]);
+const arabesqueFloorC = fracture(851, [[arabesqueC.c.fl0, arabesqueC.c.fl1], [arabesqueC.c.fl1, arabesqueC.c.fl0]], 3, [-8, 72, 168, 108]);
+
+/** One whiplash curve of vine from (x, y) climbing up and over, with leaves along it. */
+function whiplash(r: Raster, f: Frame, x: number, y: number, dir: 1 | -1, len: number, phase: number, c: Record<string, number>) {
+  let px = x;
+  let py = y;
+  for (let k = 1; k <= len; k++) {
+    const t = k / len;
+    const ang = -Math.PI / 2 + dir * t * t * 4.2 + wave(f, 0.4, phase) * 0.04;
+    const nx = px + Math.cos(ang) * 1.6;
+    const ny = py + Math.sin(ang) * 1.6;
+    r.line(px, py, nx, ny, c.vine);
+    r.line(px + 1, py, nx + 1, ny, c.vineD);
+    if (k % 6 === 0 && k < len - 4) r.fill(ellipse(nx + dir * 2.5, ny, 2.6, 1.3, dir * 0.6, Math.PI * 2 + dir * 0.6, 8), c.vineL);
+    px = nx;
+    py = ny;
+  }
+  r.fill(ellipse(px, py, 2.2, 2.2, 0, Math.PI * 2, 8), c.bud);
+  r.dot(px, py, c.budL);
+}
+
+function renderArabesqueC(r: Raster, f: Frame) {
+  const { c } = arabesqueC;
+  paintPlanes(r, arabesqueWallC, f);
+  paintPlanes(r, arabesqueFloorC, f);
+
+  // An arched window: pale morning, one star still showing.
+  const arch = [...ellipse(104, 34, 26, 28, Math.PI, Math.PI * 2, 18), [130, 68], [78, 68]] as Pt[];
+  r.fill(arch, c.frame);
+  const glass = [...ellipse(104, 35, 23, 25, Math.PI, Math.PI * 2, 18), [127, 66], [81, 66]] as Pt[];
+  r.fill(glass, c.sky, c.skyL, 6);
+  if (f.still || wave(f, 0.8) > -0.4) r.dot(94, 22, c.star);
+
+  // Whiplash vines grow in from both sides and curl around the window.
+  whiplash(r, f, 8, 70, 1, 62, 0, c);
+  whiplash(r, f, 24, 70, 1, 40, 1.4, c);
+  whiplash(r, f, 152, 70, -1, 62, 2.2, c);
+  whiplash(r, f, 138, 70, -1, 40, 3.1, c);
+  for (let k = 0; k < 4; k++) r.fill(ellipse(40 + k * 26, 60 + (k % 2) * 3, 3, 1.5, 0, Math.PI * 2, 8), c.vineL);
+
+  // The piano below, its lid a long curve.
+  r.fill(rect(30, 74, 100, 12), c.piano, c.pianoL, 2);
+  r.line(30, 74, 129, 74, c.gold);
+  keyboard(r, 36, 72, 88, c.ivory, c.ebony);
+  for (const x of [34, 80, 124]) r.fill(rect(x, 86, 3, 14), c.piano);
+}
+
+// ---------------------------------------------------------------------------
 
 export const paintings: Painting[] = [
   {
@@ -7243,5 +7631,40 @@ export const paintings: Painting[] = [
     colors: scheherazadeC.colors,
     motifs: { prince: [46, 62, 22], sultan: [142, 62, 18], violin: [92, 82, 14] },
     render: renderScheherazadeC,
+  },
+  {
+    id: "fantaisie-impromptu",
+    alt: "A grand piano in a violet Paris salon, streams of golden sixteenth notes running over rolling triplets, a manuscript leaf on the desk and a rainbow over a clearing storm in the window.",
+    colors: fantaisieC.colors,
+    motifs: { score: [23, 40, 14], notes: [70, 58, 18], rainbow: [120, 38, 22], keys: [64, 80, 20] },
+    render: renderFantaisieC,
+  },
+  {
+    id: "raindrop",
+    alt: "A stone monastery cell on Mallorca, rain running down an arched window, an upright piano with a score whose repeated notes light one by one, and a small lamp glowing on the sill.",
+    colors: raindropC.colors,
+    motifs: { rain: [122, 38, 22], piano: [36, 50, 22], note: [36, 34, 10], cell: [84, 70, 14] },
+    render: renderRaindropC,
+  },
+  {
+    id: "liebestraum",
+    alt: "A tall window onto a starry night with a great pale moon and drawn curtains, a piano whose desk holds an open book of poems, and a red rose in a vase.",
+    colors: liebestraumC.colors,
+    motifs: { moon: [40, 26, 14], book: [112, 56, 14], piano: [112, 72, 22], rose: [136, 18, 8] },
+    render: renderLiebestraumC,
+  },
+  {
+    id: "moscow-bells",
+    alt: "A Kremlin-style brick bell tower with a clock and gold dome at snowy dusk, a great bronze bell swinging in a timber frame, and a small stack of silver coins on the snow.",
+    colors: moscowC.colors,
+    motifs: { tower: [48, 34, 22], bell: [124, 40, 20], coins: [26, 88, 12] },
+    render: renderMoscowC,
+  },
+  {
+    id: "arabesque",
+    alt: "A pale green room with an arched window onto a morning sky, curling Art Nouveau vines growing in from both sides to frame it, and a piano below.",
+    colors: arabesqueC.colors,
+    motifs: { vine: [30, 40, 22], piano: [80, 78, 24], window: [104, 40, 20] },
+    render: renderArabesqueC,
   },
 ];
