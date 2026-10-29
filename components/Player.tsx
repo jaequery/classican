@@ -63,8 +63,8 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
   const [duration, setDuration] = useState<number | null>(null);
   const [hintDismissed, setHintDismissed] = useState(false);
   const [duck, setDuck] = useState(1);
-  const [hostEnabled, setHostEnabled] = useState(true);
-  const hostEnabledRef = useRef(true); // event handlers and pending requests need the latest choice
+  const [hostEnabled, setHostEnabled] = useState(false);
+  const hostEnabledRef = useRef(false); // event handlers and pending requests need the latest choice
   // What the host is saying, or why the host is off air.
   const [onAir, setOnAir] = useState<{ text: string; off?: boolean } | null>(null);
 
@@ -323,7 +323,7 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
     // Apply saved sound settings before attempting playback, without waiting
     // for the state updates to render. A muted visit must start muted too.
     try {
-      hostEnabledRef.current = localStorage.getItem(HOST_KEY) !== "false";
+      hostEnabledRef.current = localStorage.getItem(HOST_KEY) === "true";
       setHostEnabled(hostEnabledRef.current);
       const saved = localStorage.getItem(VOLUME_KEY);
       if (saved !== null && Number(saved) >= 0 && Number(saved) <= 100) {
