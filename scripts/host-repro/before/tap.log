@@ -1,0 +1,29 @@
+mode: tap
+page loaded (autoplay refused)               {"audioPaused":true,"currentTime":0,"button":"Play","status":"Press play to listen","onAir":null,"musicGain":null}
+tapped Play                                  {"audioPaused":false,"currentTime":0,"button":"Pause","status":"Loading","onAir":null,"musicGain":null}
+host starts talking                          {"audioPaused":true,"currentTime":0,"button":"Pause","status":"","onAir":"On airThis is the piece now beginning, by its composer. It was written in a single week. The composer later called it his favourite.","musicGain":null}
+listener taps pause during the host          {"audioPaused":true,"currentTime":0,"button":"Play","status":"Paused","onAir":null,"musicGain":null}
+listener taps play once                      {"audioPaused":false,"currentTime":0.2,"button":"Pause","status":"","onAir":null,"musicGain":null}
+host back on air                             {"audioPaused":false,"currentTime":15.2,"button":"Pause","status":"","onAir":null,"musicGain":null}
+6 s later                                    {"audioPaused":false,"currentTime":21.2,"button":"Pause","status":"","onAir":null,"musicGain":null}
+
+--- event log ---
++   360ms  speechSynthesis.cancel idle
++   364ms  speechSynthesis.speak ""
++   367ms  speechSynthesis.cancel idle
++   370ms  speechSynthesis.cancel idle
++  1524ms  speechSynthesis.speak ""
++  1524ms  <audio> play()
++  1638ms  <audio> playing event
++  1639ms  speechSynthesis.cancel idle
++  1639ms  speechSynthesis.speak "This is the piece now beginning, by its composer."
++  1639ms  system pauses <audio> for speech
++  1646ms  <audio> pause event
++  2538ms  speechSynthesis.cancel while speaking "This is the piece now beginning, by its composer."
++  2889ms  speechSynthesis.speak ""
++  2889ms  <audio> play()
++  2902ms  <audio> playing event
+
+FAIL:
+  - the cut-off intro is said again
+  - speechSynthesis.speak is never called with words
