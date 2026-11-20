@@ -83,10 +83,22 @@ The words are written by OpenAI's GPT-6 Luna through the Vercel AI Gateway, from
 OIDC token also works); `COMMENTARY_MODEL` changes the model, default `openai/gpt-6-luna`. If the
 gateway doesn't offer that model, the caption says “Host off air” and names the model; no other model
 is tried. Without a key the music plays as before and the caption says the key is missing.
-Answers come from `GET /api/commentary` and are cached at the CDN for a day.
+The player asks `GET /api/host-voice?kind=intro&piece=<id>` (or `kind=outro&piece=<id>&next=<id>`),
+which returns the words together with an MP3 of them spoken, so the “On air” caption is always what
+the host says. Answers are cached at the CDN for a day, so each piece and pairing is paid for about
+once a day; errors are never cached. `GET /api/commentary` still returns the words alone.
 
-The host speaks with an Apple voice (macOS, iOS) where the browser has one, preferring a premium or
-enhanced English voice; elsewhere, or if the Apple voice fails, the system's default voice reads it.
+The voice is a speech model on the same AI Gateway and key: `HOST_VOICE_MODEL` changes the model,
+default `openai/tts-1-hd`, and `HOST_VOICE` the voice, default `fable` (a warm, unhurried British
+presenter), read a little slower than conversation. Without a key, or if the gateway can't speak, the
+music plays at full volume and the caption says “Host off air” with the reason.
+
+The music and the host play through one Web Audio graph, so there is a single audio stream: on iOS
+the music no longer stops when the host talks, and the dip works there too (element volume is
+read-only on iOS). The graph starts on the first play tap. The music `<audio>` is fetched with
+anonymous CORS, which upload.wikimedia.org allows; a new music host must send
+`Access-Control-Allow-Origin` too, or the graph hears silence. Pausing while the host talks stops
+the host as well; playing again within the first 30 seconds of a piece repeats a cut-off intro.
 
 ## Accounts, likes and comments
 
@@ -155,7 +167,7 @@ npm test           # account, like and comment rules (lib/community.ts), on an i
 | Paintings | `lib/paintings.ts` |
 | Palette of the frame | `app/globals.css` (`:root`) |
 | What the radio host is told, and the model | `lib/commentary.ts` (`COMMENTARY_MODEL` overrides the model) |
-| The host's voice and the music's dip | `components/useHost.ts`, `DUCK` in `components/Player.tsx` |
+| The host's voice and the music's dip | `lib/hostVoice.ts` (`HOST_VOICE_MODEL`, `HOST_VOICE`), `DUCK` in `components/Player.tsx` |
 | Who may like, comment or delete | `lib/community.ts` |
 | Comment length, shared types | `lib/social.ts` |
 | Password and session rules | `lib/auth.ts` |

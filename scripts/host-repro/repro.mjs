@@ -3,7 +3,7 @@
 //
 //   npx next dev -p 3123 &
 //   PLAYWRIGHT_DIR=/path/with/node_modules/playwright BASE=http://localhost:3123 \
-//     node scripts/host-repro/repro.mjs wait|tap|nokey [out-dir]
+//     node scripts/host-repro/repro.mjs wait|tap|outro|nokey [out-dir]
 //
 // - Autoplay is refused until the first tap, as on iOS.
 // - speechSynthesis is swapped for a stand-in that does what iOS Safari does: when an
@@ -42,7 +42,8 @@ function wav(seconds, rate, sample) {
   for (let i = 0; i < n; i++) buf.writeInt16LE(sample(i / rate), 44 + i * 2);
   return buf;
 }
-const music = wav(240, 8000, () => 0);
+// A short piece for the outro run, so its end comes round without seeking.
+const music = wav(mode === "outro" ? 30 : 240, 8000, () => 0);
 // The host's "voice": 4.5 s of a quiet tone, standing in for the spoken clip.
 const voice = wav(4.5, 22050, (t) => Math.round(Math.sin(2 * Math.PI * 220 * t) * 3000));
 
@@ -147,6 +148,7 @@ const record = async (label) => {
 const expect = (ok, what) => {
   if (!ok) failures.push(what);
 };
+let pausesOnAir = 0;
 const onAir = () => page.waitForSelector(".on-air:not(.off)", { timeout: 15_000 }).then(() => true, () => false);
 
 mkdirSync(out, { recursive: true });
@@ -190,6 +192,28 @@ if (mode === "wait") {
   await page.waitForTimeout(6000);
   const after = await record("6 s later");
   expect(after.audioPaused === false && after.onAir === null, "the music plays on after the host");
+} else if (mode === "outro") {
+  // The 30 s piece: the intro plays first, then near the end the host back-announces it and introduces the next.
+  await page.waitForTimeout(8000);
+  const title = await page.textContent(".now .title");
+  expect(await page.waitForSelector(".on-air:not(.off)", { timeout: 25_000 }).then(() => true, () => false), "the host goes on air for the outro");
+  const samples = [await record("outro starts")];
+  for (let s = 1; s <= 4; s++) {
+    await page.waitForTimeout(1000);
+    samples.push(await record(`${s} s into the outro`));
+  }
+  // The piece's own end pauses the element as the next one loads; only pauses while on air count.
+  pausesOnAir = (await page.evaluate(() => window.__events)).filter((e) => e.includes("pause event")).length;
+  const airing = samples.filter((s) => s.onAir && !s.onAir.startsWith("Host off air"));
+  expect(airing.length > 0 && airing.every((s) => s.audioPaused === false), "audio.paused stays false during the outro");
+  expect(airing.some((s) => s.musicGain !== null && s.musicGain < 0.5), "the music is ducked under the outro");
+  const moved = await page.waitForFunction((t) => document.querySelector(".now .title")?.textContent !== t, title, { timeout: 20_000 }).then(() => true, () => false);
+  expect(moved, "the next piece follows the outro");
+  await page.waitForTimeout(3000);
+  const next = await record("3 s into the next piece");
+  expect(next.audioPaused === false && next.currentTime > 1, "the next piece plays");
+  expect(next.musicGain !== null && next.musicGain > 0.75, "the music is back to full volume");
+  expect(next.onAir === null, "the piece the outro introduced gets no second intro");
 } else if (mode === "nokey") {
   await page.waitForTimeout(6000);
   const s = await record("6 s after tapping Play (no TTS key)");
@@ -201,8 +225,8 @@ if (mode === "wait") {
 
 const speakWithText = await page.evaluate(() => window.__speakWithText);
 if (mode !== "nokey") expect(speakWithText === 0, "speechSynthesis.speak is never called with words");
-const pauseEvents = mode === "wait" ? (await page.evaluate(() => window.__events)).filter((e) => e.includes("pause event")).length : 0;
-expect(pauseEvents === 0, "no <audio> pause event fires while the host speaks");
+if (mode === "wait") pausesOnAir = (await page.evaluate(() => window.__events)).filter((e) => e.includes("pause event")).length;
+expect(pausesOnAir === 0, "no <audio> pause event fires while the host speaks");
 
 const report = [
   `mode: ${mode}`,

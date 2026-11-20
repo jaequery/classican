@@ -1,0 +1,10 @@
+mode: nokey
+page loaded (autoplay refused)               {"audioPaused":true,"currentTime":0,"button":"Play","status":"Press play to listen","onAir":"Host off airAI_GATEWAY_API_KEY is not set, so the host has no words.","musicGain":0.8}
+tapped Play                                  {"audioPaused":false,"currentTime":0,"button":"Pause","status":"Loading","onAir":"Host off airAI_GATEWAY_API_KEY is not set, so the host has no words.","musicGain":0.8}
+6 s after tapping Play (no TTS key)          {"audioPaused":false,"currentTime":6,"button":"Pause","status":"","onAir":"Host off airAI_GATEWAY_API_KEY is not set, so the host has no words.","musicGain":0.8}
+
+--- event log ---
++  2101ms  <audio> play()
++  2292ms  <audio> playing event
+
+PASS
