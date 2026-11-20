@@ -1,0 +1,14 @@
+mode: sleep
+page loaded (autoplay refused)               {"audioPaused":true,"currentTime":0,"button":"Play","status":"Press play to listen","onAir":null,"musicGain":0.8}
+tapped Play                                  {"audioPaused":false,"currentTime":0,"button":"Pause","status":"Loading","onAir":null,"musicGain":0.8}
+2 s after the graph is put to sleep          {"audioPaused":true,"currentTime":7,"button":"Play","status":"Paused","onAir":null,"musicGain":0.8}
+listener taps play once                      {"audioPaused":false,"currentTime":8.5,"button":"Pause","status":"","onAir":null,"musicGain":0.8}
+
+--- event log ---
++  2384ms  <audio> play()
++  2533ms  <audio> playing event
++ 10533ms  <audio> pause event
++ 11581ms  <audio> play()
++ 11603ms  <audio> playing event
+
+PASS

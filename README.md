@@ -95,10 +95,14 @@ music plays at full volume and the caption says “Host off air” with the reas
 
 The music and the host play through one Web Audio graph, so there is a single audio stream: on iOS
 the music no longer stops when the host talks, and the dip works there too (element volume is
-read-only on iOS). The graph starts on the first play tap. The music `<audio>` is fetched with
+read-only on iOS). The graph starts on the first play tap with the host on (a visit with the host
+off never builds it), and once the music has joined it, it stays there for the visit, even with the
+host turned off. If the system puts the graph to sleep (a call, Siri) and it won't wake, the player
+pauses, so the next tap starts it again. The music `<audio>` is fetched with
 anonymous CORS, which upload.wikimedia.org allows; a new music host must send
 `Access-Control-Allow-Origin` too, or the graph hears silence. Pausing while the host talks stops
-the host as well; playing again within the first 30 seconds of a piece repeats a cut-off intro.
+the host as well; playing again within the first 30 seconds of a piece repeats an intro that was
+cut off or had not yet begun.
 
 ## Accounts, likes and comments
 

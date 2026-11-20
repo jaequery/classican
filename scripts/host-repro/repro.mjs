@@ -3,11 +3,12 @@
 //
 //   npx next dev -p 3123 &
 //   PLAYWRIGHT_DIR=/path/with/node_modules/playwright BASE=http://localhost:3123 \
-//     node scripts/host-repro/repro.mjs wait|tap|outro|nokey [out-dir]
+//     node scripts/host-repro/repro.mjs wait|tap|outro|sleep|nokey [out-dir]
 //
 // - Autoplay is refused until the first tap, as on iOS.
 // - speechSynthesis is swapped for a stand-in that does what iOS Safari does: when an
-//   utterance with words starts, the system pauses every <audio> element.
+//   utterance with words starts, the system pauses every <audio> element. Before the fix
+//   the host spoke this way (see before/); after it, speak must never be called with words.
 // - The music is a silent WAV. The host's words (and voice, from /api/host-voice) are
 //   stubbed, except in `nokey`, where the real route answers without an API key.
 //
@@ -214,6 +215,23 @@ if (mode === "wait") {
   expect(next.audioPaused === false && next.currentTime > 1, "the next piece plays");
   expect(next.musicGain !== null && next.musicGain > 0.75, "the music is back to full volume");
   expect(next.onAir === null, "the piece the outro introduced gets no second intro");
+} else if (mode === "sleep") {
+  // The system takes the audio (a call, Siri) and the graph won't wake: the player must not say "Pause" over silence.
+  await page.waitForTimeout(7000);
+  await page.evaluate(() => {
+    const ctx = window.__gains[0].context;
+    ctx.resume = () => Promise.reject(new DOMException("interrupted", "InvalidStateError"));
+    return AudioContext.prototype.suspend.call(ctx);
+  });
+  await page.waitForTimeout(2000);
+  const s = await record("2 s after the graph is put to sleep");
+  expect(s.audioPaused === true && s.button === "Play", "the player pauses when the graph stays asleep");
+  await page.evaluate(() => delete window.__gains[0].context.resume);
+  await page.click(".control.play");
+  await page.waitForTimeout(1500);
+  const r = await record("listener taps play once");
+  const running = await page.evaluate(() => window.__gains[0].context.state);
+  expect(r.audioPaused === false && r.button === "Pause" && running === "running", "one tap wakes the graph and the music");
 } else if (mode === "nokey") {
   await page.waitForTimeout(6000);
   const s = await record("6 s after tapping Play (no TTS key)");

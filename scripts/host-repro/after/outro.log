@@ -9,10 +9,10 @@ outro starts                                 {"audioPaused":false,"currentTime":
 3 s into the next piece                      {"audioPaused":false,"currentTime":3,"button":"Pause","status":"","onAir":null,"musicGain":0.8}
 
 --- event log ---
-+  1795ms  <audio> play()
-+  1852ms  <audio> playing event
-+ 31858ms  <audio> pause event
-+ 31859ms  <audio> play()
-+ 31900ms  <audio> playing event
++  1829ms  <audio> play()
++  1873ms  <audio> playing event
++ 31868ms  <audio> pause event
++ 31868ms  <audio> play()
++ 31915ms  <audio> playing event
 
 PASS
