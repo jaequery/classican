@@ -5,10 +5,10 @@ tapped Play                                  {"audioPaused":false,"currentTime":
 listener taps play once                      {"audioPaused":false,"currentTime":8.5,"button":"Pause","status":"","onAir":null,"musicGain":0.8}
 
 --- event log ---
-+  2384ms  <audio> play()
-+  2533ms  <audio> playing event
-+ 10533ms  <audio> pause event
-+ 11581ms  <audio> play()
-+ 11603ms  <audio> playing event
++  2066ms  <audio> play()
++  2152ms  <audio> playing event
++ 10148ms  <audio> pause event
++ 11198ms  <audio> play()
++ 11215ms  <audio> playing event
 
 PASS
