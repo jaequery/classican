@@ -1,0 +1,18 @@
+mode: outro
+page loaded (autoplay refused)               {"audioPaused":true,"currentTime":0,"button":"Play","status":"Press play to listen","onAir":null,"musicGain":0.8}
+tapped Play                                  {"audioPaused":false,"currentTime":0,"button":"Pause","status":"Loading","onAir":null,"musicGain":0.8}
+outro starts                                 {"audioPaused":false,"currentTime":23.4,"button":"Pause","status":"","onAir":"On airThis is the piece now beginning, by its composer. It was written in a single week. The composer later called it his favourite.","musicGain":0.4}
+1 s into the outro                           {"audioPaused":false,"currentTime":24.4,"button":"Pause","status":"","onAir":"On airThis is the piece now beginning, by its composer. It was written in a single week. The composer later called it his favourite.","musicGain":0.36}
+2 s into the outro                           {"audioPaused":false,"currentTime":25.4,"button":"Pause","status":"","onAir":"On airThis is the piece now beginning, by its composer. It was written in a single week. The composer later called it his favourite.","musicGain":0.36}
+3 s into the outro                           {"audioPaused":false,"currentTime":26.4,"button":"Pause","status":"","onAir":"On airThis is the piece now beginning, by its composer. It was written in a single week. The composer later called it his favourite.","musicGain":0.36}
+4 s into the outro                           {"audioPaused":false,"currentTime":27.4,"button":"Pause","status":"","onAir":"On airThis is the piece now beginning, by its composer. It was written in a single week. The composer later called it his favourite.","musicGain":0.36}
+3 s into the next piece                      {"audioPaused":false,"currentTime":3,"button":"Pause","status":"","onAir":null,"musicGain":0.8}
+
+--- event log ---
++  1777ms  <audio> play()
++  1822ms  <audio> playing event
++ 31812ms  <audio> pause event
++ 31814ms  <audio> play()
++ 31854ms  <audio> playing event
+
+PASS

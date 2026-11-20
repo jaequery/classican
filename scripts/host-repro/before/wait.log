@@ -1,0 +1,39 @@
+mode: wait
+page loaded (autoplay refused)               {"audioPaused":true,"currentTime":0,"button":"Play","status":"Press play to listen","onAir":null,"musicGain":null}
+tapped Play                                  {"audioPaused":false,"currentTime":0,"button":"Pause","status":"Loading","onAir":null,"musicGain":null}
+host starts talking                          {"audioPaused":true,"currentTime":0,"button":"Pause","status":"","onAir":"On airThis is the piece now beginning, by its composer. It was written in a single week. The composer later called it his favourite.","musicGain":null}
+1 s into the host segment (no taps)          {"audioPaused":true,"currentTime":0,"button":"Pause","status":"","onAir":"On airThis is the piece now beginning, by its composer. It was written in a single week. The composer later called it his favourite.","musicGain":null}
+2 s into the host segment (no taps)          {"audioPaused":true,"currentTime":0,"button":"Pause","status":"","onAir":"On airThis is the piece now beginning, by its composer. It was written in a single week. The composer later called it his favourite.","musicGain":null}
+3 s into the host segment (no taps)          {"audioPaused":true,"currentTime":0,"button":"Pause","status":"","onAir":"On airThis is the piece now beginning, by its composer. It was written in a single week. The composer later called it his favourite.","musicGain":null}
+4 s into the host segment (no taps)          {"audioPaused":true,"currentTime":0,"button":"Pause","status":"","onAir":"On airThis is the piece now beginning, by its composer. It was written in a single week. The composer later called it his favourite.","musicGain":null}
+5 s into the host segment (no taps)          {"audioPaused":false,"currentTime":0.6,"button":"Pause","status":"","onAir":null,"musicGain":null}
+6 s into the host segment (no taps)          {"audioPaused":false,"currentTime":1.6,"button":"Pause","status":"","onAir":null,"musicGain":null}
+7 s into the host segment (no taps)          {"audioPaused":false,"currentTime":2.6,"button":"Pause","status":"","onAir":null,"musicGain":null}
+
+--- event log ---
++   383ms  speechSynthesis.cancel idle
++   387ms  speechSynthesis.speak ""
++   390ms  speechSynthesis.cancel idle
++   393ms  speechSynthesis.cancel idle
++  2528ms  speechSynthesis.speak ""
++  2528ms  <audio> play()
++  2649ms  <audio> playing event
++  2649ms  speechSynthesis.cancel idle
++  2649ms  speechSynthesis.speak "This is the piece now beginning, by its composer."
++  2649ms  system pauses <audio> for speech
++  2656ms  <audio> pause event
++  4151ms  host voice ends "This is the piece now beginning, by its composer."
++  4151ms  speechSynthesis.speak "It was written in a single week."
++  5652ms  host voice ends "It was written in a single week."
++  5652ms  speechSynthesis.speak "The composer later called it his favourite."
++  7152ms  host voice ends "The composer later called it his favourite."
++  7153ms  <audio> play()
++  7153ms  <audio> playing event
+
+FAIL:
+  - audio.paused stays false while on air
+  - never 'Pause' over paused music
+  - the music is ducked under the host
+  - the music comes back up to full volume
+  - speechSynthesis.speak is never called with words
+  - no <audio> pause event fires while the host speaks

@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useId, useRef, useState, type CSSProperties, type ReactNode, type RefObject } from "react";
 import { createDeck, type Deck } from "@/lib/shuffle";
 import { pieceId, type Track } from "@/lib/site";
-import { speakingTime, useHost } from "./useHost";
 
 const VOLUME_KEY = "classican:volume";
 const MUTED_KEY = "classican:muted";
@@ -15,6 +14,27 @@ const DUCK = { intro: 0.3, outro: 0.45 };
 const OUTRO_PREFETCH = 90;
 /** The outro ends this many seconds before the last note. */
 const OUTRO_MARGIN = 2;
+/** Seconds the music takes to dip before the host starts, and to come back up after. */
+const DUCK_RAMP = 0.4;
+/** How many of the host's segments are kept, so a piece's intro and its outro need no second request. */
+const VOICES_KEPT = 6;
+
+/** What the host says, as words for the caption and the same words spoken. */
+type Segment = { text: string; bytes: ArrayBuffer; buffer?: Promise<AudioBuffer | null> };
+type Voiced = { text: string; buffer: AudioBuffer };
+/**
+ * The page's one audio graph. The music element feeds `music`, which carries the
+ * listener's volume and the duck; the host's clips play into `voice`. One stream
+ * means nothing for iOS to pause, and gain works where element volume is read-only.
+ */
+type Graph = { ctx: AudioContext; music: GainNode; voice: GainNode };
+
+function bytesOf(base64: string) {
+  const raw = atob(base64);
+  const bytes = new Uint8Array(raw.length);
+  for (let i = 0; i < raw.length; i++) bytes[i] = raw.charCodeAt(i);
+  return bytes.buffer;
+}
 
 function formatTime(seconds: number) {
   const hours = Math.floor(seconds / 3600);
@@ -62,7 +82,6 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
   const [elapsed, setElapsed] = useState(0);
   const [duration, setDuration] = useState<number | null>(null);
   const [hintDismissed, setHintDismissed] = useState(false);
-  const [duck, setDuck] = useState(1);
   const [hostEnabled, setHostEnabled] = useState(false);
   const hostEnabledRef = useRef(false); // event handlers and pending requests need the latest choice
   // What the host is saying, or why the host is off air.
@@ -75,16 +94,18 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
   const history = useRef<number[]>([]); // pieces played before this one, for "previous"
   const deck = useRef<Deck>(null); // pieces still to come this time through the list
   const blocked = useRef(false); // the browser refused to autoplay; the first gesture starts the music
-  const host = useHost();
-  const lines = useRef(new Map<string, Promise<string | null>>()); // the host's words, by request
+  const graph = useRef<Graph | null>(null);
+  const wired = useRef(false); // the music element plays through the graph
+  const asleep = useRef(() => {}); // what to do when the graph won't wake: pause
+  const clip = useRef<AudioBufferSourceNode | null>(null); // the host's voice, playing now
+  const lines = useRef(new Map<string, Promise<Segment | null>>()); // the host's segments, by request
   const offAirShown = useRef(new Set<string>()); // each reason the host is off air is shown once a visit
   const speech = useRef(0); // the host's current segment, so a finished old one leaves the music alone
-  const talking = useRef(false); // the host is speaking now
-  // Some browsers (Safari, iOS) pause the music to let speech through; it resumes when the host is done.
-  const heldForHost = useRef(false);
-  const sound = useRef({ volume: 80, silent: false }); // for speech started from event handlers
+  const airing = useRef<"intro" | "outro" | null>(null); // what the host is saying now
+  const levels = useRef({ volume: 80, muted: false, duck: 1 }); // for gain set from event handlers
   const introSaid = useRef(false); // the loaded piece has had its intro (or was introduced by an outro)
-  const outro = useRef<{ next: number; text: string | null; started: boolean } | null>(null);
+  const introPending = useRef(false); // the intro is being fetched or decoded
+  const outro = useRef<{ next: number; voice: Voiced | null; started: boolean } | null>(null);
   const announced = useRef<number | null>(null); // the piece the last outro introduced
 
   const track = tracks[index];
@@ -125,7 +146,16 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
     [onPlayingChange],
   );
 
-  /** The host's words for a piece (and the one after it, for an outro), fetched once. Null if the host has none. */
+  /** Tell the listener once a visit why the host is off air, if this segment is still wanted. */
+  const offAir = useCallback((reason: string, segment: number) => {
+    if (!hostEnabledRef.current || segment !== speech.current || offAirShown.current.has(reason)) return;
+    offAirShown.current.add(reason);
+    console.warn(`classican host: ${reason}`);
+    setOnAir({ text: reason, off: true });
+    window.setTimeout(() => setOnAir((now) => (now?.text === reason ? null : now)), 10_000);
+  }, []);
+
+  /** The host's words and voice for a piece (and the one after it, for an outro), fetched once. Null if the host has none. */
   const line = useCallback(
     (kind: "intro" | "outro", i: number, next?: number) => {
       if (!hostEnabledRef.current) return Promise.resolve(null);
@@ -135,45 +165,121 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
       const key = params.toString();
       let words = lines.current.get(key);
       if (!words) {
-        words = fetch(`/api/commentary?${key}`)
+        words = fetch(`/api/host-voice?${key}`)
           .then(async (res) => {
-            const body = (await res.json().catch(() => null)) as { text?: string; error?: string } | null;
-            if (res.ok && body?.text) return body.text;
+            const body = (await res.json().catch(() => null)) as { text?: string; audio?: string; error?: string } | null;
+            if (res.ok && body?.text && body.audio) return { text: body.text, bytes: bytesOf(body.audio) };
             throw new Error(body?.error ?? `The host is unavailable (${res.status}).`);
           })
           .catch((err: unknown) => {
-            lines.current.delete(key); // try again next time this piece comes round
-            const reason = err instanceof Error && err.message !== "Failed to fetch" ? err.message : "The host could not be reached.";
-            if (hostEnabledRef.current && segment === speech.current && !offAirShown.current.has(reason)) {
-              offAirShown.current.add(reason);
-              console.warn(`classican host: ${reason}`);
-              setOnAir({ text: reason, off: true });
-              window.setTimeout(() => setOnAir((now) => (now?.text === reason ? null : now)), 10_000);
-            }
+            if (lines.current.get(key) === words) lines.current.delete(key); // try again next time this piece comes round
+            offAir(err instanceof Error && err.message !== "Failed to fetch" ? err.message : "The host could not be reached.", segment);
             return null;
           });
         lines.current.set(key, words);
+        // Keep only the latest few requests (oldest out first); the CDN has the rest.
+        for (const old of lines.current.keys()) if (lines.current.size > VOICES_KEPT) lines.current.delete(old);
       }
       return words;
     },
-    [tracks],
+    [offAir, tracks],
   );
 
-  /** Resume music the host's speech pushed aside, if the listener still wants it. */
-  const release = useCallback(() => {
-    if (!heldForHost.current) return;
-    heldForHost.current = false;
-    if (want.current) audioRef.current?.play().catch(() => {});
+  /** A segment ready to play: its voice decoded in the page's graph. Null if it can't be played. */
+  const voiced = useCallback(
+    (seg: Segment | null): Promise<Voiced | null> => {
+      const g = graph.current;
+      if (!seg || !g) return Promise.resolve(null);
+      const segment = speech.current;
+      // Decoding takes the bytes, so decode a copy and keep the original for another try.
+      seg.buffer ??= g.ctx.decodeAudioData(seg.bytes.slice(0)).catch(() => {
+        seg.buffer = undefined;
+        offAir("The host's voice could not be played.", segment);
+        return null;
+      });
+      return seg.buffer.then((buffer) => (buffer ? { text: seg.text, buffer } : null));
+    },
+    [offAir],
+  );
+
+  /** Set the music's and the host's levels from the volume, mute and duck; `ramp` eases a duck in or out. */
+  const applyLevels = useCallback((ramp = false) => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    const { volume, muted, duck } = levels.current;
+    audio.muted = muted;
+    const g = graph.current;
+    if (!g || !wired.current) {
+      audio.volume = (volume / 100) * duck;
+      return;
+    }
+    // The gain does the work; element volume is read-only on iOS anyway.
+    audio.volume = 1;
+    const now = g.ctx.currentTime;
+    g.music.gain.cancelScheduledValues(now);
+    g.music.gain.setTargetAtTime(muted ? 0 : (volume / 100) * duck, now, ramp ? DUCK_RAMP / 3 : 0.01);
+    g.voice.gain.cancelScheduledValues(now);
+    g.voice.gain.setTargetAtTime(muted ? 0 : volume / 100, now, 0.01);
   }, []);
+
+  /**
+   * Make the page's audio graph, or wake it. Call from a tap or key: iOS only lets
+   * audio start from one. The music joins the graph once it is running, so a
+   * graph the browser keeps asleep never silences it.
+   */
+  const ensureGraph = useCallback(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    let g = graph.current;
+    if (!g) {
+      if (!("AudioContext" in window)) return;
+      const ctx = new AudioContext();
+      const music = ctx.createGain();
+      const voice = ctx.createGain();
+      music.connect(ctx.destination);
+      voice.connect(ctx.destination);
+      g = graph.current = { ctx, music, voice };
+      const wire = () => {
+        if (wired.current || ctx.state !== "running") return;
+        try {
+          ctx.createMediaElementSource(audio).connect(music);
+          wired.current = true;
+          applyLevels();
+        } catch {
+          // The element can't join the graph; the music plays as it is, without the host's voice.
+          ctx.removeEventListener("statechange", wire);
+        }
+      };
+      ctx.addEventListener("statechange", wire);
+      wire();
+      // Once the music plays through the graph, it is only heard while the graph runs. If the
+      // system puts it to sleep (a call, Siri, another app), wake it; if it stays asleep, pause, so
+      // the button never says "Pause" over silence and the next tap starts both.
+      ctx.addEventListener("statechange", () => {
+        if (!wired.current || ctx.state === "running" || ctx.state === "closed" || !want.current) return;
+        ctx.resume().catch(() => {});
+        window.setTimeout(() => {
+          if (want.current && ctx.state !== "running") asleep.current();
+        }, 1000);
+      });
+    }
+    if (g.ctx.state !== "running") g.ctx.resume().catch(() => {});
+  }, [applyLevels]);
 
   const quiet = useCallback(() => {
     speech.current++;
-    talking.current = false;
-    host.stop();
-    release();
-    setDuck(1);
+    airing.current = null;
+    introPending.current = false;
+    try {
+      clip.current?.stop();
+    } catch {
+      // Not started yet, or already over.
+    }
+    clip.current = null;
+    levels.current.duck = 1;
+    applyLevels(true);
     setOnAir((now) => (now?.off ? now : null));
-  }, [host, release]);
+  }, [applyLevels]);
 
   const toggleHost = () => {
     const enabled = !hostEnabledRef.current;
@@ -184,7 +290,7 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
     setOnAir(null);
     outro.current = null;
     announced.current = null;
-    if (enabled) host.unlock();
+    if (enabled) ensureGraph();
     try {
       localStorage.setItem(HOST_KEY, String(enabled));
     } catch {
@@ -192,22 +298,44 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
     }
   };
 
+  /** Play the host's voice over the music, dipped to `level`. False if it can't be heard. */
   const say = useCallback(
-    (text: string, level: number) => {
-      if (!hostEnabledRef.current || sound.current.silent) return;
+    (v: Voiced, level: number, kind: "intro" | "outro") => {
+      const g = graph.current;
+      const { volume, muted } = levels.current;
+      if (!hostEnabledRef.current || muted || volume === 0) return false;
+      if (!g || !wired.current || g.ctx.state !== "running") {
+        offAir("The host can't be heard in this browser right now.", speech.current);
+        return false;
+      }
+      // One voice at a time.
+      try {
+        clip.current?.stop();
+      } catch {
+        // Not started yet, or already over.
+      }
       const id = ++speech.current;
-      talking.current = true;
-      setDuck(level);
-      setOnAir({ text });
-      host.speak(text, sound.current.volume / 100).then(() => {
+      airing.current = kind;
+      levels.current.duck = level;
+      applyLevels(true);
+      setOnAir({ text: v.text });
+      const source = g.ctx.createBufferSource();
+      source.buffer = v.buffer;
+      source.connect(g.voice);
+      source.onended = () => {
         if (id !== speech.current) return;
-        talking.current = false;
-        setDuck(1);
+        clip.current = null;
+        airing.current = null;
+        levels.current.duck = 1;
+        applyLevels(true);
         setOnAir((now) => (now?.off ? now : null));
-        release();
-      });
+      };
+      clip.current = source;
+      // The music dips first, then the host speaks.
+      source.start(g.ctx.currentTime + DUCK_RAMP);
+      return true;
     },
-    [host, release],
+    [applyLevels, offAir],
   );
 
   const load = useCallback(
@@ -265,19 +393,32 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
 
   const play = useCallback(() => {
     const audio = audioRef.current;
-    if (!audio || want.current) return;
-    if (hostEnabledRef.current) host.unlock();
+    if (!audio) return;
+    // The graph may have been put to sleep while the music was wanted; a play wakes it either way.
+    if (hostEnabledRef.current) ensureGraph();
+    else if (graph.current?.ctx.state !== "running") graph.current?.ctx.resume().catch(() => {});
+    if (want.current) return;
     setWant(true);
     if (!audio.src || audio.error) load(indexRef.current);
     start();
-  }, [host, load, setWant, start]);
+  }, [ensureGraph, load, setWant, start]);
+
+  /** Stop the host for a pause. An intro cut off is said again on play; an outro cut off leaves the next piece its own intro. */
+  const hush = useCallback(() => {
+    if (airing.current === "intro" || introPending.current) introSaid.current = false;
+    if (airing.current === "outro") announced.current = null;
+    quiet();
+  }, [quiet]);
 
   const pause = useCallback(() => {
     if (!want.current) return;
     setWant(false);
-    quiet();
+    hush();
     audioRef.current?.pause();
-  }, [quiet, setWant]);
+  }, [hush, setWant]);
+  useEffect(() => {
+    asleep.current = pause;
+  }, [pause]);
 
   const toggle = useCallback(() => (want.current ? pause() : play()), [pause, play]);
   const seek = (seconds: number) => {
@@ -304,13 +445,11 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
   }, [go]);
 
   useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
-    audio.volume = (volume / 100) * duck;
-    audio.muted = muted;
-    sound.current = { volume, silent: muted || volume === 0 };
+    levels.current.volume = volume;
+    levels.current.muted = muted;
+    applyLevels();
     if (muted || volume === 0) quiet();
-  }, [volume, muted, duck, quiet]);
+  }, [volume, muted, applyLevels, quiet]);
 
   // Open on a random piece and try to play it at once. Browsers often refuse
   // until the visitor has interacted with the page; then the first click or
@@ -372,12 +511,16 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
       // The host introduces the piece as it begins, unless the last outro already did.
       if (hostEnabledRef.current && !introSaid.current) {
         introSaid.current = true;
+        introPending.current = true;
         const segment = speech.current;
-        line("intro", i).then((text) => {
-          if (text && segment === speech.current && i === indexRef.current && want.current && !outro.current?.started && audio.currentTime < 30) {
-            say(text, DUCK.intro);
-          }
-        });
+        line("intro", i)
+          .then(voiced)
+          .then((v) => {
+            if (segment === speech.current) introPending.current = false;
+            if (v && segment === speech.current && i === indexRef.current && want.current && !outro.current?.started && audio.currentTime < 30) {
+              say(v, DUCK.intro, "intro");
+            }
+          });
       }
     };
     const onError = () => {
@@ -397,12 +540,8 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
     // (media keys, the OS player, headphones unplugged).
     const onPause = () => {
       if (switching.current || audio.ended || audio.error || !want.current) return;
-      // The browser made room for the host's voice; the listener still wants the music.
-      if (talking.current) {
-        heldForHost.current = true;
-        return;
-      }
       setWant(false);
+      hush();
     };
     const onPlay = () => !want.current && setWant(true);
     const onTime = () => {
@@ -414,18 +553,21 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
       const i = indexRef.current;
       if (!outro.current) {
         const next = deck.current!.peek(i);
-        const pending = { next, text: null as string | null, started: false };
+        const pending = { next, voice: null as Voiced | null, started: false };
         outro.current = pending;
-        line("outro", i, next).then((text) => (pending.text = text));
+        line("outro", i, next)
+          .then(voiced)
+          .then((v) => (pending.voice = v));
         return;
       }
       const o = outro.current;
-      if (o.started || !o.text || left > speakingTime(o.text) + OUTRO_MARGIN || left < 3) return;
+      if (o.started || !o.voice || left > o.voice.buffer.duration + DUCK_RAMP + OUTRO_MARGIN || left < 3) return;
+      // A short piece: the intro is still on; the outro waits for it, or is skipped.
+      if (airing.current === "intro") return;
       o.started = true;
       // The deck could have changed (previous puts a piece back), so only announce what it will really deal.
       if (deck.current!.peek(i) !== o.next) return;
-      announced.current = o.next;
-      say(o.text, DUCK.outro);
+      if (say(o.voice, DUCK.outro, "outro")) announced.current = o.next;
     };
     const onDuration = () => {
       setDuration(Number.isFinite(audio.duration) && audio.duration > 0 ? Math.floor(audio.duration) : null);
@@ -453,7 +595,7 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
       audio.removeEventListener("pause", onPause);
       audio.removeEventListener("play", onPlay);
     };
-  }, [clock, go, line, next, say, setWant, tracks]);
+  }, [clock, go, hush, line, next, say, setWant, tracks, voiced]);
 
   // Hardware media keys and the OS "now playing" panel.
   useEffect(() => {
@@ -727,7 +869,8 @@ export function Player({ tracks, index, onPlayingChange, onTrackChange, actions,
         <p className="visually-hidden" role="status">
           {status}
         </p>
-        <audio ref={audioRef} preload="none" />
+        {/* Anonymous CORS lets the music play through the audio graph; without it the graph hears silence. */}
+        <audio ref={audioRef} preload="none" crossOrigin="anonymous" />
       </section>
     </>
   );
